@@ -13,6 +13,7 @@ use PayPal\Api\RedirectUrls;
 use PayPal\Api\PaymentExecution;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use PayPal\Auth\OAuthTokenCredential;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
@@ -124,6 +125,11 @@ class PaypalController extends Controller
                     'amount' => $result->transactions[0]->amount->total,
                     'status' => $result->state,
                 ]);
+
+                Mail::raw('This is a test email from paypal controller', function ($message) {
+                    $message->to(Auth::user()->email)
+                            ->subject('Test Email');
+                });
 
                 return view('deposit_success', compact('result'));
             } else {

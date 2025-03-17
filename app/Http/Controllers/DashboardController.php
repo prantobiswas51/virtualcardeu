@@ -5,14 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class DashboardController extends Controller
 {
-
-    public function index(){
-        $transactions = Transaction::all();
-        return view('dashboard', compact('transactions'));
-    }
 
     public function logout(Request $request)
     {
