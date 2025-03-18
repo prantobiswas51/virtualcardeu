@@ -52,11 +52,24 @@
             </div>
         </div>
 
+        {{-- Currency Selector --}}
+       {{--  <div class="w-full my-4 hidden" id="currencies_div">
+            <p class="py-2">Select currency you want to pay</p>
+            <select name="currency" id="currency" class="w-full p-2 border bg-gray-800 border-gray-300 rounded">
+                <option value="">Currencies</option>
+                @if (!empty($currencies['currencies']))
+                    @foreach ($currencies['currencies'] as $currency)
+                        <option value="{{ $currency }}">{{ strtoupper($currency) }}</option>
+                    @endforeach
+                @endif
+                
+            </select> 
+        </div>--}}
+
     </div>
 
     <div class="my-4 mt-16">
-        <button id="next_button" onclick="gotoFees()"
-            class="w-full bg-gray-600 text-white py-2 rounded-lg transition">Next</button>
+        <button id="next_button" onclick="gotoFees()" class="w-full bg-gray-600 text-white py-2 rounded-lg transition">Next</button>
     </div>
 
     <script>
@@ -72,6 +85,14 @@
             // Add 'bg-blue-600' to selected method
             element.classList.remove('bg-gray-50', 'text-black');
             element.classList.add('bg-blue-600', 'text-white');
+
+            // Show or hide currencies_div based on selected method
+            // const currenciesDiv = document.getElementById('currencies_div');
+            // if (method === 'crypto') {
+            //     currenciesDiv.classList.remove('hidden');
+            // } else {
+            //     currenciesDiv.classList.add('hidden');
+            // }
 
             checkSelection();
         }
@@ -119,7 +140,8 @@
         function gotoFees(){
             let selectedMethod = document.getElementById('selected_method').value;
             let amount = document.getElementById('amount').value;
-
+            // let currency = document.getElementById('currency').value;
+            
             if (!selectedMethod || !amount) {
                 alert("Please select a payment method and enter an amount.");
                 return;

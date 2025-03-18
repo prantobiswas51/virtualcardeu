@@ -4,15 +4,21 @@
         <p class="text-gray-100 font-medium text-sm text-center">Transfer amount</p>
 
         @php
-            $amount = floatval(request('amount', 0)); // Ensure it's numeric
-            $transaction_fee = $amount * 0.10; // 10% fee
+            $amount = floatval(request('amount', 0)); 
+            $currency = request('currency');
+            $method = request('selected_method');
+            $transaction_fee = $amount * 0.10;
             $total_amount = $amount + $transaction_fee;
         @endphp
 
         <p class="text-gray-100 font-medium text-2xl pb-4 text-center">${{ number_format($amount, 2) }}</p>
 
-        <form action="{{ route('deposit_paypal') }}" method="POST">
+        {{-- <form action="{{ route('deposit_paypal') }}" method="POST"> --}}
+        <form id="deposit_form" action="{{ route('deposit_paypal') }}" method="POST">
             @csrf
+
+            <input type="hidden" id="hidden_method" value="{{ $method }}">
+            <input type="hidden" name="currency" value="{{ $currency }}">
 
             <div class="method flex justify-between bg-gray-800 rounded-md p-4 items-center py-2">
                 <div class="">Method</div>
@@ -40,7 +46,26 @@
                 <input type="hidden" name="total_amount" value="{{ $total_amount }}">
             </div>
 
-            <button type="submit" class="bg-green-700 my-4 p-2 rounded-md w-full">Pay Now</button>
+            <button type="submit" id="pay_now" class="bg-green-700 my-4 p-2 rounded-md w-full">Pay Now</button>
         </form>
     </div>
+
+    <script>
+        document.getElementById('pay_now').addEventListener('click', function(event) {
+            event.preventDefault();
+    
+            let selectedMethod = document.getElementById('hidden_method').value;
+            let depositForm = document.getElementById('deposit_form');
+    
+            // Update form action dynamically
+            if (selectedMethod === 'crypto') {
+                depositForm.action = "{{ route('deposit_crypto') }}";
+            } else {
+                depositForm.action = "{{ route('deposit_paypal') }}";
+            }
+    
+            depositForm.submit(); // Submit the form after updating action
+        });
+    </script>
+
 </x-app-layout>
