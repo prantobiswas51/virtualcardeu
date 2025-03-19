@@ -21,7 +21,7 @@
 
         <input type="hidden" id="selected_method" value="">
 
-        <label for="amount" class="block text-gray-100 font-medium mt-6">Enter Amount</label>
+        <label for="amount" class="block text-gray-100 font-medium mt-6">Enter amount</label>
         <input type="number" id="amount" placeholder="Enter amount"
             class="w-full px-4 py-2 border rounded-lg text-gray-900 focus:ring focus:ring-blue-300">
 
