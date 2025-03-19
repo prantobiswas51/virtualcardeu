@@ -295,8 +295,8 @@ class DepositController extends Controller
     // Payeer Accounts
     public function createPayeerDeposit(Request $request)
     {
-        $merchant_id = env('PAYEER_MERCHANT_ID');  // Payeer ID (Merchant ID)
-        $secret_key = env('PAYEER_SECRET_KEY');  // Payeer Secret Key
+        $merchant_id = '2204977736';  // Payeer ID (Merchant ID)
+        $secret_key = 'b91F5IYeFnzrVPNEuzHLKKS7SD';  // Payeer Secret Key
 
         $amount = number_format($request->amount, 2, '.', ''); // Format amount
         $currency = 'USD';
