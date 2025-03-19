@@ -18,6 +18,10 @@
 
     <body class="font-sans bg-gray-900">
 
+        <div class="p-2 bg-red-400 text-center">
+            Website under construction , For emergency contact - prantobd320@gmail.com
+        </div>
+
         <div class="text-white max-w-[800px] mx-auto  mb-[100px]">
             
             @include('layouts.navigation')
