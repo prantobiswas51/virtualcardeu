@@ -295,50 +295,48 @@ class DepositController extends Controller
     // Payeer Accounts
     public function createPayeerDeposit(Request $request)
     {
-        $merchant_id = '2204977736';  // Payeer ID (Merchant ID)
-        $secret_key = 'b91F5IYeFnzrVPNEuzHLKKS7SD';  // Payeer Secret Key
+        $m_shop = env('PAYEER_MERCHANT_ID');
+        $m_orderid = '1';
+        $m_amount = number_format($request->total_amount, 2, '.', '');
+        $m_curr = 'USD';
+        $m_desc = base64_encode('Test');
+        $m_key = env('PAYEER_SECRET_KEY');
 
-        $amount = number_format($request->amount, 2, '.', ''); // Format amount
-        $currency = 'USD';
-        $order_id = time(); // Unique order ID
-        $desc = base64_encode("Deposit to account");
+        $arHash = array(
+            $m_shop,
+            $m_orderid,
+            $m_amount,
+            $m_curr,
+            $m_desc
+        );
 
-        // Generate signature
-        $sign = strtoupper(hash('sha256', implode(':', [
-            $merchant_id,
-            $order_id,
-            $amount,
-            $currency,
-            $desc,
-            $secret_key
-        ])));
+        $arHash[] = $m_key;
 
-        $data = [
-            'm_shop' => $merchant_id,
-            'm_orderid' => $order_id,
-            'm_amount' => $amount,
-            'm_curr' => $currency,
-            'm_desc' => $desc,
-            'm_sign' => $sign,
-            'm_success_url' => route('deposit.success'),
-            'm_fail_url' => route('deposit.fail'),
-        ];
+        $sign = strtoupper(hash('sha256', implode(':', $arHash)));
 
         // Redirect to Payeer payment page
-        $query = http_build_query($data);
-        return redirect("https://payeer.com/merchant/?$query");
-    }
+        $url = 'https://payeer.com/merchant/?' . http_build_query([
+            'm_shop' => $m_shop,
+            'm_orderid' => $m_orderid,
+            'm_amount' => $m_amount,
+            'm_curr' => $m_curr,
+            'm_desc' => $m_desc,
+            'm_sign' => $sign,
+            'lang' => 'en'
+        ]);
 
+        return redirect($url);
+    }
 
     public function payeerSuccess()
     {
         dd('Success');
-        return view('deposit.success'); // Create a success view
+        return view('payeer_success'); // Create a success view
     }
 
     public function payeerFail()
     {
         dd('Fail');
-        return view('deposit.fail'); // Create a failure view
+        return view('payeer_fail'); // Create a failure view
     }
 }
