@@ -25,5 +25,4 @@ class DashboardController extends Controller
         return redirect('/');
     }
 
-
 }

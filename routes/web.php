@@ -37,7 +37,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/payment/status/{invoice_id}', [DepositController::class, 'checkPaymentStatus'])->name('payment.status');
 
-    
+    // Payeer deposit
+    Route::post('/deposit/payeer', [DepositController::class, 'createPayeerDeposit'])->name('deposit_payeer');
+    Route::get('/deposit/payeer/success', [DepositController::class, 'success'])->name('payeer_success');
+    Route::get('/deposit/payeer/fail', [DepositController::class, 'fail'])->name('payeer_fail');
+
 });
 
 

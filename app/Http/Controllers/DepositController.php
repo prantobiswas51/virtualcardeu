@@ -20,6 +20,7 @@ use PayPal\Auth\OAuthTokenCredential;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
+use App\Services\CPayeer;
 
 class DepositController extends Controller
 {
@@ -289,6 +290,62 @@ class DepositController extends Controller
         }
 
         return redirect()->route('dashboard')->with('error', 'Payment not completed yet');
+    }
+
+    // Payeer Accounts
+    public function createPayeerDeposit(Request $request)
+    {
+        $account = env('PAYEER_ACCOUNT');  // Your Payeer account number
+        $apiId = env('PAYEER_MERCHANT_ID');  // API ID from Payeer
+        $apiPass = env('PAYEER_API_PASS');  // API Password
+
+        $payeer = new CPayeer($account, $apiId, $apiPass);
+
+        if (!$payeer->isAuth()) {
+            return response()->json(['error' => 'Payeer Authentication Failed'], 500);
+        }
+
+        $amount = $request->amount;  // Get amount from user
+        $currency = 'USD';
+        $order_id = time();
+        $desc = "Deposit to account";
+
+        // Generate signature
+        $sign = hash('sha256', implode(':', [
+            $account,
+            $order_id,
+            $amount,
+            $currency,
+            base64_encode($desc),
+            $apiPass
+        ]));
+
+        $data = [
+            'm_shop' => $account,
+            'm_orderid' => $order_id,
+            'm_amount' => number_format($amount, 2, '.', ''),
+            'm_curr' => $currency,
+            'm_desc' => base64_encode($desc),
+            'm_sign' => $sign,
+            'm_success_url' => route('deposit.success'),
+            'm_fail_url' => route('deposit.fail'),
+        ];
+
+        // Redirect to Payeer payment page
+        $query = http_build_query($data);
+        return redirect("https://payeer.com/merchant/?$query");
+    }
+
+    public function payeerSuccess()
+    {
+        dd('Success');
+        return view('deposit.success'); // Create a success view
+    }
+
+    public function payeerFail()
+    {
+        dd('Fail');
+        return view('deposit.fail'); // Create a failure view
     }
 
 }

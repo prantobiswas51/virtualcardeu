@@ -60,8 +60,14 @@
             // Update form action dynamically
             if (selectedMethod === 'crypto') {
                 depositForm.action = "{{ route('deposit_crypto') }}";
-            } else {
+            } 
+            
+            if (selectedMethod === 'paypal') {
                 depositForm.action = "{{ route('deposit_paypal') }}";
+            }
+
+            if (selectedMethod === 'payeer') {
+                depositForm.action = "{{ route('deposit_payeer') }}";
             }
     
             depositForm.submit(); // Submit the form after updating action
