@@ -20,7 +20,6 @@ use PayPal\Auth\OAuthTokenCredential;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
-use App\Services\CPayeer;
 
 class DepositController extends Controller
 {
