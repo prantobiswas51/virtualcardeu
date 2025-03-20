@@ -1,5 +1,7 @@
 <?php
 
+use GuzzleHttp\Client;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
@@ -9,13 +11,10 @@ use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\DepositController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
-use SocialiteProviders\PayPal\Provider as PayPalProvider;
 use SocialiteProviders\Manager\Config as SocialiteConfig;
+use SocialiteProviders\PayPal\Provider as PayPalProvider;
 
-Route::get('/', function () {
-    return view('home');
-});
-
+Route::get('/', function () { return view('home'); });
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -48,23 +47,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/deposit/payeer/fail', [DepositController::class, 'fail'])->name('payeer_fail');
 
     // Payout======
-    Route::get('/payout', [PayoutController::class, 'index'])->name('payout');
+    Route::get('/payout', [PayoutController::class, 'index'])->name('payout'); //return the payout view only
+    Route::get('/payout/paypal', [PayoutController::class, 'paypalPayout'])->name('paypal_payout');
 
-    Route::get('/payout/paypal/login', [PayoutController::class, 'paypal_login'])->name('paypal_login');
-    
-    Route::get('/payout/paypal/callback', function () {
-        
-        // $paypalUser = Socialite::driver('paypal')->stateless()->user();
-        
-        // // Get the authenticated user
-        // $user = Auth::user();
-    
-        // // Save PayPal email to the user profile
-        // $user->paypal_email = $paypalUser->email;
-        // $user->save();
-    
-        return redirect()->route('dashboard')->with('success', 'PayPal email linked successfully!');
-    })->name('paypal_callback');
+    Route::get('/paypal/callback', [PayoutController::class, 'handlePaypalCallback']);
 
 
 });

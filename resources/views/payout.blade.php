@@ -1,4 +1,6 @@
 <x-app-layout>
+    <script src="https://www.paypalobjects.com/payouts/js/payouts_aac.js"></script>
+
     <h3 class="py-2 text-2xl font-bold">Payout</h3>
 
     <div class="bg-gray-800 p-6 rounded-md">
@@ -20,7 +22,7 @@
 
         {{-- Currency Selector --}}
         <div class="w-full my-4 mt-6 hidden" id="paypal_login_button">
-            <a href="{{ route('paypal_login') }}"><button class="bg-blue-800 text-white p-2 w-full rounded-md">Connect With Paypal</button></a>
+            <div id="paypal-container"></div>
         </div>
 
     </div>
@@ -46,7 +48,7 @@
             // Show or hide paypal_login_button based on selected method
             const currenciesDiv = document.getElementById('paypal_login_button');
             if (method === 'paypal') {
-                currenciesDiv.classList.remove('hidden');
+                currenciesDiv.classList.remove('hidden');                
             } else {
                 currenciesDiv.classList.add('hidden');
             }
@@ -106,6 +108,24 @@
 
             window.location.href = `/deposit/fee_check?selected_method=${selectedMethod}&amount=${amount}`;
         }
+
+        // Paypal Login
+        paypal.PayoutsAAC.render({
+            env: "{{ config('paypal.env') }}",
+            clientId: {
+                production: "{{ config('paypal.client_id') }}",
+                sandbox: "{{ config('paypal.client_id') }}"
+            },
+            merchantId: "{{ config('paypal.merchant_id') }}",
+            pageType: "login",
+            onLogin: function(response) {
+                if (response.err) {
+                    console.error("Login error:", response.err);
+                } else {
+                    window.location.href = "{{ config('paypal.redirect_uri') }}?code=" + response.body.code;
+                }
+            }
+        }, '#paypal-container');
     </script>
 
 </x-app-layout>
