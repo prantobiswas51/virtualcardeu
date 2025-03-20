@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('paypal_email')->nullable();
             $table->string('profile_photo')->nullable();
             $table->string('pin')->nullable();
             $table->string('number')->nullable();
             $table->decimal('balance', 10, 2)->default(0.00);
             $table->enum('role', ['Admin', 'User'])->default('User');
-
 
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

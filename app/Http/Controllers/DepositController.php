@@ -35,39 +35,9 @@ class DepositController extends Controller
     }
 
     // Deposit page return + currency
-    public function getAvailableCurrencies()
+    public function index()
     {
-        // Set the API endpoint
-        $url = 'https://api.nowpayments.io/v1/currencies';
-
-        // Initialize cURL session
-        $ch = curl_init();
-
-        // Set cURL options
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'x-api-key: ' . '5BTM43E-8SN436A-M5BM6SX-CZFF0J1'
-        ]);
-
-        // Execute cURL request and get the response
-        $response = curl_exec($ch);
-
-        // Check for cURL errors
-        if (curl_errno($ch)) {
-            $error_msg = curl_error($ch);
-        }
-
-        // Close cURL session
-        curl_close($ch);
-
-        if (isset($error_msg)) {
-            return response()->json(['error' => $error_msg], 500);
-        }
-
-        $currencies = json_decode($response, true);
-
-        return view('deposit', compact('currencies'));
+       return view('deposit');
     }
 
     public function feeCheck(Request $request)
@@ -165,7 +135,7 @@ class DepositController extends Controller
                     'payment_method' => 'Paypal',
                     'payment_id' => $result->id,
                     'payer_email' => $result->payer->payer_info->email,
-                    'amount' => $result->transactions[0]->amount->total,
+                    'amount' => $amount_to_add,
                     'status' => $result->state,
                 ]);
 

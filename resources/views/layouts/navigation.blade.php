@@ -3,7 +3,7 @@
         <div class=" py-4 items-center flex">
             <a class="py-2 pr-2 underline" href="{{ route('dashboard') }}">Dashboard</a>
             <a class="px-2 underline" href="{{ route('deposit') }}">Deposit</a>
-            <a class="px-2 underline" href="">Payout</a>
+            <a class="px-2 underline" href="{{ route('payout') }}">Payout</a>
             <a class="px-2 underline" href="">Support Ticket</a>
         </div>
         <div class=" flex p-4 items-center gap-2">
