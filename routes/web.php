@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/payout', [PayoutController::class, 'index'])->name('payout'); //return the payout view only
     Route::get('/payout/paypal', [PayoutController::class, 'paypalPayout'])->name('paypal_payout');
 
-    Route::get('/paypal/callback', [PayoutController::class, 'handlePaypalCallback']);
+    Route::get('/payout/paypal/callback', [PayoutController::class, 'handlePaypalCallback'])->name('paypal_login_callback');
 
 
 });

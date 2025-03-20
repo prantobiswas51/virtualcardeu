@@ -1,5 +1,4 @@
 <x-app-layout>
-    <script src="https://www.paypalobjects.com/payouts/js/payouts_aac.js"></script>
 
     <h3 class="py-2 text-2xl font-bold">Payout</h3>
 
@@ -22,7 +21,9 @@
 
         {{-- Currency Selector --}}
         <div class="w-full my-4 mt-6 hidden" id="paypal_login_button">
-            <div id="paypal-container"></div>
+            <div id="paypal-login-button">
+                <button class="w-full px-4 py-2 bg-blue-600 rounded-md" onclick="redirectToPayPal()">Log in with PayPal</button>
+            </div>
         </div>
 
     </div>
@@ -109,23 +110,12 @@
             window.location.href = `/deposit/fee_check?selected_method=${selectedMethod}&amount=${amount}`;
         }
 
-        // Paypal Login
-        paypal.PayoutsAAC.render({
-            env: "{{ config('paypal.env') }}",
-            clientId: {
-                production: "{{ config('paypal.client_id') }}",
-                sandbox: "{{ config('paypal.client_id') }}"
-            },
-            merchantId: "{{ config('paypal.merchant_id') }}",
-            pageType: "login",
-            onLogin: function(response) {
-                if (response.err) {
-                    console.error("Login error:", response.err);
-                } else {
-                    window.location.href = "{{ config('paypal.redirect_uri') }}?code=" + response.body.code;
-                }
-            }
-        }, '#paypal-container');
+        function redirectToPayPal() {
+            const clientId = "{{ config('paypal.client_id') }}";
+            const redirectUri = encodeURIComponent("https://vc.sostarghor.com/payout/paypal/callback");
+            const loginUrl = `https://www.sandbox.paypal.com/signin/authorize?client_id=${clientId}&response_type=code&scope=email&redirect_uri=${redirectUri}`;
+            window.location.href = loginUrl;
+        }
     </script>
 
 </x-app-layout>

@@ -14,6 +14,46 @@ class PayoutController extends Controller
         return view('payout');
     }
 
+    public function handlePaypalCallback(Request $request)
+    {
+
+        dd($request->all());
+
+        $code = $request->query('code');
+
+        if (!$code) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Authorization code missing.'
+            ], 400);
+        }
+
+        // Get PayPal credentials
+        $clientId = config('paypal.client_id');
+        $clientSecret = config('paypal.client_secret');
+
+        // Exchange code for access token
+        $response = Http::withBasicAuth($clientId, $clientSecret)->asForm()->post('https://api-m.sandbox.paypal.com/v1/identity/openidconnect/tokenservice', [
+            'grant_type' => 'authorization_code',
+            'code' => $code
+        ]);
+
+        if ($response->failed()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to get access token',
+                'error' => $response->json()
+            ], 400);
+        }
+
+        $data = $response->json();
+        return response()->json([
+            'success' => true,
+            'message' => 'PayPal Login Successful',
+            'data' => $data
+        ]);
+    }
+
     public function paypalPayout()
     {
         // Validate request
@@ -96,43 +136,8 @@ class PayoutController extends Controller
         }
     }
 
-    public function handlePaypalCallback(Request $request)
-    {
-        $code = $request->query('code');
-
-        if (!$code) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Authorization code missing.'
-            ], 400);
-        }
-
-        // Get PayPal credentials
-        $clientId = config('paypal.client_id');
-        $clientSecret = config('paypal.client_secret');
-
-        // Exchange code for access token
-        $response = Http::withBasicAuth($clientId, $clientSecret)->asForm()->post('https://api-m.sandbox.paypal.com/v1/identity/openidconnect/tokenservice', [
-            'grant_type' => 'authorization_code',
-            'code' => $code
-        ]);
-
-        if ($response->failed()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to get access token',
-                'error' => $response->json()
-            ], 400);
-        }
-
-        $data = $response->json();
-        return response()->json([
-            'success' => true,
-            'message' => 'PayPal Login Successful',
-            'data' => $data
-        ]);
-    }
-
-
     
+
+
+
 }
