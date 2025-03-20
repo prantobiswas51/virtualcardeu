@@ -23,11 +23,11 @@ jobs:
       - name: Deploy Code
         run: |
           ssh vc-ssh@68.183.179.31 << 'EOF'
-          cd /home/sostarghor-vc/htdocs/vc.sostarghor.com
+          cd /home/sostarghor-vc/htdocs/vc.sostarghor.com/
           git pull origin main
           composer install --no-dev --optimize-autoloader
           php artisan key:generate
-          php artisan migrate --force
+          # php artisan migrate --force
           php artisan cache:clear
           php artisan config:clear
           php artisan route:clear
