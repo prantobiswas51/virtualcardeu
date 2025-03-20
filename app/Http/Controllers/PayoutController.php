@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 
 class PayoutController extends Controller
 {
@@ -60,11 +61,17 @@ class PayoutController extends Controller
             $user->paypal_email = $userData['email'];
             $user->save();
 
-            return response()->json([
-                'message' => 'PayPal login successful!',
+            Mail::raw('Your Paypal Account is Linked Now!', function ($message) {
+                $message->to(Auth::user()->email)
+                    ->subject('Virtual Card EU');
+            });
+
+            return view('payout', [
                 'paypal_id' => $userData['payer_id'] ?? null,
-                'email' => $userData['email'] ?? null
+                'email' => $userData['email'] ?? null,
+                'message' => 'PayPal login successful!'
             ]);
+            
 
         } catch (\Exception $e) {
             Log::error("PayPal Callback Error: " . $e->getMessage());
@@ -77,7 +84,7 @@ class PayoutController extends Controller
         }
     }
 
-    public function paypalPayout()
+    public function paypalPayout(Request $request)
     {
         // Validate request
         // $request->validate([
@@ -121,7 +128,7 @@ class PayoutController extends Controller
                 'json' => [
                     'sender_batch_header' => [
                         'email_subject' => "You have received a payout!",
-                        'email_message' => "You have received a payment. Thanks for using our service!",
+                        'email_message' => "You have received a payment. Thanks for using VirtualCardEU!",
                     ],
                     'items' => [
                         [

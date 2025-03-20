@@ -10,7 +10,13 @@
             <p>{{ Str::of(Auth::user()->name)->before(' ')  }}</p>
             <x-heroicon-s-bell-alert class="w-6 h-6" />
             <p class="bg-green-600 p-2 rounded-md">${{ Auth::user()->balance ?? "0.00"}}</p>
-            <a href="{{ route('profile.edit') }}"><img class="rounded-[50%] w-10 h-10 bg-blue-600" src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt=""></a> 
+            <a href="{{ route('profile.edit') }}">
+                @if(Auth::user()->profile_photo && file_exists(storage_path('app/public/' . Auth::user()->profile_photo)))
+                    <img class="w-10 h-10 rounded-[50px]" src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt="Profile Photo">
+                @else
+                    <img class="w-10 h-10 rounded-[50px]" src="{{ asset('assets/avatar.png') }}" alt="Avatar">
+                @endif
+            </a> 
         </div>
     @else 
         <div class="flex items-center gap-3 py-4 ">

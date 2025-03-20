@@ -25,9 +25,12 @@ jobs:
           ssh vc-ssh@68.183.179.31 << 'EOF'
           cd /home/sostarghor-vc/htdocs/vc.sostarghor.com/
           php artisan down
+          git fetch --all
+          git reset --hard origin/main
           git pull origin main
           composer install
           npm install
+          npm run build
           php artisan key:generate
           php artisan cache:clear
           php artisan config:clear

@@ -138,7 +138,7 @@ class DepositController extends Controller
                     'status' => $result->state,
                 ]);
 
-                Mail::raw('This is a test email from paypal controller', function ($message) {
+                Mail::raw('Your Transaction is Completed', function ($message) {
                     $message->to(Auth::user()->email)
                         ->subject('Test Email');
                 });

@@ -19,10 +19,17 @@
     <body class="font-sans bg-gray-900">
 
         <div class="p-2 bg-red-400 text-center">
-            Website under construction , For emergency contact - prantobd320@gmail.com
+            Website under construction <br> For emergency => prantobd320@gmail.com
         </div>
 
         <div class="text-white max-w-[800px] mx-auto  mb-[100px]">
+
+            @if(session('message'))
+                <div class="alert alert-success bg-gray-500">
+                    {{ session('message') }} <span class="p-2 px-4 bg-red-900 text-white">X</span>
+                </div>
+            @endif
+
             
             @include('layouts.navigation')
             <main>

@@ -19,11 +19,15 @@
 
         <input type="hidden" id="selected_method" value="">
 
-        {{-- Currency Selector --}}
         <div class="w-full my-4 mt-6 hidden" id="paypal_login_button">
-            <div id="paypal-login-button">
-                <button class="w-full px-4 py-2 bg-blue-600 rounded-md" onclick="redirectToPayPal()">Log in with PayPal</button>
-            </div>
+            @if (Auth::user()->paypal_id)
+                <p>You are already logged in with Paypal.</p>
+                <button class="w-full bg-green-600 p-2 rounded-md my-2">Open Paypal Payout Form</button>
+            @else  
+                <div id="paypal-login-button">
+                    <button class="w-full px-4 py-2 bg-blue-600 rounded-md" onclick="redirectToPayPal()">Log in with PayPal</button>
+                </div>
+            @endif
         </div>
 
     </div>
