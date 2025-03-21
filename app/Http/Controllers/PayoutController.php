@@ -129,8 +129,8 @@ class PayoutController extends Controller
                     ],
                     'items' => [
                         [
-                            'recipient_type' => "PAYPAL_ID", // EMAIL or PAYPAL_ID
-                            'receiver' => Auth::user()->paypal_id,
+                            'recipient_type' => "EMAIL", // EMAIL or PAYPAL_ID
+                            'receiver' => Auth::user()->paypal_email,
                             'amount' => [
                                 'value' => $amount_to_payout,
                                 'currency' => "USD",
