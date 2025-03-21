@@ -153,6 +153,7 @@ class PayoutController extends Controller
 
             // Step 3: Save Transaction
             $transaction = new Transaction();
+            $transaction->user_id = Auth::id();
             $transaction->payment_method = 'Paypal';
             $transaction->payment_id = $payoutData['batch_header']['payout_batch_id'] ?? 'unknown';
             $transaction->payer_email = Auth::user()->paypal_email;
@@ -161,13 +162,15 @@ class PayoutController extends Controller
             $transaction->type = 'withdrawal';
             $transaction->save();
 
+            $transactions = Transaction::where('user_id', Auth::id())->get();
+
             // Step 4: Deduct balance
             Auth::user()->decrement('balance', $total_amount);
 
             // Log response
             Log::info("PayPal Payout Response", $payoutData);
 
-            return view('payout')->with('message', 'Payout sent Successful');
+            return view('dashboard', compact(['transactions']))->with('message', 'Payout sent Successful');
 
         } catch (\Exception $e) {
             Log::error("PayPal Payout Error: " . $e->getMessage());
