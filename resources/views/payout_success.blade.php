@@ -20,7 +20,7 @@
                         Payer Email
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-300 text-right">
-                        {{ $payout_email  }}
+                        {{ $payout_email ?? Auth::user()->paypal_email }}
                     </td>
                 </tr>
                 <!-- Row 2: Amount -->

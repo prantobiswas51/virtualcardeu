@@ -23,8 +23,9 @@
             @if(session('message'))
                 <div class="flex justify-center">
                     <div class="alert alert-success flex justify-between flex-row items-center top-20 absolute w-[600px] bg-green-600 shadow-lg rounded-md p-2 pl-5">
-                        {{ session('message') }}<span class="p-4 bg-red-900 rounded-r-md text-white">X</span>
+                        {{ session('message') }}
                     </div>
+                    <span class="p-4 bg-gray-300 rounded-r-md text-black">X</span>
                 </div>
             @endif
 

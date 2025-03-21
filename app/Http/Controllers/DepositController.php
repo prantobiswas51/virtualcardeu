@@ -136,11 +136,12 @@ class DepositController extends Controller
                     'payer_email' => $result->payer->payer_info->email,
                     'amount' => $amount_to_add,
                     'status' => $result->state,
+                    'type' => 'deposit'
                 ]);
 
                 Mail::raw('Your Transaction is Completed', function ($message) {
                     $message->to(Auth::user()->email)
-                        ->subject('Test Email');
+                        ->subject('Deposit VirtualCardEU');
                 });
 
                 return view('deposit_success', compact('result'));
