@@ -151,6 +151,8 @@ class PayoutController extends Controller
 
             $payoutData = json_decode($payoutResponse->getBody(), true);
 
+            dd($payoutData);
+
             // Step 3: Save Transaction
             $transaction = new Transaction();
             $transaction->user_id = Auth::id();
@@ -158,7 +160,7 @@ class PayoutController extends Controller
             $transaction->payment_id = $payoutData['batch_header']['payout_batch_id'] ?? 'unknown';
             $transaction->payer_email = Auth::user()->paypal_email;
             $transaction->amount = $total_amount;
-            $transaction->status = $payoutData['batch_header']['batch_status'] ?? "unknown";
+            $transaction->status = 'approved';
             $transaction->type = 'withdrawal';
             $transaction->save();
 
