@@ -101,7 +101,7 @@ class PayoutController extends Controller
         // Get PayPal credentials
         $clientId = config('paypal.client_id');
         $clientSecret = config('paypal.secret');
-        $paypalEnv = env('PAYPAL_ENV', 'sandbox'); // 'sandbox' or 'production'
+        $paypalEnv = env('PAYPAL_ENV', 'sandbox');
         $paypalUrl = $paypalEnv === 'production'
             ? "https://api-m.paypal.com"
             : "https://api-m.sandbox.paypal.com";
@@ -124,7 +124,7 @@ class PayoutController extends Controller
             $accessToken = $authData['access_token'];
 
             // Step 2: Make Payout API Call
-            $payoutResponse = $client->post("$paypalUrl/v1/payments/payouts?sync_mode=true", [
+            $payoutResponse = $client->post("$paypalUrl/v1/payments/payouts", [
                 'headers' => [
                     'Authorization' => "Bearer $accessToken",
                     'Content-Type' => 'application/json',
@@ -137,7 +137,7 @@ class PayoutController extends Controller
                     'items' => [
                         [
                             'recipient_type' => "EMAIL",
-                            'receiver' => Auth::user()->paypal_email,
+                            'receiver' => 'sb-fw0ei38674837@personal.example.com',
                             'amount' => [
                                 'value' => $amount_to_payout,
                                 'currency' => "USD",
