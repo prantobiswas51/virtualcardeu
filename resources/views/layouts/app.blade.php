@@ -18,19 +18,16 @@
 
     <body class="font-sans bg-gray-900">
 
-        <div class="p-2 bg-red-400 text-center">
-            Website under construction <br> For emergency => prantobd320@gmail.com
-        </div>
-
         <div class="text-white max-w-[800px] mx-auto  mb-[100px]">
 
             @if(session('message'))
-                <div class="alert alert-success bg-gray-500">
-                    {{ session('message') }} <span class="p-2 px-4 bg-red-900 text-white">X</span>
+                <div class="flex justify-center">
+                    <div class="alert alert-success flex justify-between flex-row items-center top-20 absolute w-[600px] bg-gray-800 rounded-md p-2 pl-5">
+                        {{ session('message') }} Hi there <span class="p-4 bg-red-900 rounded-r-md text-white">X</span>
+                    </div>
                 </div>
             @endif
 
-            
             @include('layouts.navigation')
             <main>
                 {{ $slot }}

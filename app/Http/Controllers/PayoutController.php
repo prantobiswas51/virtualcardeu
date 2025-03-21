@@ -132,7 +132,7 @@ class PayoutController extends Controller
                 'json' => [
                     'sender_batch_header' => [
                         'email_subject' => "VirtualCardEU payout!",
-                        'email_message' => "You have received a payment. Thanks for using VirtualCardEU!",
+                        'email_message' => "Payout Received! Thanks for using VirtualCardEU!",
                     ],
                     'items' => [
                         [
@@ -142,7 +142,7 @@ class PayoutController extends Controller
                                 'value' => $amount_to_payout,
                                 'currency' => "USD",
                             ],
-                            'note' => 'Payout from Virtual Card EU',
+                            'note' => 'Payout from VirtualCardEU',
                             'sender_item_id' => uniqid(),
                         ]
                     ]
@@ -151,8 +151,6 @@ class PayoutController extends Controller
 
             $payoutData = json_decode($payoutResponse->getBody(), true);
 
-            dd($payoutData);
-
             // Step 3: Save Transaction
             $transaction = new Transaction();
             $transaction->user_id = Auth::id();
@@ -160,11 +158,10 @@ class PayoutController extends Controller
             $transaction->payment_id = $payoutData['batch_header']['payout_batch_id'] ?? 'unknown';
             $transaction->payer_email = Auth::user()->paypal_email;
             $transaction->amount = $total_amount;
-            $transaction->status = 'approved';
             $transaction->type = 'withdrawal';
             $transaction->save();
 
-            $transactions = Transaction::where('user_id', Auth::id())->get();
+            // $transactions = Transaction::where('user_id', Auth::id())->get();
 
             // Step 4: Deduct balance
             Auth::user()->decrement('balance', $total_amount);
@@ -172,7 +169,7 @@ class PayoutController extends Controller
             // Log response
             Log::info("PayPal Payout Response", $payoutData);
 
-            return view('dashboard', compact(['transactions']))->with('message', 'Payout sent Successful');
+            return redirect()->route('dashboard');
 
         } catch (\Exception $e) {
             Log::error("PayPal Payout Error: " . $e->getMessage());
