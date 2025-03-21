@@ -67,7 +67,7 @@ class PayoutController extends Controller
                     ->subject('Virtual Card EU');
             });
 
-            return redirect()->route('payout')->with('message', 'Paypal Logged in Success');
+            return redirect()->route('payout')->with('message', 'Paypal Connected Successfully!');
         } catch (\Exception $e) {
             Log::error("PayPal Callback Error: " . $e->getMessage());
 
@@ -91,10 +91,12 @@ class PayoutController extends Controller
 
         // Check if user has a PayPal email
         if (!Auth::user()->paypal_email) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No PayPal email found. Please update your profile.',
-            ], 400);
+            return redirect()->route('payout')->with('message', 'Paypal Email Not Found!');
+        }
+
+        // Check if user has enough balance
+        if (Auth::user()->balance < $total_amount) {
+            return redirect()->route('payout')->with('message', 'Not enough balance left!');
         }
 
         // Get PayPal credentials
@@ -150,17 +152,22 @@ class PayoutController extends Controller
 
             $payoutData = json_decode($payoutResponse->getBody(), true);
 
+            // Check if we received a valid payout batch ID
+            $paymentId = $payoutData['batch_header']['payout_batch_id'] ?? null;
+            if (!$paymentId) {
+                return redirect()->route('payout')->with('message', 'No Payment Batch ID received');
+            }
+
             // Step 3: Save Transaction
             $transaction = new Transaction();
             $transaction->user_id = Auth::id();
             $transaction->payment_method = 'Paypal';
-            $transaction->payment_id = $payoutData['batch_header']['payout_batch_id'] ?? 'unknown';
+            $transaction->payment_id = $paymentId;
             $transaction->payer_email = Auth::user()->paypal_email;
             $transaction->amount = $total_amount;
             $transaction->type = 'withdrawal';
+            $transaction->status = 'pending'; // Initially set as pending
             $transaction->save();
-
-            // $transactions = Transaction::where('user_id', Auth::id())->get();
 
             // Step 4: Deduct balance
             Auth::user()->decrement('balance', $total_amount);
@@ -168,22 +175,22 @@ class PayoutController extends Controller
             // Log response
             Log::info("PayPal Payout Response", $payoutData);
 
+            // Redirect with safer data passing
             return redirect()->route('payout_success', [
-                'payment_id' => $payoutData['batch_header']['payout_batch_id'],
-                'amount' => $amount_to_payout,
-                'payout_email' => Auth::user()->paypal_email
-            ]);
+                'payment_id' => $paymentId,
+                'amount' => $amount_to_payout
+            ])->with('payout_email', Auth::user()->paypal_email);
 
         } catch (\Exception $e) {
             Log::error("PayPal Payout Error: " . $e->getMessage());
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Payout failed. Please try again later',
+            return redirect()->route('payout', compact([
+                'message' => 'Payout failed. Please try again later or contact support!',
                 'error' => $e->getMessage()
-            ], 500);
+            ]));
         }
     }
+
 
     public function success(Request $request)
     {
@@ -193,6 +200,4 @@ class PayoutController extends Controller
 
         return view('payout_success', compact('payment_id', 'amount', 'payout_email'));
     }
-
-
 }
