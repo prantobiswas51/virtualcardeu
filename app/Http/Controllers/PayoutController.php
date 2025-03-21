@@ -152,7 +152,7 @@ class PayoutController extends Controller
             $payoutData = json_decode($payoutResponse->getBody(), true);
 
             // Step 3: Save Transaction
-            $transaction = new Transaction();
+            $transaction = new \App\Models\Transaction();
             $transaction->payment_method = 'Paypal';
             $transaction->payment_id = $payoutData['batch_header']['payout_batch_id'] ?? 'unknown';
             $transaction->payer_email = Auth::user()->paypal_email;
@@ -177,7 +177,7 @@ class PayoutController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Payout failed. Please try again later.',
+                'message' => 'Payout failed. Please try again later',
                 'error' => $e->getMessage()
             ], 500);
         }

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('payer_email');
             $table->decimal('amount', 10, 2);
             $table->string('status')->nullable();
-            $table->enum('type', ['deposit','withdraw']);
+            $table->string('type')->nullable();
             $table->timestamps();
         });
     }
