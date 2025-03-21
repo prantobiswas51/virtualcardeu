@@ -67,8 +67,7 @@ class PayoutController extends Controller
                     ->subject('Virtual Card EU');
             });
 
-            return redirect()->route('payout')->with('message', 'Paypal Logged in Success');            
-
+            return redirect()->route('payout')->with('message', 'Paypal Logged in Success');
         } catch (\Exception $e) {
             Log::error("PayPal Callback Error: " . $e->getMessage());
 
@@ -80,24 +79,32 @@ class PayoutController extends Controller
         }
     }
 
+
     public function paypalPayout(Request $request)
     {
-
         // Validate request
         $request->validate([
             'total_amount' => 'required|numeric|min:1',
         ]);
 
         $total_amount = $request->total_amount;
-        $amount_to_payout = $total_amount-$total_amount*0.05;
+        $amount_to_payout = $total_amount - ($total_amount * 0.05);
 
-        // Get PayPal credentials from .env
+        // Check if user has a PayPal email
+        if (!Auth::user()->paypal_email) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No PayPal email found. Please update your profile.',
+            ], 400);
+        }
+
+        // Get PayPal credentials
         $clientId = config('paypal.client_id');
         $clientSecret = config('paypal.secret');
         $paypalEnv = env('PAYPAL_ENV', 'sandbox'); // 'sandbox' or 'production'
-
-        // Set PayPal API URL
-        $paypalUrl = "https://api-m.sandbox.paypal.com";
+        $paypalUrl = $paypalEnv === 'production'
+            ? "https://api-m.paypal.com"
+            : "https://api-m.sandbox.paypal.com";
 
         try {
             $client = new Client();
@@ -117,7 +124,7 @@ class PayoutController extends Controller
             $accessToken = $authData['access_token'];
 
             // Step 2: Make Payout API Call
-            $payoutResponse = $client->post("$paypalUrl/v1/payments/payouts", [
+            $payoutResponse = $client->post("$paypalUrl/v1/payments/payouts?sync_mode=true", [
                 'headers' => [
                     'Authorization' => "Bearer $accessToken",
                     'Content-Type' => 'application/json',
@@ -129,7 +136,7 @@ class PayoutController extends Controller
                     ],
                     'items' => [
                         [
-                            'recipient_type' => "EMAIL", // EMAIL or PAYPAL_ID
+                            'recipient_type' => "EMAIL",
                             'receiver' => Auth::user()->paypal_email,
                             'amount' => [
                                 'value' => $amount_to_payout,
@@ -144,19 +151,20 @@ class PayoutController extends Controller
 
             $payoutData = json_decode($payoutResponse->getBody(), true);
 
-            $transactions = new Transaction();
-            $transactions->payment_method = 'Paypal';
-            $transactions->payment_id = 'fefiehr';
-            $transactions->payer_email = 'fefiehr';
-            $transactions->amount = $total_amount;
-            $transactions->status = "approved";
-            $transactions->type = "payout";
-            $transactions->save();
+            // Step 3: Save Transaction
+            $transaction = new Transaction();
+            $transaction->payment_method = 'Paypal';
+            $transaction->payment_id = $payoutData['batch_header']['payout_batch_id'] ?? 'unknown';
+            $transaction->payer_email = Auth::user()->paypal_email;
+            $transaction->amount = $total_amount;
+            $transaction->status = $payoutData['batch_header']['batch_status'] ?? "unknown";
+            $transaction->type = "payout";
+            $transaction->save();
 
-            $user = Auth::user();
-            $user->balance = decrement($total_amount);
+            // Step 4: Deduct balance
+            Auth::user()->decrement('balance', $total_amount);
 
-            // Log the response
+            // Log response
             Log::info("PayPal Payout Response", $payoutData);
 
             return response()->json([
@@ -164,7 +172,6 @@ class PayoutController extends Controller
                 'message' => 'Payout sent successfully!',
                 'data' => $payoutData
             ], 200);
-
         } catch (\Exception $e) {
             Log::error("PayPal Payout Error: " . $e->getMessage());
 
@@ -175,9 +182,4 @@ class PayoutController extends Controller
             ], 500);
         }
     }
-
-    
-
-
-
 }
