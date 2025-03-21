@@ -185,9 +185,14 @@ class PayoutController extends Controller
         }
     }
 
-    public function success($payment_id, $amount, $payout_email)
+    public function success(Request $request)
     {
-        return view('payout_success', compact(['payment_id', 'amount', 'payout_email']));
+        $payment_id = $request->query('payment_id');
+        $amount = $request->query('amount');
+        $payout_email = $request->query('payout_email');
+
+        return view('payout_success', compact('payment_id', 'amount', 'payout_email'));
     }
+
 
 }

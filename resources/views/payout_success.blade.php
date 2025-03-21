@@ -1,6 +1,6 @@
 <x-app-layout>
 
-    <h2 class="text-center text-green-500 text-2xl my-4">Payment Successful</h2>
+    <h2 class="text-center text-green-500 text-2xl my-4">Payout Successful</h2>
 
     <div class="bg-gray-800 shadow-lg rounded-lg overflow-hidden w-full my-4">
         <table class="min-w-full">
