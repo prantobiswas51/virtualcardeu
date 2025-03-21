@@ -79,7 +79,6 @@ class PayoutController extends Controller
         }
     }
 
-
     public function paypalPayout(Request $request)
     {
         // Validate request
@@ -169,7 +168,11 @@ class PayoutController extends Controller
             // Log response
             Log::info("PayPal Payout Response", $payoutData);
 
-            return redirect()->route('dashboard');
+            return redirect()->route('payout_success', [
+                'payment_id' => $payoutData['batch_header']['payout_batch_id'],
+                'amount' => $amount_to_payout,
+                'payout_email' => Auth::user()->paypal_email
+            ]);
 
         } catch (\Exception $e) {
             Log::error("PayPal Payout Error: " . $e->getMessage());
@@ -181,4 +184,10 @@ class PayoutController extends Controller
             ], 500);
         }
     }
+
+    public function success($payment_id, $amount, $payout_email)
+    {
+        return view('payout_success', compact(['payment_id', 'amount', 'payout_email']));
+    }
+
 }

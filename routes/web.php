@@ -48,6 +48,7 @@ Route::middleware('auth')->group(function () {
 
     // Payout======
     Route::get('/payout', [PayoutController::class, 'index'])->name('payout');
+    Route::get('/payout/paypal/success', [PayoutController::class, 'success'])->name('payout_success');
 
     Route::get('/payout/paypal/form', function () { 
         return view('paypal_payout');
