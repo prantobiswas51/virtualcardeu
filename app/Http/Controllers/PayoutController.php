@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Transaction;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -66,12 +67,7 @@ class PayoutController extends Controller
                     ->subject('Virtual Card EU');
             });
 
-            return view('payout', [
-                'paypal_id' => $userData['payer_id'] ?? null,
-                'email' => $userData['email'] ?? null,
-                'message' => 'PayPal login successful!'
-            ]);
-            
+            return redirect()->route('payout')->with('message', 'Paypal Logged in Success');            
 
         } catch (\Exception $e) {
             Log::error("PayPal Callback Error: " . $e->getMessage());
@@ -86,13 +82,14 @@ class PayoutController extends Controller
 
     public function paypalPayout(Request $request)
     {
+
         // Validate request
-        // $request->validate([
-        //     'recipient' => 'required', // Can be an email or Payer ID
-        //     'amount' => 'required|numeric|min:1',
-        //     'currency' => 'required|string|min:3|max:3',
-        //     'recipient_type' => 'required|in:EMAIL,PAYPAL_ID' // EMAIL or PAYPAL_ID
-        // ]);
+        $request->validate([
+            'total_amount' => 'required|numeric|min:1',
+        ]);
+
+        $total_amount = $request->total_amount;
+        $amount_to_payout = $total_amount-$total_amount*0.05;
 
         // Get PayPal credentials from .env
         $clientId = config('paypal.client_id');
@@ -127,18 +124,18 @@ class PayoutController extends Controller
                 ],
                 'json' => [
                     'sender_batch_header' => [
-                        'email_subject' => "You have received a payout!",
+                        'email_subject' => "VirtualCardEU payout!",
                         'email_message' => "You have received a payment. Thanks for using VirtualCardEU!",
                     ],
                     'items' => [
                         [
-                            'recipient_type' => "EMAIL", // EMAIL or PAYPAL_ID
-                            'receiver' => 'sb-fw0ei38674837@personal.example.com',
+                            'recipient_type' => "PAYPAL_ID", // EMAIL or PAYPAL_ID
+                            'receiver' => Auth::user()->paypal_id,
                             'amount' => [
-                                'value' => "55",
+                                'value' => $amount_to_payout,
                                 'currency' => "USD",
                             ],
-                            'note' => 'Payout from your website',
+                            'note' => 'Payout from Virtual Card EU',
                             'sender_item_id' => uniqid(),
                         ]
                     ]
@@ -146,6 +143,18 @@ class PayoutController extends Controller
             ]);
 
             $payoutData = json_decode($payoutResponse->getBody(), true);
+
+            $transactions = new Transaction();
+            $transactions->payment_method = 'Paypal';
+            $transactions->payment_id = 'fefiehr';
+            $transactions->payer_email = 'fefiehr';
+            $transactions->amount = $total_amount;
+            $transactions->status = "approved";
+            $transactions->type = "payout";
+            $transactions->save();
+
+            $user = Auth::user();
+            $user->balance = decrement($total_amount);
 
             // Log the response
             Log::info("PayPal Payout Response", $payoutData);
@@ -155,6 +164,7 @@ class PayoutController extends Controller
                 'message' => 'Payout sent successfully!',
                 'data' => $payoutData
             ], 200);
+
         } catch (\Exception $e) {
             Log::error("PayPal Payout Error: " . $e->getMessage());
 

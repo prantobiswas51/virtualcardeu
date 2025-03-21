@@ -20,9 +20,9 @@
         <input type="hidden" id="selected_method" value="">
 
         <div class="w-full my-4 mt-6 hidden" id="paypal_login_button">
-            @if (Auth::user()->paypal_id)
+            @if (Auth::user()->paypal_id && Auth::user()->paypal_email)
                 <p>You are already logged in with Paypal.</p>
-                <button class="w-full bg-green-600 p-2 rounded-md my-2">Open Paypal Payout Form</button>
+                <a href="/payout/paypal/form"><button class="w-full bg-green-600 p-2 rounded-md my-2">Open Paypal Payout Form</button></a>
             @else  
                 <div id="paypal-login-button">
                     <button class="w-full px-4 py-2 bg-blue-600 rounded-md" onclick="redirectToPayPal()">Log in with PayPal</button>

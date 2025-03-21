@@ -47,9 +47,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/deposit/payeer/fail', [DepositController::class, 'fail'])->name('payeer_fail');
 
     // Payout======
-    Route::get('/payout', [PayoutController::class, 'index'])->name('payout'); //return the payout view only
-    Route::get('/payout/paypal', [PayoutController::class, 'paypalPayout'])->name('paypal_payout');
+    Route::get('/payout', [PayoutController::class, 'index'])->name('payout');
 
+    Route::get('/payout/paypal/form', function () { 
+        return view('paypal_payout');
+    });
+
+    Route::post('/payout/paypal', [PayoutController::class, 'paypalPayout'])->name('paypal_payout');
     Route::get('/payout/paypal/callback', [PayoutController::class, 'handlePaypalCallback'])->name('paypal_login_callback');
 
 
