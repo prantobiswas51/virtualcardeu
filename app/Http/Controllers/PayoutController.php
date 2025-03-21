@@ -137,7 +137,7 @@ class PayoutController extends Controller
                     'items' => [
                         [
                             'recipient_type' => "EMAIL",
-                            'receiver' => 'sb-fw0ei38674837@personal.example.com',
+                            'receiver' => Auth::user()->paypal_email,
                             'amount' => [
                                 'value' => $amount_to_payout,
                                 'currency' => "USD",
@@ -152,14 +152,14 @@ class PayoutController extends Controller
             $payoutData = json_decode($payoutResponse->getBody(), true);
 
             // Step 3: Save Transaction
-            $transaction = new \App\Models\Transaction();
-            $transaction->payment_method = 'Paypal';
-            $transaction->payment_id = $payoutData['batch_header']['payout_batch_id'] ?? 'unknown';
-            $transaction->payer_email = Auth::user()->paypal_email;
-            $transaction->amount = $total_amount;
-            $transaction->status = $payoutData['batch_header']['batch_status'] ?? "unknown";
-            $transaction->type = "payout";
-            $transaction->save();
+            // $transaction = new \App\Models\Transaction();
+            // $transaction->payment_method = 'Paypal';
+            // $transaction->payment_id = $payoutData['batch_header']['payout_batch_id'] ?? 'unknown';
+            // $transaction->payer_email = Auth::user()->paypal_email;
+            // $transaction->amount = $total_amount;
+            // $transaction->status = $payoutData['batch_header']['batch_status'] ?? "unknown";
+            // $transaction->type = 'withdrawal';
+            // $transaction->save();
 
             // Step 4: Deduct balance
             Auth::user()->decrement('balance', $total_amount);
@@ -172,6 +172,7 @@ class PayoutController extends Controller
                 'message' => 'Payout sent successfully!',
                 'data' => $payoutData
             ], 200);
+            
         } catch (\Exception $e) {
             Log::error("PayPal Payout Error: " . $e->getMessage());
 
