@@ -152,14 +152,14 @@ class PayoutController extends Controller
             $payoutData = json_decode($payoutResponse->getBody(), true);
 
             // Step 3: Save Transaction
-            // $transaction = new \App\Models\Transaction();
-            // $transaction->payment_method = 'Paypal';
-            // $transaction->payment_id = $payoutData['batch_header']['payout_batch_id'] ?? 'unknown';
-            // $transaction->payer_email = Auth::user()->paypal_email;
-            // $transaction->amount = $total_amount;
-            // $transaction->status = $payoutData['batch_header']['batch_status'] ?? "unknown";
-            // $transaction->type = 'withdrawal';
-            // $transaction->save();
+            $transaction = new Transaction();
+            $transaction->payment_method = 'Paypal';
+            $transaction->payment_id = $payoutData['batch_header']['payout_batch_id'] ?? 'unknown';
+            $transaction->payer_email = Auth::user()->paypal_email;
+            $transaction->amount = $total_amount;
+            $transaction->status = $payoutData['batch_header']['batch_status'] ?? "unknown";
+            $transaction->type = 'withdrawal';
+            $transaction->save();
 
             // Step 4: Deduct balance
             Auth::user()->decrement('balance', $total_amount);
@@ -167,12 +167,8 @@ class PayoutController extends Controller
             // Log response
             Log::info("PayPal Payout Response", $payoutData);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Payout sent successfully!',
-                'data' => $payoutData
-            ], 200);
-            
+            return view('payout')->with('message', 'Payout sent Successful');
+
         } catch (\Exception $e) {
             Log::error("PayPal Payout Error: " . $e->getMessage());
 
