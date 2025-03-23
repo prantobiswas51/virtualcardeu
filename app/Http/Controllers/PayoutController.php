@@ -12,6 +12,15 @@ use Illuminate\Support\Facades\Mail;
 
 class PayoutController extends Controller
 {
+    protected $apiKey;
+    protected $bearerToken;
+    protected $baseUrl = 'https://api.nowpayments.io/v1';
+
+    public function __construct()
+    {
+        $this->apiKey = config(env('paypal.nowpayment_key'));
+    }
+
     public function index()
     {
         return view('payout');
@@ -180,7 +189,6 @@ class PayoutController extends Controller
                 'payment_id' => $paymentId,
                 'amount' => $amount_to_payout
             ])->with('payout_email', Auth::user()->paypal_email);
-
         } catch (\Exception $e) {
             Log::error("PayPal Payout Error: " . $e->getMessage());
 
@@ -191,7 +199,7 @@ class PayoutController extends Controller
         }
     }
 
-
+    // paypal success payout
     public function success(Request $request)
     {
         $payment_id = $request->query('payment_id');
@@ -199,5 +207,45 @@ class PayoutController extends Controller
         $payout_email = $request->query('payout_email');
 
         return view('payout_success', compact('payment_id', 'amount', 'payout_email'));
+    }
+
+    // Nowpayments (Crypto Payments)
+    public function createCryptoPayout(Request $request)
+    {
+        $request->validate([
+            'address' => 'required|string',
+            'amount' => 'required|numeric|min:0.000001',
+        ]);
+
+        // STEP 1: Authenticate and Get Token
+        $authResponse = Http::post('https://api.nowpayments.io/v1/auth', [
+            'email' => config('paypal.nowpayment_email'),
+            'password' => config('paypal.nowpayment_password'),
+        ]);
+
+        if ($authResponse->failed()) {
+            return response()->json(['message' => 'Authentication failed'], 401);
+        }
+
+        $bearerToken = $authResponse->json('token');
+        $apiKey = config('paypal.nowpayment_key');
+
+        $payoutResponse = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $bearerToken,
+            'x-api-key' => $apiKey,
+            'Content-Type' => 'application/json',
+        ])->post('https://api.nowpayments.io/v1/payout', [
+            "ipn_callback_url" => "https://yourwebsite.com/callback",
+            "withdrawals" => [
+                [
+                    "address" => $request->address,
+                    "currency" => "trx", // Use the correct crypto currency
+                    "amount" => $request->amount,
+                    "ipn_callback_url" => "https://yourwebsite.com/callback"
+                ]
+            ]
+        ]);
+
+        return response()->json($payoutResponse->json(), $payoutResponse->status());
     }
 }

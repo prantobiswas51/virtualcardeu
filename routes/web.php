@@ -22,6 +22,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/support', [DashboardController::class, 'support'])->name('support');
+    Route::get('/cards', [DashboardController::class, 'cards'])->name('cards');
+    Route::get('/banks', [DashboardController::class, 'banks'])->name('banks');
+    Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
+
     Route::post('/upload-profile-photo', [ProfileController::class, 'uploadProfilePhoto'])->name('upload_photo');
 
     // Custom controller routes
@@ -56,6 +61,10 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/payout/paypal', [PayoutController::class, 'paypalPayout'])->name('paypal_payout');
     Route::get('/payout/paypal/callback', [PayoutController::class, 'handlePaypalCallback'])->name('paypal_login_callback');
+
+    // crypto payout
+    Route::post('/payout/crypto', [PayoutController::class, 'createCryptoPayout'])->name('crypto_payout');
+
 
 
 });

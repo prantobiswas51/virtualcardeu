@@ -17,16 +17,16 @@
         <div class="flex items-center border border-gray-600 rounded-lg overflow-hidden mb-4">
             <span class="bg-gray-700 px-3 py-2">$</span>
             <input type="number" id="withdraw_input" class="bg-gray-900 text-white px-3 py-2 w-full focus:outline-none"
-                placeholder="1" min="1">
+                placeholder="1.00" min="1">
         </div>
 
         <div class="flex gap-2 mb-4 justify-between">
-            <button class="amount-btn bg-gray-700 px-3 py-2 rounded-lg" data-amount="5">$5</button>
-            <button class="amount-btn bg-gray-700 px-3 py-2 rounded-lg" data-amount="10">$10</button>
-            <button class="amount-btn bg-gray-700 px-3 py-2 rounded-lg" data-amount="20">$20</button>
-            <button class="amount-btn bg-gray-700 px-3 py-2 rounded-lg" data-amount="50">$50</button>
-            <button class="amount-btn bg-gray-700 px-3 py-2 rounded-lg" data-amount="100">$100</button>
-            <button class="amount-btn bg-gray-700 px-3 py-2 rounded-lg" data-amount="150">$150</button>
+            <button class="amount-btn bg-gray-700 px-3 py-2 w-full rounded-lg" data-amount="5">$5</button>
+            <button class="amount-btn bg-gray-700 px-3 py-2 w-full rounded-lg" data-amount="10">$10</button>
+            <button class="amount-btn bg-gray-700 px-3 py-2 w-full rounded-lg" data-amount="20">$20</button>
+            <button class="amount-btn bg-gray-700 px-3 py-2 w-full rounded-lg" data-amount="50">$50</button>
+            <button class="amount-btn bg-gray-700 px-3 py-2 w-full rounded-lg" data-amount="100">$100</button>
+            <button class="amount-btn bg-gray-700 px-3 py-2 w-full rounded-lg" data-amount="150">$150</button>
         </div>
 
         <div class="bg-gray-700 p-4 rounded-lg mb-4">

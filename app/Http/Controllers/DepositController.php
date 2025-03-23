@@ -25,6 +25,7 @@ class DepositController extends Controller
 {
 
     private $_api_context;
+    private $apiKey;
 
     public function __construct()
     {
@@ -163,6 +164,8 @@ class DepositController extends Controller
         $currency = "USD";
         $email = Auth::user()->email;
 
+        $apiKey = config('paypal.nowpayment_key');
+
         $postData = [
             "price_amount" => $amount,
             "price_currency" => $currency,
@@ -188,7 +191,7 @@ class DepositController extends Controller
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => json_encode($postData), // Properly encoded JSON
             CURLOPT_HTTPHEADER => [
-                'x-api-key: 5BTM43E-8SN436A-M5BM6SX-CZFF0J1',
+                'x-api-key: ' . $apiKey . '',
                 'Content-Type: application/json'
             ],
         ]);

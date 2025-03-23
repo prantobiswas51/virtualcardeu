@@ -2,23 +2,31 @@
     <div class="text-white max-w-[800px] mx-auto flex justify-between py-4">
 
         <div class="nav1 text-center flex flex-col items-center hover:text-sky-500 hover:cursor-pointer">
-            <x-heroicon-s-rectangle-group class="w-6 h-6 " />
-            <p>Dashboard</p>
+            <a href="{{ route('dashboard') }}" class="flex flex-col justify-center items-center">
+                <x-heroicon-s-rectangle-group class="w-6 h-6" />
+                <p>Dashboard</p>
+            </a>
         </div>
 
         <div class="nav2 text-center flex flex-col items-center hover:text-sky-500 hover:cursor-pointer">
-            <x-heroicon-s-credit-card class="w-6 h-6 " />
-            <p>My Cards</p>
+            <a href="{{ route('cards') }}" class="flex flex-col justify-center items-center">
+                <x-heroicon-s-credit-card class="w-6 h-6" />
+                <p>My Cards</p>
+            </a>
         </div>
 
         <div class="nav1 text-center flex flex-col items-center hover:text-sky-500 hover:cursor-pointer">
-            <x-heroicon-s-banknotes class="w-6 h-6 " />
-            <p>My Banks</p>
+            <a href="{{ route('banks') }}" class="flex flex-col justify-center items-center">
+                <x-heroicon-s-banknotes class="w-6 h-6" />
+                <p>My Banks</p>
+            </a>
         </div>
 
         <div class="nav1 text-center flex flex-col items-center hover:text-sky-500 hover:cursor-pointer">
-            <x-heroicon-s-cog-6-tooth class="w-6 h-6" />
-            <p>Settings</p>
+            <a href="{{ route('settings') }}" class="flex flex-col justify-center items-center">
+                <x-heroicon-s-cog-6-tooth class="w-6 h-6" />
+                <p>Settings</p>
+            </a>
         </div>
 
         <div class="nav1 text-center  hover:text-sky-500 hover:cursor-pointer">

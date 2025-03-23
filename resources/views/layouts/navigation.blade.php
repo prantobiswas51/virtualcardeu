@@ -1,10 +1,9 @@
 <div class="flex justify-between border-b border-gray-700 bg-gray">
     @auth
         <div class=" py-4 items-center flex">
-            <a class="py-2 pr-2 underline" href="{{ route('dashboard') }}">Dashboard</a>
-            <a class="px-2 underline" href="{{ route('deposit') }}">Deposit</a>
+            <a class="pr-2 underline" href="{{ route('deposit') }}">Deposit</a>
             <a class="px-2 underline" href="{{ route('payout') }}">Payout</a>
-            <a class="px-2 underline" href="">Support Ticket</a>
+            <a class="px-2 underline" href="{{ route('support') }}">Support</a>
         </div>
         <div class=" flex p-4 items-center gap-2">
             <p>{{ Str::of(Auth::user()->name)->before(' ')  }}</p>
@@ -12,9 +11,9 @@
             <p class="bg-green-600 p-2 rounded-md">${{ Auth::user()->balance ?? "0.00"}}</p>
             <a href="{{ route('profile.edit') }}">
                 @if(Auth::user()->profile_photo && file_exists(storage_path('app/public/' . Auth::user()->profile_photo)))
-                    <img class="w-10 h-10 rounded-[50px]" src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt="Profile Photo">
+                    <img class="min-w-10 min-h-10 max-w-10 max-h-10 rounded-[50px]" src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt="Profile Photo">
                 @else
-                    <img class="w-10 h-10 rounded-[50px]" src="{{ asset('assets/avatar.png') }}" alt="Avatar">
+                    <img class="min-w-10 min-h-10 max-w-10 max-h-10 rounded-[50px]" src="{{ asset('assets/avatar.png') }}" alt="Avatar">
                 @endif
             </a> 
         </div>

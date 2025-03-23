@@ -30,6 +30,16 @@
             @endif
         </div>
 
+        <div class=" my-4">
+
+            <form action="{{ route('crypto_payout') }}" method="POST">
+                @csrf
+                <input type="text" name="address" class="w-full bg-gray-700">
+                <input type="text" name="amount" class="w-full bg-gray-700">
+                <button type="submit" class="border p-2 px-4 rounded-md"> Submit </button>
+            </form>
+        </div>
+
     </div>
 
     {{-- <div class="my-4 mt-16">

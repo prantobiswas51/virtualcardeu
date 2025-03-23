@@ -25,4 +25,25 @@ class DashboardController extends Controller
         return redirect('/');
     }
 
+    public function support()
+    {
+        return view('support');
+    }
+
+    public function cards()
+    {
+        return view('mycards');
+    }
+
+    public function banks()
+    {
+        return view('mybanks');
+    }
+
+    public function settings()
+    {
+        return view('settings');
+    }
+    
+
 }
