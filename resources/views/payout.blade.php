@@ -13,7 +13,7 @@
 
             <div class="payment_method p-2 bg-gray-50 px-4 rounded-md text-black flex items-center justify-center cursor-pointer hover:bg-blue-300"
                 onclick="selectPaymentMethod(this, 'crypto')">
-                <img class="w-8 mr-2" src="{{ asset('assets/crypto.jpg') }}" alt=""> Crypto
+                <img class="w-8 mr-2" src="{{ asset('assets/crypto.png') }}" alt=""> Crypto
             </div>
         </div>
 

@@ -4,6 +4,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CardController;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\CryptoController;
 use App\Http\Controllers\PayoutController;
@@ -65,6 +66,8 @@ Route::middleware('auth')->group(function () {
     // crypto payout
     Route::post('/payout/crypto', [PayoutController::class, 'createCryptoPayout'])->name('crypto_payout');
 
+    // Card Management
+    Route::post('/cards/request_card', [CardController::class, 'requestCard'])->name('request_card');
 
 
 });

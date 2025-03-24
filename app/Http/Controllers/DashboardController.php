@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Card;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,7 +33,13 @@ class DashboardController extends Controller
 
     public function cards()
     {
-        return view('mycards');
+        $myCards = Card::where('user_id', Auth::id())->get();
+        $available_cards = Card::whereNull('user_id')
+        ->where('status', 'Inactive')
+        ->selectRaw('type, company, amount, COUNT(*) as total') // Use COUNT to aggregate
+        ->groupBy('type', 'company', 'amount')
+        ->get();
+        return view('mycards', compact('myCards', 'available_cards'));
     }
 
     public function banks()
