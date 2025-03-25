@@ -31,7 +31,7 @@
                             <div class="">XXX</div>
                         </div>
                     </div>
-                    <div class="cardlogo absolute bottom-4 right-4">
+                    <div class="cardlogo absolute bottom-4 right-4 ">
                         <img class="max-w-[100px]" src="{{ asset('assets/visa.svg') }}" alt="">
                     </div>
                 </div>
@@ -110,11 +110,11 @@
     <hr>
 
     <h2 class="text-2xl py-4">Your Cards</h2>
-    <div class="grid lg:grid-cols-2 gap-6">
+    <div class="grid lg:grid-cols-2 md:grid-cols-2  gap-6">
 
         @foreach ($myCards as $myCard)
         <div style="background-image: url('{{ asset('assets/card_bg.jpg') }}');"
-            class="card flex flex-col justify-between min-w-[350px] min-h-[200px] rounded-lg  p-4 relative bg-cover bg-center ">
+            class="card flex flex-col justify-between w-[350px] h-[200px] mx-auto max-w-[350px] max-h-[200px] rounded-lg  p-4 relative bg-cover bg-center ">
             <div class="topright flex flex-col items-end">
                 <div class="flex justify-between w-full">
                     <p class="text-lg">${{ $myCard->amount }}</p>
@@ -135,7 +135,7 @@
                     <div class="">{{ $myCard->cvc }}</div>
                 </div>
             </div>
-            <div class="cardlogo absolute bottom-4 right-4">
+            <div class="cardlogo absolute bottom-4 right-4 ">
                 @switch($myCard->company)
                     @case('Visa')
                         <img class="max-w-[100px]" src="{{ asset('assets/visa.svg') }}" alt="Visa">
