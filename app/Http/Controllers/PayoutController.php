@@ -35,11 +35,9 @@ class PayoutController extends Controller
         $code = $request->query('code');
         $clientId = config('paypal.client_id');
         $clientSecret = config('paypal.secret');
-        $paypalEnv = config('paypal.env', 'sandbox');
+        // $paypalEnv = config('paypal.env', 'sandbox');
 
-        $paypalUrl = $paypalEnv === 'sandbox'
-            ? "https://api-m.sandbox.paypal.com"
-            : "https://api-m.paypal.com";
+        $paypalUrl = "https://api-m.paypal.com";
 
         try {
             $client = new Client();
@@ -161,7 +159,7 @@ class PayoutController extends Controller
 
             // Check if we received a valid payout batch ID
             $paymentId = $payoutData['batch_header']['payout_batch_id'] ?? null;
-            
+
             if (!$paymentId) {
                 return redirect()->route('payout')->with('message', 'No Payment Batch ID received');
             }
