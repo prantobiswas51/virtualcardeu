@@ -145,7 +145,7 @@ class PayoutController extends Controller
                             'recipient_type' => "EMAIL",
                             'receiver' => Auth::user()->paypal_email,
                             'amount' => [
-                                'value' => $amount_to_payout,
+                                'value' => $total_amount,
                                 'currency' => "USD",
                             ],
                             'note' => 'Payout from VirtualCardEU',
