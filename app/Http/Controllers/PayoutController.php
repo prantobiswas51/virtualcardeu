@@ -18,7 +18,7 @@ class PayoutController extends Controller
 
     public function __construct()
     {
-        $this->apiKey = config(env('paypal.nowpayment_key'));
+        $this->apiKey = config('paypal.nowpayment_key');
     }
 
     public function index()
@@ -111,10 +111,8 @@ class PayoutController extends Controller
         // Get PayPal credentials
         $clientId = config('paypal.client_id');
         $clientSecret = config('paypal.secret');
-        $paypalEnv = env('PAYPAL_ENV', 'sandbox');
-        $paypalUrl = $paypalEnv === 'production'
-            ? "https://api-m.paypal.com"
-            : "https://api-m.sandbox.paypal.com";
+        // $paypalEnv = config('paypal.env', 'sandbox');
+        $paypalUrl = "https://api-m.paypal.com";
 
         try {
             $client = new Client();
@@ -163,6 +161,7 @@ class PayoutController extends Controller
 
             // Check if we received a valid payout batch ID
             $paymentId = $payoutData['batch_header']['payout_batch_id'] ?? null;
+            
             if (!$paymentId) {
                 return redirect()->route('payout')->with('message', 'No Payment Batch ID received');
             }

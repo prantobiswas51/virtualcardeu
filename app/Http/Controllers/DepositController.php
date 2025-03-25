@@ -223,14 +223,20 @@ class DepositController extends Controller
     public function handleWebhook(Request $request)
     {
         $data = $request->all();
-
-        dd($data);
+        
+        // Log the webhook data for debugging
+        \Illuminate\Support\Facades\Log::info('Payment webhook received', $data);
 
         // Verify if payment is completed
         if (isset($data['payment_status']) && $data['payment_status'] == 'finished') {
             $invoice = Invoice::where('np_invoice_id', $data['payment_id'])->first();
 
-            if ($invoice && $invoice->status != 'Completed') {
+            if (!$invoice) {
+                \Illuminate\Support\Facades\Log::error('Invoice not found for payment_id: ' . $data['payment_id']);
+                return response()->json(['error' => 'Invoice not found'], 404);
+            }
+
+            if ($invoice->status != 'Completed') {
                 // Update invoice status
                 $invoice->status = "Completed";
                 $invoice->save();
@@ -240,6 +246,23 @@ class DepositController extends Controller
                 if ($user) {
                     $user->balance += $invoice->amount; // Add USD amount to user balance
                     $user->save();
+
+                    // Create transaction record
+                    \App\Models\Transaction::create([
+                        'user_id' => $user->id,
+                        'payment_method' => 'Crypto',
+                        'payment_id' => $data['payment_id'],
+                        'payer_email' => $invoice->payer_email,
+                        'amount' => $invoice->amount,
+                        'status' => 'completed',
+                        'type' => 'deposit'
+                    ]);
+
+                    // Send confirmation email
+                    Mail::raw('Your Crypto Transaction is Completed', function ($message) use ($user) {
+                        $message->to($user->email)
+                            ->subject('Deposit VirtualCardEU');
+                    });
                 }
 
                 return response()->json(['message' => 'Payment successful, balance updated']);
@@ -303,13 +326,38 @@ class DepositController extends Controller
 
     public function payeerSuccess()
     {
-        dd('Success');
-        return view('payeer_success'); // Create a success view
+        // Log the success
+        \Illuminate\Support\Facades\Log::info('Payeer payment successful');
+        
+        // Update user balance and create transaction
+        $user = Auth::user();
+        if ($user) {
+            // Create transaction record
+            \App\Models\Transaction::create([
+                'user_id' => $user->id,
+                'payment_method' => 'Payeer',
+                'payment_id' => request('m_orderid'),
+                'payer_email' => $user->email,
+                'amount' => request('m_amount'),
+                'status' => 'completed',
+                'type' => 'deposit'
+            ]);
+
+            // Send confirmation email
+            Mail::raw('Your Payeer Transaction is Completed', function ($message) use ($user) {
+                $message->to($user->email)
+                    ->subject('Deposit VirtualCardEU');
+            });
+        }
+
+        return view('payeer_success')->with('success', 'Payment completed successfully!');
     }
 
     public function payeerFail()
     {
-        dd('Fail');
-        return view('payeer_fail'); // Create a failure view
+        // Log the failure
+        \Illuminate\Support\Facades\Log::error('Payeer payment failed');
+        
+        return view('payeer_fail')->with('error', 'Payment failed. Please try again or contact support.');
     }
 }
