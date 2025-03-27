@@ -80,12 +80,7 @@ class PayoutController extends Controller
 
         } catch (\Exception $e) {
             Log::error("PayPal Callback Error: " . $e->getMessage());
-
-            return response()->json([
-                'success' => false,
-                'message' => 'PayPal authentication failed.',
-                'error' => $e->getMessage()
-            ], 500);
+            return redirect()->route('payout')->with('message', 'Authorization Failed');
         }
     }
 
@@ -193,11 +188,18 @@ class PayoutController extends Controller
             
         } catch (\Exception $e) {
             Log::error("PayPal Payout Error: " . $e->getMessage());
+            
+            $transaction = new Transaction();
+            $transaction->user_id = Auth::id();
+            $transaction->payment_method = 'Paypal';
+            $transaction->payment_id = 'null';
+            $transaction->payer_email = Auth::user()->paypal_email;
+            $transaction->amount = $total_amount;
+            $transaction->type = 'withdrawal';
+            $transaction->status = 'failed'; // Initially set as pending
+            $transaction->save();
 
-            return redirect()->route('payout', compact([
-                'message' => 'Payout failed. Please try again later or contact support!',
-                'error' => $e->getMessage()
-            ]));
+            return redirect()->route('payout')->with('message', 'Payout Failed: Check Paypal.log');
         }
     }
 

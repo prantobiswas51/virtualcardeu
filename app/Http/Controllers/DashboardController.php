@@ -14,7 +14,7 @@ class DashboardController extends Controller
 
     public function index(){
         $transactions = Transaction::where('user_id', Auth::id())->get();        
-        return view('dashboard', compact('transactions', 'paid'));
+        return view('dashboard', compact('transactions'));
     }
 
     public function logout(Request $request)
