@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Card;
+use App\Models\Setting;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,8 +13,8 @@ class DashboardController extends Controller
 {
 
     public function index(){
-        $transactions = Transaction::where('user_id', Auth::id())->get();
-        return view('dashboard', compact('transactions'));
+        $transactions = Transaction::where('user_id', Auth::id())->get();        
+        return view('dashboard', compact('transactions', 'paid'));
     }
 
     public function logout(Request $request)

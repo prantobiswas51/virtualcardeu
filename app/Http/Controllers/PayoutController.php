@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Transaction;
 use GuzzleHttp\Client;
+use App\Models\Setting;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -33,8 +34,9 @@ class PayoutController extends Controller
         }
 
         $code = $request->query('code');
-        $clientId = config('paypal.client_id');
-        $clientSecret = config('paypal.secret');
+        $clientId = Setting::first()->paypal_client_id;
+        $clientSecret = Setting::first()->paypal_secret;
+
         // $paypalEnv = config('paypal.env', 'sandbox');
 
         $paypalUrl = "https://api-m.paypal.com";
@@ -75,6 +77,7 @@ class PayoutController extends Controller
             });
 
             return redirect()->route('payout')->with('message', 'Paypal Connected Successfully!');
+
         } catch (\Exception $e) {
             Log::error("PayPal Callback Error: " . $e->getMessage());
 
@@ -107,8 +110,8 @@ class PayoutController extends Controller
         }
 
         // Get PayPal credentials
-        $clientId = config('paypal.client_id');
-        $clientSecret = config('paypal.secret');
+        $clientId = Setting::first()->paypal_client_id;
+        $clientSecret = Setting::first()->paypal_secret;
         // $paypalEnv = config('paypal.env', 'sandbox');
         $paypalUrl = "https://api-m.paypal.com";
 
@@ -186,6 +189,8 @@ class PayoutController extends Controller
                 'payment_id' => $paymentId,
                 'amount' => $amount_to_payout
             ])->with('payout_email', Auth::user()->paypal_email);
+
+            
         } catch (\Exception $e) {
             Log::error("PayPal Payout Error: " . $e->getMessage());
 

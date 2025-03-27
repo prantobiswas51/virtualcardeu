@@ -27,7 +27,6 @@
    <!-- transaction -->
    <div class="transaction">
       <p class="font-bold text-white py-4">Transactions</p>
-
    </div>
    <!-- eth -->
 
