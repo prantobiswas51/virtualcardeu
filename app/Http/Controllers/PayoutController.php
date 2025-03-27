@@ -206,6 +206,54 @@ class PayoutController extends Controller
         return view('payout_success', compact('payment_id', 'amount', 'payout_email'));
     }
 
+    public function handlePaypalWebhook(Request $request)
+    {
+        $payload = $request->all();
+        Log::info('PayPal Webhook Received', $payload);
+
+        $eventType = $payload['event_type'] ?? null;
+        $resource = $payload['resource'] ?? [];
+
+        if (!$eventType) {
+            return response()->json(['message' => 'Invalid request'], 400);
+        }
+
+        // Extract payout details
+        $payoutItemId = $resource['payout_item_id'] ?? null;
+        $transactionId = $resource['transaction_id'] ?? null;
+        $transactionStatus = strtolower($resource['transaction_status'] ?? 'PENDING'); // Make it lowercase for easy comparison
+
+        if (!$payoutItemId) {
+            Log::info('Payout Item ID not found');
+            return response()->json(['message' => 'Payout Item ID not found'], 400);            
+        }
+
+        // Find transaction by payout ID
+        $transaction = Transaction::where('payment_id', $payoutItemId)->first();
+
+        if (!$transaction) {
+            Log::info('Transaction ID not found on our server - POSHALGO');
+            return response()->json(['message' => 'Transaction not found'], 404);
+        }
+
+        // Update transaction status based on webhook event
+        if ($eventType === 'CUSTOMER.PAYOUT.COMPLETED') {
+            $transaction->status = 'success';
+            $transaction->payment_id = $transactionId; // Save transaction ID from PayPal
+        } elseif ($eventType === 'CUSTOMER.PAYOUT.FAILED') {
+            $transaction->status = 'failed';
+        }
+
+        $transaction->save();
+        Log::info("Payout ID $payoutItemId updated to status: $transaction->status");
+    }
+
+
+
+
+
+
+
     // Nowpayments (Crypto Payments)
     public function createCryptoPayout(Request $request)
     {

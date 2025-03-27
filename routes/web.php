@@ -63,6 +63,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/payout/paypal', [PayoutController::class, 'paypalPayout'])->name('paypal_payout');
     Route::get('/payout/paypal/callback', [PayoutController::class, 'handlePaypalCallback'])->name('paypal_login_callback');
 
+    Route::post('/payout/paypal/check/status', [PayoutController::class, 'handlePaypalWebhook']);
+
     // crypto payout
     Route::post('/payout/crypto', [PayoutController::class, 'createCryptoPayout'])->name('crypto_payout');
 
