@@ -1,9 +1,15 @@
 <div class="flex justify-between border-b border-gray-700 bg-gray">
     @auth
         <div class=" py-4 items-center flex">
-            <a class="pr-2 underline" href="{{ route('deposit') }}">Deposit</a>
-            <a class="px-2 underline" href="{{ route('payout') }}">Payout</a>
-            <a class="px-2 underline" href="{{ route('support') }}">Support</a>
+            <div class="hidden sm:block">
+                <a class="pr-2 underline " href="{{ route('deposit') }}">Deposit</a>
+                <a class="px-2 underline " href="{{ route('payout') }}">Payout</a>
+                <a class="px-2 underline " href="{{ route('support') }}">Support</a>
+            </div>
+
+            <div class="block sm:hidden">
+                ||| <br>
+            </div>
         </div>
         <div class=" flex p-4 items-center gap-2">
             <p>{{ Str::of(Auth::user()->name)->before(' ')  }}</p>

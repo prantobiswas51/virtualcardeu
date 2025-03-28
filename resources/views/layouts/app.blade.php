@@ -18,7 +18,7 @@
 
     <body class="font-sans bg-gray-900">
 
-        <div class="text-white max-w-3xl w-full mx-auto  mb-[100px]">
+        <div class="text-white max-w-3xl w-full mx-auto mb-[100px] px-4 md:px-0">
 
             @if(session('message'))
                 <div class="flex justify-center">
