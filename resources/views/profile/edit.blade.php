@@ -27,7 +27,7 @@
                         <input type="file" id="profile_photo" name="profile_photo" class="mt-2 block text-white" onchange="previewFile()">
                 
                         <!-- Save Button -->
-                        <button type="submit" class="mt-4 bg-sky-600 p-1 px-4 rounded-md">SAVE</button>
+                        <button type="submit" class="mt-4 bg-sky-600 p-1 px-4  rounded-md">SAVE</button>
                 
                         @if(session('success'))
                             <span class="text-green-500">{{ session('success') }}</span>
@@ -37,6 +37,41 @@
                             <span class="text-red-500">{{ $message }}</span> 
                         @enderror
                     </form>
+                </div>
+            </div>
+
+            {{-- Paypal email and pin update --}}
+            <div class="p-4 sm:p-8 bg-gray-800 text-gray-200 shadow sm:rounded-lg">
+                <div class="" id="update_other_info">
+                    <form action="{{ route('update_other_info') }}" method="POST">
+                        @csrf
+                
+                        <label for="paypal_email" class="text-white text-sm">Paypal Email</label>
+                        <input type="email" name="paypal_email" placeholder="Paypal Email" value="{{ Auth::user()->paypal_email }}" class="mb-2 block text-gray-700 w-full rounded-md">
+
+                        <label for="" class="text-white text-sm">Mobile/Phone Number (Type with Country Code)</label>
+                        <input type="number" name="mobile_number" placeholder="Number" value="{{ Auth::user()->number }}" class="mb-2 block text-gray-700 w-full rounded-md">
+
+                        <label for="" class="text-white text-sm">
+                            @if (Auth::user()->pin)
+                                Current PIN
+                            @else
+                                Set PIN
+                            @endif
+                        </label>
+
+                        <input type="number" name="pin" pattern="\d{6}" placeholder="Account Pin" class="mb-2 block text-gray-700 w-full rounded-md" required>
+
+                        @if (Auth::user()->pin)
+                            <label for="" class="text-white text-sm">New PIN</label>
+                            <input type="number" name="new_pin" pattern="\d{6}" placeholder="Account Pin" class=" block text-gray-700 w-full rounded-md" required>
+                        @endif
+
+                        <!-- Save Button -->
+                        <button type="submit" class="mt-4 bg-sky-600 p-1 px-4 rounded-md">SAVE</button>
+
+                    </form>
+                    
                 </div>
             </div>
 

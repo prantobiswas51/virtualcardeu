@@ -28,7 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/banks', [DashboardController::class, 'banks'])->name('banks');
     Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
 
-    Route::post('/upload-profile-photo', [ProfileController::class, 'uploadProfilePhoto'])->name('upload_photo');
+    Route::post('/upload_profile_photo', [ProfileController::class, 'uploadProfilePhoto'])->name('upload_photo');
+    Route::post('/update_info', [ProfileController::class, 'update_other_info'])->name('update_other_info');
 
     // Custom controller routes
     Route::get('/force_logout', [DashboardController::class, 'logout'])->name('force_logout');

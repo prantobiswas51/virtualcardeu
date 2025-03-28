@@ -25,7 +25,10 @@
         <div class="w-full my-4 mt-6 hidden" id="paypal_login_button">
             @if (Auth::user()->paypal_id && Auth::user()->paypal_email)
                 <p>You are already logged in with Paypal.</p>
-                <a href="/payout/paypal/form"><button class="w-full bg-green-600 p-2 rounded-md my-2">Open Paypal Payout Form</button></a>
+                <div class="flex w-full gap-4">
+                    <a class="w-full" href="/payout/paypal/form"><button class="w-full bg-green-600 p-2 px-4 rounded-md my-2">Open Paypal Payout Form</button></a>
+                    <a class="w-full" href="{{ route('profile.edit') }}"><button class="w-full bg-red-600 p-2 px-4 rounded-md my-2">Change Email</button></a>
+                </div>
             @else  
                 <div id="paypal-login-button">
                     <button class="w-full px-4 py-2 bg-blue-600 rounded-md" onclick="redirectToPayPal()">Log in with PayPal</button>

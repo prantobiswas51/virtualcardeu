@@ -58,7 +58,14 @@
                      <td>{{ $transaction->payment_id }}</td>
                      <td>${{ $transaction->amount }}</td>
                      <td>
-                        <button class="bg-green-800 p-1 px-2 rounded-md">{{ $transaction->status }}</button>
+                        <button class="
+                           {{ $transaction->status === 'failed' ? 'bg-red-800' : '' }}
+                           {{ $transaction->status === 'success' ? 'bg-green-800' : '' }}
+                           {{ $transaction->status === 'pending' ? 'bg-yellow-800' : '' }}
+                           p-1 px-2 rounded-md">
+                           {{ $transaction->status }}
+                        </button>
+                      
                      </td>
                      <td>{{ $transaction->type }}</td>
                   </tr>

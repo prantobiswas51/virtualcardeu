@@ -34,13 +34,13 @@
             <div class="flex justify-between items-center">
                 <span>
                     @if(Auth::user()->paypal_email)
-                    {{ Auth::user()->paypal_email }}
+                        {{ Auth::user()->paypal_email }}
                     @else
-                    <a href="{{ route('payout') }}" class="underline text-red-400 text-sm">Add Email</a>
+                        <a href="{{ route('payout') }}" class="underline text-red-400 text-sm">Add Email</a>
                     @endif
                 </span>
                 <p>
-                    <a href="{{ route('payout') }}" class="underline text-red-400 text-sm">Change Email</a>
+                    <a href="{{ route('profile.edit') }}" class="underline text-red-400 text-sm">Change Email</a>
                 </p>
             </div>
         </div>
