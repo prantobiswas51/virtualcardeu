@@ -6,12 +6,13 @@ use App\Models\User;
 use PayPal\Api\Payer;
 use PayPal\Api\Amount;
 use App\Models\Invoice;
+use App\Models\Setting;
 use PayPal\Api\Payment;
 use PayPal\Api\Transaction;
 use PayPal\Rest\ApiContext;
 use Illuminate\Http\Request;
-use PayPal\Api\RedirectUrls;
 
+use PayPal\Api\RedirectUrls;
 use PayPal\Api\PaymentExecution;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +31,7 @@ class DepositController extends Controller
     public function __construct()
     {
         $paypal = config('paypal');
-        $this->_api_context = new ApiContext(new OAuthTokenCredential($paypal['client_id'], $paypal['secret']));
+        $this->_api_context = new ApiContext(new OAuthTokenCredential(Setting::first()->paypal_client_id, Setting::first()->paypal_secret));
         $this->_api_context->setConfig($paypal['settings']);
     }
 
@@ -48,6 +49,7 @@ class DepositController extends Controller
         return view('deposit_fee', compact(['method', 'amount']));
     }
 
+    // Paypal
     // Paypal
     public function postPayWithPaypal(Request $request)
     {
@@ -100,6 +102,7 @@ class DepositController extends Controller
         Session::put('error', 'Unknow Error Occurred');
         return Redirect::route('deposit');
     }
+
 
     // paypal
     public function getPaypalPaymentStatus(Request $request)

@@ -1,4 +1,4 @@
-<div class="footer bg-gray-800 fixed w-full bottom-0 mt-[200px] text-[12px] sm:text-[16px]">
+{{-- <div class="footer bg-gray-800 fixed w-full bottom-0 mt-[200px] text-[12px] sm:text-[16px]">
     <div class="text-white max-w-3xl w-full mx-auto flex justify-between py-4 px-4">
 
         <div class="nav1 text-center flex flex-col items-center hover:text-sky-500 hover:cursor-pointer">
@@ -37,4 +37,4 @@
         </div>
 
     </div>
-</div>
+</div> --}}

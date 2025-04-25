@@ -10,7 +10,7 @@
 
             {{-- Profile Photo Upload --}}
             <div class="p-4 sm:p-8 bg-gray-800 text-gray-200 shadow sm:rounded-lg">
-                <div class="">
+                <div class="" id="photo">
                     <form action="{{ route('upload_photo') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                 

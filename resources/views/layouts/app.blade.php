@@ -8,7 +8,7 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <!-- Scripts -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -16,9 +16,9 @@
        
     </head>
 
-    <body class="font-sans bg-gray-900">
+    <body class="font-sans ">
 
-        <div class="text-white max-w-3xl w-full mx-auto mb-[100px] px-4 md:px-0">
+        <div class=" w-full mx-auto px-4 md:px-0">
 
             @if(session('message'))
                 <div class="flex justify-center">

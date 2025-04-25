@@ -1,3 +1,172 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* Base Styles */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Form Styles */
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #0070ba;
+    box-shadow: 0 0 0 1px #0070ba;
+}
+
+/* Custom Button Styles */
+.btn-primary {
+    background-color: #0070ba;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #003087;
+}
+
+/* Custom Card Styles */
+.card-shadow {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.card-hover:hover {
+    transform: translateY(-2px);
+    transition: transform 0.3s;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Custom Animation */
+.fade-in {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Dashboard Card Styles */
+.stat-card {
+    transition: all 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Virtual Card Style */
+.virtual-card {
+    background: linear-gradient(135deg, #0070ba, #003087);
+    color: white;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+}
+
+.virtual-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Table Hover Styles */
+.table-row-hover:hover {
+    background-color: #f3f7fd;
+}
+
+/* Status Badge Styles */
+.status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-badge-pending {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.status-badge-processing {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.status-badge-completed {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.status-badge-cancelled {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+/* Modal Animation */
+.modal-fade-in {
+    animation: modalFadeIn 0.3s ease forwards;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile Navigation Fix for iOS Safari */
+.mobile-nav {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Responsive Typography */
+@media (max-width: 640px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.25rem;
+    }
+
+    h3 {
+        font-size: 1.125rem;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .no-print {
+        display: none;
+    }
+
+    body {
+        background-color: white;
+    }
+}
