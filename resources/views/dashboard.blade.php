@@ -79,257 +79,158 @@
 
    </div> --}}
 
-   {{-- New Design --}}
 
-   <div class="flex flex-col min-h-screen">
-
-      <!-- Mobile Navigation -->
-      <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-md z-50">
-         <div class="flex justify-between px-6 py-3">
-            <a href="dashboard.html" class="text-primary flex flex-col items-center justify-center">
-               <i class="fas fa-home text-lg"></i>
-               <span class="text-xs mt-1">Home</span>
-            </a>
-            <a href="wallet.html" class="text-gray-600 hover:text-primary flex flex-col items-center justify-center">
-               <i class="fas fa-wallet text-lg"></i>
-               <span class="text-xs mt-1">Wallet</span>
-            </a>
-            <a href="activity.html" class="text-gray-600 hover:text-primary flex flex-col items-center justify-center">
-               <i class="fas fa-chart-line text-lg"></i>
-               <span class="text-xs mt-1">Activity</span>
-            </a>
-            <a href="profile.html" class="text-gray-600 hover:text-primary flex flex-col items-center justify-center">
-               <i class="fas fa-user text-lg"></i>
-               <span class="text-xs mt-1">Profile</span>
-            </a>
-         </div>
-      </div>
-
-
-      <div class="flex-1 flex flex-col md:flex-row">
-
-         <!-- Desktop Side Navigation -->
-         <div class="hidden md:block w-64 bg-white shadow-md">
-            <div class="h-full px-3 py-4 overflow-y-auto">
-               <ul class="space-y-2">
-                  <li>
-                     <a href="{{ route('dashboard') }}"
-                        class="flex items-center p-3 text-primary rounded-lg bg-blue-50">
-                        <i class="fas fa-home w-6"></i>
-                        <span class="ml-3">Dashboard</span>
-                     </a>
-
-                  </li>
-                  <li>
-                     <a href="wallet.html"
-                        class="flex items-center p-3 text-gray-700 hover:bg-blue-50 rounded-lg hover:text-primary">
-                        <i class="fas fa-wallet w-6"></i>
-                        <span class="ml-3">Wallet</span>
-                     </a>
-                  </li>
-                  <li>
-                     <a href="cards.html"
-                        class="flex items-center p-3 text-gray-700 hover:bg-blue-50 rounded-lg hover:text-primary">
-                        <i class="fas fa-credit-card w-6"></i>
-                        <span class="ml-3">Cards</span>
-                     </a>
-                  </li>
-                  <li>
-                     <a href="virtual_bank.php"
-                        class="flex items-center p-3 text-gray-700 hover:bg-blue-50 rounded-lg hover:text-primary">
-                        <i class="fas fa-university w-6"></i>
-                        <span class="ml-3">Virtual Bank</span>
-                     </a>
-                  </li>
-                  <li>
-                     <a href="activity.html"
-                        class="flex items-center p-3 text-gray-700 hover:bg-blue-50 rounded-lg hover:text-primary">
-                        <i class="fas fa-chart-line w-6"></i>
-                        <span class="ml-3">Activity</span>
-                     </a>
-                  </li>
-                  <li>
-                     <a href="deposit.html"
-                        class="flex items-center p-3 text-gray-700 hover:bg-blue-50 rounded-lg hover:text-primary">
-                        <i class="fas fa-arrow-down w-6"></i>
-                        <span class="ml-3">Deposit</span>
-                     </a>
-                  </li>
-                  <li>
-                     <a href="withdraw.html"
-                        class="flex items-center p-3 text-gray-700 hover:bg-blue-50 rounded-lg hover:text-primary">
-                        <i class="fas fa-arrow-up w-6"></i>
-                        <span class="ml-3">Withdraw</span>
-                     </a>
-                  </li>
-                  <li>
-                     <a href="profile.html"
-                        class="flex items-center p-3 text-gray-700 hover:bg-blue-50 rounded-lg hover:text-primary">
-                        <i class="fas fa-user w-6"></i>
-                        <span class="ml-3">Profile</span>
-                     </a>
-                  </li>
-               </ul>
+   <!-- Main Content -->
+   <div class="flex-1 p-4 md:p-6 pb-20 bg-gray-100 md:pb-6">
+      <div class="max-w-7xl mx-auto">
+         <!-- User Welcome & Balance -->
+         <div class="mb-6">
+            <h1 class="text-2xl font-bold text-gray-900">Welcome back, {{ Auth::user()->name }}</h1>
+            <div class="bg-primary text-white mt-4 rounded-lg p-6">
+               <p class="text-sm mb-1">Available Balance</p>
+               <div class="flex items-end">
+                  <h2 class="text-3xl font-bold">$ {{ Auth::user()->balance }}</h2>
+                  <span class="text-white opacity-80 ml-2 text-sm mb-1">USD</span>
+               </div>
             </div>
          </div>
 
-         <!-- Main Content -->
-         <main class="flex-1 p-4 md:p-6 pb-20 bg-gray-100 md:pb-6">
-            <div class="max-w-7xl mx-auto">
-               <!-- User Welcome & Balance -->
-               <div class="mb-6">
-                  <h1 class="text-2xl font-bold text-gray-900">Welcome back, {{ Auth::user()->name }}</h1>
-                  <div class="bg-primary text-white mt-4 rounded-lg p-6">
-                     <p class="text-sm mb-1">Available Balance</p>
-                     <div class="flex items-end">
-                        <h2 class="text-3xl font-bold">$ {{ Auth::user()->balance }}</h2>
-                        <span class="text-white opacity-80 ml-2 text-sm mb-1">USD</span>
-                     </div>
-                  </div>
+         <!-- Quick Actions -->
+         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+            <a href="deposit.html"
+               class="bg-white p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
+               <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-2">
+                  <i class="fas fa-arrow-down"></i>
                </div>
-
-               <!-- Quick Actions -->
-               <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-                  <a href="deposit.html"
-                     class="bg-white p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
-                     <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-2">
-                        <i class="fas fa-arrow-down"></i>
-                     </div>
-                     <span class="text-gray-700 text-sm">Deposit</span>
-                  </a>
-                  <a href="withdraw.html"
-                     class="bg-white p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
-                     <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-2">
-                        <i class="fas fa-arrow-up"></i>
-                     </div>
-                     <span class="text-gray-700 text-sm">Withdraw</span>
-                  </a>
-                  <a href="order-card.html"
-                     class="bg-white p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
-                     <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-2">
-                        <i class="fas fa-credit-card"></i>
-                     </div>
-                     <span class="text-gray-700 text-sm">Order Card</span>
-                  </a>
-                  <a href="create_virtual_account.php"
-                     class="bg-white p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
-                     <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-2">
-                        <i class="fas fa-university"></i>
-                     </div>
-                     <span class="text-gray-700 text-sm">Create Bank</span>
-                  </a>
+               <span class="text-gray-700 text-sm">Deposit</span>
+            </a>
+            <a href="withdraw.html"
+               class="bg-white p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
+               <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-2">
+                  <i class="fas fa-arrow-up"></i>
                </div>
-
-               <!-- Recent Transactions -->
-               <div class="mb-8">
-                  <div class="flex justify-between items-center mb-4">
-                     <h2 class="text-xl font-semibold text-gray-900">Recent Transactions</h2>
-                     <a href="activity.html" class="text-primary text-sm hover:underline">View all</a>
-                  </div>
-                  <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-                     <div class="divide-y divide-gray-200">
-                        <div class="p-4 hover:bg-gray-50">
-                           <div class="flex justify-between items-center">
-                              <div class="flex items-start">
-                                 <div
-                                    class="h-10 w-10 rounded-full bg-green-50 flex items-center justify-center text-green-600 mr-3">
-                                    <i class="fas fa-arrow-down"></i>
-                                 </div>
-                                 <div>
-                                    <p class="text-sm font-medium text-gray-900">Deposit</p>
-                                    <p class="text-xs text-gray-500">Apr 15, 2025</p>
-                                 </div>
-                              </div>
-                              <span class="text-green-600 font-medium">+$500.00</span>
-                           </div>
-                        </div>
-                        <div class="p-4 hover:bg-gray-50">
-                           <div class="flex justify-between items-center">
-                              <div class="flex items-start">
-                                 <div
-                                    class="h-10 w-10 rounded-full bg-red-50 flex items-center justify-center text-red-600 mr-3">
-                                    <i class="fas fa-arrow-up"></i>
-                                 </div>
-                                 <div>
-                                    <p class="text-sm font-medium text-gray-900">Withdrawal to PayPal</p>
-                                    <p class="text-xs text-gray-500">Apr 12, 2025</p>
-                                 </div>
-                              </div>
-                              <span class="text-red-600 font-medium">-$250.00</span>
-                           </div>
-                        </div>
-                        <div class="p-4 hover:bg-gray-50">
-                           <div class="flex justify-between items-center">
-                              <div class="flex items-start">
-                                 <div
-                                    class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 mr-3">
-                                    <i class="fas fa-credit-card"></i>
-                                 </div>
-                                 <div>
-                                    <p class="text-sm font-medium text-gray-900">Virtual Card Order</p>
-                                    <p class="text-xs text-gray-500">Apr 10, 2025</p>
-                                 </div>
-                              </div>
-                              <span class="text-red-600 font-medium">-$25.00</span>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
+               <span class="text-gray-700 text-sm">Withdraw</span>
+            </a>
+            <a href="order-card.html"
+               class="bg-white p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
+               <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-2">
+                  <i class="fas fa-credit-card"></i>
                </div>
+               <span class="text-gray-700 text-sm">Order Card</span>
+            </a>
+            <a href="create_virtual_account.php"
+               class="bg-white p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
+               <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-2">
+                  <i class="fas fa-university"></i>
+               </div>
+               <span class="text-gray-700 text-sm">Create Bank</span>
+            </a>
+         </div>
 
-               <!-- Your Services -->
-               <div>
-                  <div class="flex justify-between items-center mb-4">
-                     <h2 class="text-xl font-semibold text-gray-900">Your Services</h2>
-                  </div>
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                     <div class="bg-white rounded-lg shadow-sm p-5">
+         <!-- Recent Transactions -->
+         <div class="mb-8">
+            <div class="flex justify-between items-center mb-4">
+               <h2 class="text-xl font-semibold text-gray-900">Recent Transactions</h2>
+               <a href="activity.html" class="text-primary text-sm hover:underline">View all</a>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+               <div class="divide-y divide-gray-200">
+                  <div class="p-4 hover:bg-gray-50">
+                     <div class="flex justify-between items-center">
                         <div class="flex items-start">
                            <div
-                              class="flex-shrink-0 h-10 w-10 rounded-md bg-blue-50 flex items-center justify-center text-primary">
+                              class="h-10 w-10 rounded-full bg-green-50 flex items-center justify-center text-green-600 mr-3">
+                              <i class="fas fa-arrow-down"></i>
+                           </div>
+                           <div>
+                              <p class="text-sm font-medium text-gray-900">Deposit</p>
+                              <p class="text-xs text-gray-500">Apr 15, 2025</p>
+                           </div>
+                        </div>
+                        <span class="text-green-600 font-medium">+$500.00</span>
+                     </div>
+                  </div>
+                  <div class="p-4 hover:bg-gray-50">
+                     <div class="flex justify-between items-center">
+                        <div class="flex items-start">
+                           <div
+                              class="h-10 w-10 rounded-full bg-red-50 flex items-center justify-center text-red-600 mr-3">
+                              <i class="fas fa-arrow-up"></i>
+                           </div>
+                           <div>
+                              <p class="text-sm font-medium text-gray-900">Withdrawal to PayPal</p>
+                              <p class="text-xs text-gray-500">Apr 12, 2025</p>
+                           </div>
+                        </div>
+                        <span class="text-red-600 font-medium">-$250.00</span>
+                     </div>
+                  </div>
+                  <div class="p-4 hover:bg-gray-50">
+                     <div class="flex justify-between items-center">
+                        <div class="flex items-start">
+                           <div
+                              class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 mr-3">
                               <i class="fas fa-credit-card"></i>
                            </div>
-                           <div class="ml-4">
-                              <h3 class="text-lg font-medium text-gray-900">Virtual Card</h3>
-                              <p class="mt-1 text-sm text-gray-500">Create a virtual card for online shopping with
-                                 enhanced security.</p>
-                              <div class="mt-3">
-                                 <a href="order-card.html"
-                                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
-                                    Order Now
-                                 </a>
-                              </div>
+                           <div>
+                              <p class="text-sm font-medium text-gray-900">Virtual Card Order</p>
+                              <p class="text-xs text-gray-500">Apr 10, 2025</p>
                            </div>
                         </div>
+                        <span class="text-red-600 font-medium">-$25.00</span>
                      </div>
-                     <div class="bg-white rounded-lg shadow-sm p-5">
-                        <div class="flex items-start">
-                           <div
-                              class="flex-shrink-0 h-10 w-10 rounded-md bg-blue-50 flex items-center justify-center text-primary">
-                              <i class="fas fa-university"></i>
-                           </div>
-                           <div class="ml-4">
-                              <h3 class="text-lg font-medium text-gray-900">Virtual Bank Account</h3>
-                              <p class="mt-1 text-sm text-gray-500">Create a virtual bank account to receive payments
-                                 securely.</p>
-                              <div class="mt-3">
-                                 <a href="create_virtual_account.php"
-                                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
-                                    Create Account
-                                 </a>
-                              </div>
-                           </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         <!-- Your Services -->
+         <div>
+            <div class="flex justify-between items-center mb-4">
+               <h2 class="text-xl font-semibold text-gray-900">Your Services</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+               <div class="bg-white rounded-lg shadow-sm p-5">
+                  <div class="flex items-start">
+                     <div
+                        class="flex-shrink-0 h-10 w-10 rounded-md bg-blue-50 flex items-center justify-center text-primary">
+                        <i class="fas fa-credit-card"></i>
+                     </div>
+                     <div class="ml-4">
+                        <h3 class="text-lg font-medium text-gray-900">Virtual Card</h3>
+                        <p class="mt-1 text-sm text-gray-500">Create a virtual card for online shopping with
+                           enhanced security.</p>
+                        <div class="mt-3">
+                           <a href="order-card.html"
+                              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                              Order Now
+                           </a>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="bg-white rounded-lg shadow-sm p-5">
+                  <div class="flex items-start">
+                     <div
+                        class="flex-shrink-0 h-10 w-10 rounded-md bg-blue-50 flex items-center justify-center text-primary">
+                        <i class="fas fa-university"></i>
+                     </div>
+                     <div class="ml-4">
+                        <h3 class="text-lg font-medium text-gray-900">Virtual Bank Account</h3>
+                        <p class="mt-1 text-sm text-gray-500">Create a virtual bank account to receive payments
+                           securely.</p>
+                        <div class="mt-3">
+                           <a href="create_virtual_account.php"
+                              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                              Create Account
+                           </a>
                         </div>
                      </div>
                   </div>
                </div>
             </div>
-         </main>
-
+         </div>
       </div>
    </div>
-
-
-
 
 </x-app-layout>

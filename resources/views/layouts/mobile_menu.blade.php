@@ -38,3 +38,24 @@
 
     </div>
 </div> --}}
+
+<div class="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-md z-50">
+    <div class="flex justify-between px-6 py-3">
+        <a href="dashboard.html" class="text-primary flex flex-col items-center justify-center">
+            <i class="fas fa-home text-lg"></i>
+            <span class="text-xs mt-1">Home</span>
+        </a>
+        <a href="wallet.html" class="text-gray-600 hover:text-primary flex flex-col items-center justify-center">
+            <i class="fas fa-wallet text-lg"></i>
+            <span class="text-xs mt-1">Wallet</span>
+        </a>
+        <a href="activity.html" class="text-gray-600 hover:text-primary flex flex-col items-center justify-center">
+            <i class="fas fa-chart-line text-lg"></i>
+            <span class="text-xs mt-1">Activity</span>
+        </a>
+        <a href="profile.html" class="text-gray-600 hover:text-primary flex flex-col items-center justify-center">
+            <i class="fas fa-user text-lg"></i>
+            <span class="text-xs mt-1">Profile</span>
+        </a>
+    </div>
+</div>
