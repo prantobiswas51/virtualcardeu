@@ -32,6 +32,12 @@ class DashboardController extends Controller
         return view('support');
     }
 
+    public function activity()
+    {
+        $transactions = Transaction::where('user_id', Auth::id())->get();
+        return view('activity', compact('transactions'));
+    }
+
     public function cards()
     {
         $myCards = Card::where('user_id', Auth::id())->get();

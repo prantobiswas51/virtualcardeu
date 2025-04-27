@@ -1,19 +1,21 @@
 <x-app-layout>
-    <h3 class="py-2 text-2xl font-bold">Deposit</h3>
+    
 
-    <div class="bg-gray-800 p-6 rounded-md">
+    <div class="mx-auto p-6 rounded-md ">
 
-        <label for="payment-method" class="block text-gray-100 py-4">Select Payment Method</label>
-        <div class="flex gap-3">
-            <div class="payment_method p-2 bg-gray-50 px-4 rounded-md text-black flex items-center justify-center cursor-pointer hover:bg-blue-300"
+        <div class="shadow-md p-4 rounded-lg border">
+            <h3 class="py-2 text-2xl font-bold">Deposit</h3>
+        <label for="payment-method" class="block  py-4">Select Payment Method</label>
+        <div class="flex gap-3 ">
+            <div class="payment_method p-2 bg-gray-50 px-4 rounded-md flex items-center justify-center cursor-pointer hover:bg-blue-300"
                 onclick="selectPaymentMethod(this, 'paypal')">
                 <img class="w-6 mr-2" src="{{ asset('assets/paypal.png') }}" alt=""> PayPal
             </div>
-            <div class="payment_method p-2 bg-gray-50 px-4 rounded-md text-black flex items-center justify-center cursor-pointer hover:bg-blue-300"
+            <div class="payment_method p-2 bg-gray-50 px-4 rounded-md flex items-center justify-center cursor-pointer hover:bg-blue-300"
                 onclick="selectPaymentMethod(this, 'payeer')">
                 <img class="w-8 mr-2" src="{{ asset('assets/payeer.png') }}" alt=""> Payeer
             </div>
-            <div class="payment_method p-2 bg-gray-50 px-4 rounded-md text-black flex items-center justify-center cursor-pointer hover:bg-blue-300"
+            <div class="payment_method p-2 bg-gray-50 px-4 rounded-md flex items-center justify-center cursor-pointer hover:bg-blue-300"
                 onclick="selectPaymentMethod(this, 'crypto')">
                 <img class="w-8 mr-2" src="{{ asset('assets/crypto.png') }}" alt=""> Crypto
             </div>
@@ -21,32 +23,32 @@
 
         <input type="hidden" id="selected_method" value="">
 
-        <label for="amount" class="block text-gray-100 font-medium mt-6">Enter amount</label>
+        <label for="amount" class="block  font-medium mt-6">Enter amount</label>
         <input type="number" id="amount" placeholder="Enter amount"
             class="w-full px-4 py-2 border rounded-lg text-gray-900 focus:ring focus:ring-blue-300">
 
-        <div class="grid grid-cols-3 gap-3 mt-4">
-            <div class="payment_amount p-2 bg-gray-50 px-4 rounded-md text-black flex items-center justify-center cursor-pointer hover:bg-blue-300"
+        <div class="grid grid-cols-3 gap-3 mt-4 ">
+            <div class="payment_amount p-2 bg-gray-50 px-4 rounded-md flex items-center justify-center cursor-pointer hover:bg-blue-300"
                 onclick="selectAmount(this, 50)">
                 $50
             </div>
-            <div class="payment_amount p-2 bg-gray-50 px-4 rounded-md text-black flex items-center justify-center cursor-pointer hover:bg-blue-300"
+            <div class="payment_amount p-2 bg-gray-50 px-4 rounded-md flex items-center justify-center cursor-pointer hover:bg-blue-300"
                 onclick="selectAmount(this, 100)">
                 $100
             </div>
-            <div class="payment_amount p-2 bg-gray-50 px-4 rounded-md text-black flex items-center justify-center cursor-pointer hover:bg-blue-300"
+            <div class="payment_amount p-2 bg-gray-50 px-4 rounded-md flex items-center justify-center cursor-pointer hover:bg-blue-300"
                 onclick="selectAmount(this, 150)">
                 $150
             </div>
-            <div class="payment_amount p-2 bg-gray-50 px-4 rounded-md text-black flex items-center justify-center cursor-pointer hover:bg-blue-300"
+            <div class="payment_amount p-2 bg-gray-50 px-4 rounded-md flex items-center justify-center cursor-pointer hover:bg-blue-300"
                 onclick="selectAmount(this, 200)">
                 $200
             </div>
-            <div class="payment_amount p-2 bg-gray-50 px-4 rounded-md text-black flex items-center justify-center cursor-pointer hover:bg-blue-300"
+            <div class="payment_amount p-2 bg-gray-50 px-4 rounded-md flex items-center justify-center cursor-pointer hover:bg-blue-300"
                 onclick="selectAmount(this, 250)">
                 $250
             </div>
-            <div class="payment_amount p-2 bg-gray-50 px-4 rounded-md text-black flex items-center justify-center cursor-pointer hover:bg-blue-300"
+            <div class="payment_amount p-2 bg-gray-50 px-4 rounded-md flex items-center justify-center cursor-pointer hover:bg-blue-300"
                 onclick="selectAmount(this, 300)">
                 $300
             </div>
@@ -66,11 +68,14 @@
             </select> 
         </div>--}}
 
+        <div class="my-4 mt-16">
+            <button id="next_button" onclick="gotoFees()" class="w-full bg-gray-600 text-white py-2 rounded-lg transition">Next</button>
+        </div>
+        </div>
+
     </div>
 
-    <div class="my-4 mt-16">
-        <button id="next_button" onclick="gotoFees()" class="w-full bg-gray-600 text-white py-2 rounded-lg transition">Next</button>
-    </div>
+    
 
     <script>
         function selectPaymentMethod(element, method) {

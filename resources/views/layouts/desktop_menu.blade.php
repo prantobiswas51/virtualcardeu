@@ -51,7 +51,7 @@
 
           </li>
           <li>
-             <a href="wallet.html"
+             <a href=""
                 class="flex items-center p-3 text-gray-700 hover:bg-blue-50 rounded-lg hover:text-primary">
                 <i class="fas fa-wallet w-6"></i>
                 <span class="ml-3">Wallet</span>
@@ -72,28 +72,28 @@
              </a>
           </li>
           <li>
-             <a href="activity.html"
+             <a href="{{ route('activity') }}"
                 class="flex items-center p-3 text-gray-700 hover:bg-blue-50 rounded-lg hover:text-primary">
                 <i class="fas fa-chart-line w-6"></i>
                 <span class="ml-3">Activity</span>
              </a>
           </li>
           <li>
-             <a href="deposit.html"
+             <a href="{{ route('deposit') }}"
                 class="flex items-center p-3 text-gray-700 hover:bg-blue-50 rounded-lg hover:text-primary">
                 <i class="fas fa-arrow-down w-6"></i>
                 <span class="ml-3">Deposit</span>
              </a>
           </li>
           <li>
-             <a href="withdraw.html"
+             <a href="{{ route('payout') }}"
                 class="flex items-center p-3 text-gray-700 hover:bg-blue-50 rounded-lg hover:text-primary">
                 <i class="fas fa-arrow-up w-6"></i>
                 <span class="ml-3">Withdraw</span>
              </a>
           </li>
           <li>
-             <a href="profile.html"
+             <a href="{{ route('profile.edit') }}"
                 class="flex items-center p-3 text-gray-700 hover:bg-blue-50 rounded-lg hover:text-primary">
                 <i class="fas fa-user w-6"></i>
                 <span class="ml-3">Profile</span>

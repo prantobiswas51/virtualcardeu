@@ -42,7 +42,7 @@
    @endauth
 </div> --}}
 
-<header class="bg-sky-100 shadow-sm">
+<header class="bg-sky-100 shadow-sm" id="nav_header">
    <div class=" mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
          <div class="flex items-center">
@@ -78,7 +78,7 @@
 
                   <button class="max-w-xs rounded-full flex items-center text-sm focus:outline-none">
                      <span class="sr-only">Open user menu</span>
-                     <a href="{{ route('profile.edit') }}#photo">
+                     <a href="{{ route('profile.edit') }}">
 
                         @if(Auth::user()->profile_photo && file_exists(storage_path('app/public/' .
                         Auth::user()->profile_photo)))

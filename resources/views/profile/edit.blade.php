@@ -1,20 +1,28 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-500 leading-tight">
+        <h2 class="font-semibold text-xl  leading-tight">
             {{ __('Profile') }}
         </h2>
     </x-slot>
 
-    <div class="py-4">
-        <div class=" mx-auto space-y-6 ">
+    <div class="py-4 max-w-2xl mx-auto">
+        <div class=" space-y-6 ">
+
+            
+
+            <div class="p-4 sm:p-8   shadow sm:rounded-lg">
+                <div class=".">
+                    @include('profile.partials.update-profile-information-form')
+                </div>
+            </div>
 
             {{-- Profile Photo Upload --}}
-            <div class="p-4 sm:p-8 bg-gray-800 text-gray-200 shadow sm:rounded-lg">
-                <div class="" id="photo">
+            <div class="p-4 sm:p-8 shadow sm:rounded-lg">
+                <div class="">
                     <form action="{{ route('upload_photo') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                 
-                        <label for="profile_photo" class="text-white">Profile Photo</label>
+                        <label for="profile_photo" class="">Profile Photo</label>
                 
                         <!-- Image Preview -->
                         <div class="mb-4">
@@ -24,10 +32,10 @@
                         </div>
                 
                         <!-- File Input -->
-                        <input type="file" id="profile_photo" name="profile_photo" class="mt-2 block text-white" onchange="previewFile()">
+                        <input type="file" id="profile_photo" name="profile_photo" class="mt-2 block " onchange="previewFile()">
                 
                         <!-- Save Button -->
-                        <button type="submit" class="mt-4 bg-sky-600 p-1 px-4  rounded-md">SAVE</button>
+                        <x-primary-button type="submit" class="bg-sky-500 mt-4">{{ __('Save') }}</x-primary-button>
                 
                         @if(session('success'))
                             <span class="text-green-500">{{ session('success') }}</span>
@@ -41,18 +49,18 @@
             </div>
 
             {{-- Paypal email and pin update --}}
-            <div class="p-4 sm:p-8 bg-gray-800 text-gray-200 shadow sm:rounded-lg">
+            <div class="p-4 sm:p-8   shadow sm:rounded-lg">
                 <div class="" id="update_other_info">
                     <form action="{{ route('update_other_info') }}" method="POST">
                         @csrf
                 
-                        <label for="paypal_email" class="text-white text-sm">Paypal Email</label>
+                        <label for="paypal_email" class=" text-sm">Paypal Email</label>
                         <input type="email" name="paypal_email" placeholder="Paypal Email" value="{{ Auth::user()->paypal_email }}" class="mb-2 block text-gray-700 w-full rounded-md">
 
-                        <label for="" class="text-white text-sm">Mobile/Phone Number (Type with Country Code)</label>
+                        <label for="" class=" text-sm">Mobile/Phone Number (Type with Country Code)</label>
                         <input type="number" name="mobile_number" placeholder="Number" value="{{ Auth::user()->number }}" class="mb-2 block text-gray-700 w-full rounded-md">
 
-                        <label for="" class="text-white text-sm">
+                        <label for="" class=" text-sm">
                             @if (Auth::user()->pin)
                                 Current PIN
                             @else
@@ -63,31 +71,26 @@
                         <input type="number" name="pin" pattern="\d{6}" placeholder="Account Pin" class="mb-2 block text-gray-700 w-full rounded-md" required>
 
                         @if (Auth::user()->pin)
-                            <label for="" class="text-white text-sm">New PIN</label>
+                            <label for="" class=" text-sm">New PIN</label>
                             <input type="number" name="new_pin" pattern="\d{6}" placeholder="Account Pin" class=" block text-gray-700 w-full rounded-md" required>
                         @endif
 
                         <!-- Save Button -->
-                        <button type="submit" class="mt-4 bg-sky-600 p-1 px-4 rounded-md">SAVE</button>
+                        {{-- <button  class="mt-4 bg-sky-600 p-1 px-4 rounded-md">SAVE</button> --}}
+                        <x-primary-button type="submit" class="bg-sky-500 mt-4">{{ __('Save') }}</x-primary-button>
 
                     </form>
                     
                 </div>
             </div>
 
-            <div class="p-4 sm:p-8 bg-gray-800 text-gray-200 shadow sm:rounded-lg">
-                <div class=".">
-                    @include('profile.partials.update-profile-information-form')
-                </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-gray-800 shadow sm:rounded-lg">
+            <div class="p-4 sm:p-8  shadow sm:rounded-lg">
                 <div class=".">
                     @include('profile.partials.update-password-form')
                 </div>
             </div>
 
-            <div class="p-4 sm:p-8 bg-gray-800 shadow sm:rounded-lg">
+            <div class="p-4 sm:p-8  shadow sm:rounded-lg">
                 <div class=".">
                     @include('profile.partials.delete-user-form')
                 </div>

@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/activity', [DashboardController::class, 'activity'])->name('activity');
     Route::get('/support', [DashboardController::class, 'support'])->name('support');
     Route::get('/cards', [DashboardController::class, 'cards'])->name('cards');
     Route::get('/banks', [DashboardController::class, 'banks'])->name('banks');
