@@ -32,6 +32,11 @@ class DashboardController extends Controller
         return view('support');
     }
 
+    public function notifications()
+    {
+        return view('notifications');
+    }
+
     public function activity()
     {
         $transactions = Transaction::where('user_id', Auth::id())->get();

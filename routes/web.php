@@ -15,7 +15,7 @@ use App\Http\Controllers\DashboardController;
 use SocialiteProviders\Manager\Config as SocialiteConfig;
 use SocialiteProviders\PayPal\Provider as PayPalProvider;
 
-Route::get('/', function () { return view('home'); });
+Route::get('/', function () { return view('home'); })->name('home');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/cards', [DashboardController::class, 'cards'])->name('cards');
     Route::get('/banks', [DashboardController::class, 'banks'])->name('banks');
     Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
+    Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');
 
     Route::post('/upload_profile_photo', [ProfileController::class, 'uploadProfilePhoto'])->name('upload_photo');
     Route::post('/update_info', [ProfileController::class, 'update_other_info'])->name('update_other_info');
