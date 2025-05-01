@@ -1,242 +1,185 @@
 <x-app-layout>
 
-    <p class="text-2xl p-4 text-center">Buy Virtual Card</p>
+  
 
-    <div class="bg-gray-800 pb-6 rounded-2xl w-full max-w-md mx-auto mb-6 shadow-xl">
-        <div class="py-4 bg-gradient-to-r rounded-t-2xl from-blue-500 via-purple-500 to-pink-500"></div>
-
-        <div class="px-8 pt-6">
-
-            {{-- Static Card --}}
-            <div class="relative w-full text-gray-100 flex justify-center mb-4">
-                <div style="background-image: url('{{ asset('assets/card_bg.jpg') }}');"
-                    class="card flex flex-col justify-between min-w-[350px] min-h-[200px] rounded-lg  p-4 relative bg-cover bg-center ">
-                    <div class="topright flex flex-col items-end">
-                        <div class="flex justify-between w-full">
-                            <p class="text-lg">$ XX</p>
-                            <p class="text-lg">Virtual Card</p>
-                        </div>
-                        <div class="flex justify-between w-full">
-                            <p class="text-md text-gray-300">Inactive</p>
-                            <p class="text-sm text-gray-300">Onetime/Reloadable</p>
-                        </div>
-                    </div>
-                    <div class="bottomleft flex flex-col">
-                        <p>Limited Use</p>
-                        <p class="text-lg pb-1">XXXX XXXX XXXX XXXX</p>
-                        <div class="flex gap-2 items-center">
-                            <div class="text-[10px] leading-none text-gray-200">Expiry <br> Date</div>
-                            <div class="">XX/XX</div>
-                            <div class="ml-8 text-[10px] leading-none text-gray-200">CVC <br> Code</div>
-                            <div class="">XXX</div>
-                        </div>
-                    </div>
-                    <div class="cardlogo absolute bottom-4 right-4 ">
-                        <img class="max-w-[100px]" src="{{ asset('assets/visa.svg') }}" alt="">
-                    </div>
-                </div>
+<div class="flex-1 p-4 md:p-6 pb-20 md:pb-6">
+    <div class="max-w-4xl mx-auto">
+        <div class="mb-6 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">My Cards</h1>
+                <p class="text-gray-600 mt-1">Manage your virtual cards</p>
             </div>
-            <hr>
-
-            <div class="fees">
-                <div class="flex justify-between pt-2">
-                    <p>Card Type</p>
-                    <p id="selectedCardType" class="text-green-500"></p>
-                </div>
-
-                <div class="flex justify-between">
-                    <p>Card Issue Fee</p>
-                    <p id="cardFee" class="text-red-500">-$10.00</p>
-                </div>
-
-                <div class="flex justify-between pb-2">
-                    <p>Total Cost</p>
-                    <p id="totalCost" class="text-red-500">-$0.00</p>
-                </div>
-            </div>
-
-            @php
-                $av_grouped_cards = $available_cards->groupBy(['type', 'company', 'amount']);
-            @endphp
-
-
-            @if(!$av_grouped_cards->isEmpty())
-            <form action="{{ route('request_card') }}" method="POST" class="space-y-4">
-                @csrf
-
-                <div>
-                    <label for="company" class=" block mb-1">Card Type</label>
-                    <div class="flex gap-2">
-                        @foreach ($av_grouped_cards as $type => $companies)
-                        <button type="button" onclick="updateCompanyOptions('{{ $type }}')"
-                            class="type-btn w-1/2 py-2 bg-gray-700 text-gray-100 font-semibold rounded-md">
-                            {{ $type }}</button>
-                        @endforeach
-                        <input type="hidden" name="type" id="type" value="{{ $available_cards->first()->type ?? '' }}">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block mb-1">Card Company</label>
-                    <select name="company" id="company" class="w-full rounded-md bg-gray-800 text-white p-2"
-                        onchange="updateAmountOptions()">
-                        @foreach ($av_grouped_cards->first() as $company => $amounts)
-                        <option value="{{ $company }}">{{ $company }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block mb-1">Select Amount</label>
-                    <select name="amount" id="amount" class="w-full rounded-md bg-gray-800 text-white p-2">
-                        @foreach ($av_grouped_cards->first()->first() as $amount => $cards)
-                        <option value="{{ $amount }}">${{ $amount }}.00</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <button type="submit"
-                    class="w-full py-3 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition duration-200">
-                    Generate Now
-                </button>
-            </form>
-
-            @else
-                <p class="text-red-500 text-2xl text-center">No Available Card</p>
-            @endif
+            <a href="{{ route('order_cards') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-secondary">
+                <i class="fas fa-plus mr-2"></i> New Card
+            </a>
         </div>
-    </div>
 
-    <hr>
-
-    <h2 class="text-2xl py-4">Your Cards</h2>
-    <div class="grid lg:grid-cols-2 md:grid-cols-2  gap-6">
-
-        @foreach ($myCards as $myCard)
-        <div style="background-image: url('{{ asset('assets/card_bg.jpg') }}');"
-            class="card flex flex-col justify-between w-[350px] h-[200px] mx-auto max-w-[350px] max-h-[200px] rounded-lg  p-4 relative bg-cover bg-center ">
-            <div class="topright flex flex-col items-end">
-                <div class="flex justify-between w-full">
-                    <p class="text-lg">${{ $myCard->amount }}</p>
-                    <p class="text-lg">Virtual Card</p>
+        <!-- Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <!-- Card 1 - Active -->
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                <div class="p-1">
+                    <div class="h-48 bg-gradient-to-r from-primary to-secondary rounded-lg shadow-md p-6 text-white relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -mt-12 -mr-12"></div>
+                        <div class="flex flex-col justify-between h-full">
+                            <div>
+                                <div class="text-sm uppercase mb-1">Virtual Card</div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-globe mr-2"></i>
+                                    <span>DigiWallet Mastercard</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-xl font-mono mb-4">4256 7890 1234 5678</div>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <div class="text-xs opacity-75">Card Holder</div>
+                                        <div>JOHN DOE</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs opacity-75">Expires</div>
+                                        <div>05/27</div>
+                                    </div>
+                                    <div class="w-12">
+                                        <i class="fab fa-cc-mastercard text-3xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex justify-between w-full">
-                    <p class="text-md text-gray-300">{{ $myCard->status }}</p>
-                    <p class="text-sm text-gray-300">{{ $myCard->type }}</p>
+                <div class="p-4 border-t">
+                    <div class="flex justify-between mb-2">
+                        <div>
+                            <h3 class="font-medium text-gray-900">Personal Card</h3>
+                            <p class="text-gray-500 text-sm">USD Currency</p>
+                        </div>
+                        <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full flex items-center">
+                            <i class="fas fa-check-circle mr-1"></i> Active
+                        </span>
+                    </div>
+                    <div class="flex justify-between text-sm mb-4">
+                        <span class="text-gray-500">Balance:</span>
+                        <span class="font-semibold text-gray-900">$1,245.00</span>
+                    </div>
+                    <div class="flex justify-between space-x-2">
+                        <button class="flex-1 bg-primary text-white py-2 px-3 rounded-md hover:bg-secondary transition-colors text-sm">
+                            <i class="fas fa-money-bill-wave mr-1"></i> Top Up
+                        </button>
+                        <button class="flex-1 border border-gray-300 text-gray-700 py-2 px-3 rounded-md hover:bg-gray-50 transition-colors text-sm">
+                            <i class="fas fa-eye mr-1"></i> Details
+                        </button>
+                        <button class="bg-red-50 text-red-500 p-2 rounded-md hover:bg-red-100 transition-colors text-sm">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="bottomleft flex flex-col">
-                <p>Limited Use</p>
-                <p class="text-lg pb-1">{{ $myCard->number }}</p>
-                <div class="flex gap-2 items-center">
-                    <div class="text-[10px] leading-none text-gray-200">Expiry <br> Date</div>
-                    <div class="">{{ $myCard->expiry_date }}</div>
-                    <div class="ml-8 text-[10px] leading-none text-gray-200">CVC <br> Code</div>
-                    <div class="">{{ $myCard->cvc }}</div>
-                </div>
-            </div>
-            <div class="cardlogo absolute bottom-4 right-4 ">
-                @switch($myCard->company)
-                    @case('Visa')
-                        <img class="max-w-[100px]" src="{{ asset('assets/visa.svg') }}" alt="Visa">
-                        @break
-                    @case('Mastercard')
-                        <img class="max-w-[100px]" src="{{ asset('assets/mastercard.png') }}" alt="Mastercard">
-                        @break
-                    @case('Amex')
-                        <img class="max-w-[100px]" src="{{ asset('assets/amex.svg') }}" alt="Amex">
-                        @break
-                    @case('Discover')
-                        <img class="max-w-[100px]" src="{{ asset('assets/discover.svg') }}" alt="Discover">
-                        @break
-                    @default
-                        <img class="max-w-[100px]" src="{{ asset('assets/default.svg') }}" alt="Default">
-                @endswitch
 
+            <!-- Card 2 - Processing -->
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                <div class="p-1">
+                    <div class="h-48 bg-gradient-to-r from-gray-400 to-gray-500 rounded-lg shadow-md p-6 text-white relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -mt-12 -mr-12"></div>
+                        <div class="flex flex-col justify-between h-full">
+                            <div>
+                                <div class="text-sm uppercase mb-1">Virtual Card</div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-globe mr-2"></i>
+                                    <span>DigiWallet Visa</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-xl font-mono mb-4">**** **** **** ****</div>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <div class="text-xs opacity-75">Card Holder</div>
+                                        <div>JOHN DOE</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs opacity-75">Expires</div>
+                                        <div>**/**</div>
+                                    </div>
+                                    <div class="w-12">
+                                        <i class="fab fa-cc-visa text-3xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 border-t">
+                    <div class="flex justify-between mb-2">
+                        <div>
+                            <h3 class="font-medium text-gray-900">Shopping Card</h3>
+                            <p class="text-gray-500 text-sm">EUR Currency</p>
+                        </div>
+                        <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full flex items-center">
+                            <i class="fas fa-clock mr-1"></i> Processing
+                        </span>
+                    </div>
+                    <div class="flex justify-between text-sm mb-4">
+                        <span class="text-gray-500">Order Date:</span>
+                        <span class="font-semibold text-gray-900">Apr 15, 2025</span>
+                    </div>
+                    <div class="bg-yellow-50 p-3 rounded-md text-sm text-yellow-700 mb-4">
+                        <i class="fas fa-info-circle mr-1"></i> Your card is being processed. Details will be available soon.
+                    </div>
+                </div>
             </div>
         </div>
-        @endforeach
+
+        <!-- Card Transactions -->
+        <div class="bg-white rounded-lg shadow-sm mb-6">
+            <div class="p-4 border-b flex justify-between items-center">
+                <h2 class="text-lg font-semibold text-gray-900">Recent Card Transactions</h2>
+                <select class="text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                    <option value="all">All Cards</option>
+                    <option value="4256">Mastercard (...5678)</option>
+                </select>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-4 py-3">Merchant</th>
+                            <th scope="col" class="px-4 py-3">Date</th>
+                            <th scope="col" class="px-4 py-3">Card</th>
+                            <th scope="col" class="px-4 py-3 text-right">Amount</th>
+                            <th scope="col" class="px-4 py-3 text-right">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="px-4 py-3 font-medium text-gray-900">Amazon</td>
+                            <td class="px-4 py-3">Apr 17, 2025</td>
+                            <td class="px-4 py-3">Mastercard (...5678)</td>
+                            <td class="px-4 py-3 text-right text-red-600 font-medium">-$45.99</td>
+                            <td class="px-4 py-3 text-right"><span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Completed</span></td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="px-4 py-3 font-medium text-gray-900">Netflix</td>
+                            <td class="px-4 py-3">Apr 15, 2025</td>
+                            <td class="px-4 py-3">Mastercard (...5678)</td>
+                            <td class="px-4 py-3 text-right text-red-600 font-medium">-$14.99</td>
+                            <td class="px-4 py-3 text-right"><span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Completed</span></td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="px-4 py-3 font-medium text-gray-900">DigiWallet Top-up</td>
+                            <td class="px-4 py-3">Apr 10, 2025</td>
+                            <td class="px-4 py-3">Mastercard (...5678)</td>
+                            <td class="px-4 py-3 text-right text-green-600 font-medium">+$300.00</td>
+                            <td class="px-4 py-3 text-right"><span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Completed</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="p-4 border-t">
+                <a href="activity.html" class="text-primary text-sm hover:underline">View all transactions</a>
+            </div>
+        </div>
     </div>
-
-    <script>
-        let groupedCards = @json($av_grouped_cards); // Get grouped data from PHP
-        
-        document.addEventListener("DOMContentLoaded", function () {
-            let typeButtons = document.querySelectorAll(".type-btn");
-            let companySelect = document.getElementById("company");
-            let amountSelect = document.getElementById("amount");
-            let totalCost = document.getElementById("totalCost");
-            let selectedCardType = document.getElementById("selectedCardType");
-            let cardFee = document.getElementById("cardFee");
-
-            function updateSelectedText() {
-                let selectedType = document.getElementById("type").value;
-                let selectedCompany = companySelect.value;
-                let selectedAmount = amountSelect.value;
-                let fee = 10; // Fixed card issue fee
-                let total = parseFloat(selectedAmount) + fee;
-
-                selectedCardType.innerText = `${selectedCompany} - ${selectedType}`;
-                cardFee.innerText = `-$${fee.toFixed(2)}`;
-                totalCost.innerText = `-$${total.toFixed(2)}`;
-            }
-
-            typeButtons.forEach(button => {
-                button.addEventListener("click", function () {
-                    typeButtons.forEach(btn => {
-                        btn.classList.remove("bg-orange-500", "text-white");
-                        btn.classList.add("bg-gray-700", "text-gray-100");
-                    });
-
-                    this.classList.remove("bg-gray-700", "text-gray-100");
-                    this.classList.add("bg-orange-500", "text-white");
-
-                    document.getElementById("type").value = this.innerText.trim();
-                    updateCompanyOptions(this.innerText.trim());
-                    updateSelectedText();
-                });
-            });
-
-            companySelect.addEventListener("change", updateSelectedText);
-            amountSelect.addEventListener("change", updateSelectedText);
-        });
-
-
-    
-        function updateCompanyOptions(selectedType) {
-            let companySelect = document.getElementById("company");
-            let amountSelect = document.getElementById("amount");
-    
-            // Clear existing options
-            companySelect.innerHTML = "";
-    
-            // Populate based on selected type
-            if (groupedCards[selectedType]) {
-                for (let company in groupedCards[selectedType]) {
-                    companySelect.innerHTML += `<option value="${company}">${company}</option>`;
-                }
-            }
-    
-            // Auto-update amount options
-            updateAmountOptions();
-        }
-    
-        function updateAmountOptions() {
-            let selectedType = document.getElementById("type").value;
-            let selectedCompany = document.getElementById("company").value;
-            let amountSelect = document.getElementById("amount");
-    
-            // Clear existing options
-            amountSelect.innerHTML = "";
-    
-            // Populate based on selected type & company
-            if (groupedCards[selectedType] && groupedCards[selectedType][selectedCompany]) {
-                for (let amount in groupedCards[selectedType][selectedCompany]) {
-                    amountSelect.innerHTML += `<option value="${amount}">$${amount}.00</option>`;
-                }
-            }
-        }
-    </script>
+</div>
 
 
 </x-app-layout>

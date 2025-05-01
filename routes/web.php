@@ -25,8 +25,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/activity', [DashboardController::class, 'activity'])->name('activity');
     Route::get('/support', [DashboardController::class, 'support'])->name('support');
+
     Route::get('/cards', [DashboardController::class, 'cards'])->name('cards');
+    Route::get('/cards/new', [DashboardController::class, 'order_cards'])->name('order_cards');
+
     Route::get('/banks', [DashboardController::class, 'banks'])->name('banks');
+    Route::get('/banks/new', [DashboardController::class, 'order_banks'])->name('order_banks');
+
     Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
     Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');
 

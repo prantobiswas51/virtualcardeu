@@ -128,13 +128,17 @@
          </div>
 
          <!-- Recent Transactions -->
+
          <div class="mb-8">
             <div class="flex justify-between items-center mb-4">
                <h2 class="text-xl font-semibold text-gray-900">Recent Transactions</h2>
-               <a href="activity.html" class="text-primary text-sm hover:underline">View all</a>
+               <a href="{{ route('activity') }}" class="text-primary text-sm hover:underline">View all</a>
             </div>
             <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+
                <div class="divide-y divide-gray-200">
+
+                  @foreach ($transactions as $transaction)
                   <div class="p-4 hover:bg-gray-50">
                      <div class="flex justify-between items-center">
                         <div class="flex items-start">
@@ -144,13 +148,15 @@
                            </div>
                            <div>
                               <p class="text-sm font-medium text-gray-900">Deposit</p>
-                              <p class="text-xs text-gray-500">Apr 15, 2025</p>
+                              <p class="text-xs text-gray-500">{{ $transaction->created_at->diffForHumans() }}</p>
                            </div>
                         </div>
-                        <span class="text-green-600 font-medium">+$500.00</span>
+                        <span class="text-green-600 font-medium">${{ $transaction->amount }}</span>
                      </div>
                   </div>
-                  <div class="p-4 hover:bg-gray-50">
+                  @endforeach
+
+                  {{-- <div class="p-4 hover:bg-gray-50">
                      <div class="flex justify-between items-center">
                         <div class="flex items-start">
                            <div
@@ -165,6 +171,7 @@
                         <span class="text-red-600 font-medium">-$250.00</span>
                      </div>
                   </div>
+
                   <div class="p-4 hover:bg-gray-50">
                      <div class="flex justify-between items-center">
                         <div class="flex items-start">
@@ -179,7 +186,8 @@
                         </div>
                         <span class="text-red-600 font-medium">-$25.00</span>
                      </div>
-                  </div>
+                  </div> --}}
+
                </div>
             </div>
          </div>

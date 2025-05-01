@@ -54,9 +54,17 @@ class DashboardController extends Controller
         return view('mycards', compact('myCards', 'available_cards'));
     }
 
+    public function order_cards(){
+        return view('new_card');
+    }
+
     public function banks()
     {
         return view('mybanks');
+    }
+
+    public function order_banks(){
+        return view('new_bank');
     }
 
     public function settings()

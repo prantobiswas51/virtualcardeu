@@ -56,16 +56,18 @@
                <span class="ml-3">Wallet</span>
             </a>
          </li>
-         <li>
-            <a href="cards.html"
-               class="flex items-center p-3 rounded-lg {{ request()->is('cards') ? 'bg-blue-50 text-primary' : 'text-gray-700 hover:bg-blue-50 hover:text-primary' }}">
-               <i class="fas fa-credit-card w-6"></i>
-               <span class="ml-3">Cards</span>
+
+         <li class="{{ Request::is('cards*') ? 'text-primary' : '' }}">
+            <a href="{{ route('cards') }}"
+               class="flex items-center p-3 rounded-lg {{ request()->is('cards*') ? 'bg-blue-50 text-primary' : 'text-gray-700 hover:bg-blue-50 hover:text-primary' }}">
+                <i class="fas fa-credit-card w-6"></i>
+                <span class="ml-3">Cards</span>
             </a>
-         </li>
+        </li>        
+
          <li>
-            <a href="virtual_bank.php"
-               class="flex items-center p-3 rounded-lg {{ request()->is('virtual_bank') ? 'bg-blue-50 text-primary' : 'text-gray-700 hover:bg-blue-50 hover:text-primary' }}">
+            <a href="{{ route('banks') }}"
+               class="flex items-center p-3 rounded-lg {{ request()->is('banks*') ? 'bg-blue-50 text-primary' : 'text-gray-700 hover:bg-blue-50 hover:text-primary' }}">
                <i class="fas fa-university w-6"></i>
                <span class="ml-3">Virtual Bank</span>
             </a>
