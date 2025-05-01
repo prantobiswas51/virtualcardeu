@@ -70,7 +70,7 @@
                 depositForm.action = "{{ route('deposit_payeer') }}";
             }
     
-            depositForm.submit(); // Submit the form after updating action
+            depositForm.submit();
         });
     </script>
 

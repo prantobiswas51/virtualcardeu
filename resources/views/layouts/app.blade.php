@@ -33,7 +33,7 @@
         </div>
         @endif
 
-        <main class="flex-1 flex flex-col md:flex-row">
+        <main class="flex-1 flex bg-gray-100 flex-col md:flex-row">
 
             <!-- Desktop Side Navigation -->
             @auth

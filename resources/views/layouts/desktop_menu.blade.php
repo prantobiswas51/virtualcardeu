@@ -49,13 +49,14 @@
                <span class="ml-3">Dashboard</span>
             </a>
          </li>
-         <li>
+         
+         {{-- <li>
             <a href="#"
                class="flex items-center p-3 rounded-lg {{ request()->is('wallet') ? 'bg-blue-50 text-primary' : 'text-gray-700 hover:bg-blue-50 hover:text-primary' }}">
                <i class="fas fa-wallet w-6"></i>
                <span class="ml-3">Wallet</span>
             </a>
-         </li>
+         </li> --}}
 
          <li class="{{ Request::is('cards*') ? 'text-primary' : '' }}">
             <a href="{{ route('cards') }}"
