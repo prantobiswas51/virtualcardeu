@@ -74,7 +74,8 @@
 
                     <!-- Payment Form -->
                     <div id="payment_form" class="mt-6">
-                        <form class="space-y-6">
+                        <form class="space-y-6" id="deposit_form" action="{{ route('deposit_paypal') }}" method="POST" >
+                            @csrf
 
                             {{-- Payment Method --}}
                             <input type="hidden" id="selected_method" value="">
@@ -126,7 +127,7 @@
                             </div>
 
                             <div class="pt-2">
-                                <button type="button"
+                                <button type="submit"
                                     class="w-full bg-primary text-white py-3 px-4 rounded-md hover:bg-secondary transition duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
                                     Continue to Payment
                                 </button>
@@ -188,18 +189,19 @@
 
 
     <script>
+
         function selectPaymentMethod(element, method) {
             document.getElementById('selected_method').value = method;
 
             // Remove 'bg-blue-600' from all payment methods
             document.querySelectorAll('.payment_method').forEach(div => {
-                div.classList.remove('border-b', 'border-sky-400', 'text-sky-400');
+                div.classList.remove('border-b-2', 'border-sky-400', 'text-sky-400');
                 div.classList.add('text-black');
             });
 
             // Add 'bg-blue-600' to selected method
-            element.classList.remove('border-b', 'border-sky-400');
-            element.classList.add('border-b', 'border-sky-400', 'text-sky-400');
+            element.classList.remove('border-b-2', 'border-sky-400');
+            element.classList.add('border-b-2', 'border-sky-400', 'text-sky-400');
 
             checkSelection();
         }

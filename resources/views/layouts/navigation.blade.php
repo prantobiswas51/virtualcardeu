@@ -30,6 +30,9 @@
                </a>
 
             </div>
+
+            <div class="bg-sky-300 p-2 px-4 rounded-[50px]">${{ Auth::user()->balance }}</div>
+
             <div class="ml-4 flex items-center md:ml-6">
                <div class="relative">
 

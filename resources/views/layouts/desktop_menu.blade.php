@@ -101,6 +101,17 @@
                <span class="ml-3">Profile</span>
             </a>
          </li>
+
+         @if (Auth::user()->role === 'Admin')
+         <li>
+            <a href="{{ route('filament.admin.pages.dashboard') }}"
+               class="flex items-center p-3 rounded-lg hover:bg-blue-50 hover:text-primary">
+               <i class="fa-solid fa-user-tie w-6"></i>
+               <span class="ml-3">Admin</span>
+            </a>
+         </li>
+         @endif
+
       </ul>
 
    </div>

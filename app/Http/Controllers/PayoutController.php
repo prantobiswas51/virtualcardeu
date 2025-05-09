@@ -24,7 +24,8 @@ class PayoutController extends Controller
 
     public function index()
     {
-        return view('payout');
+        $Settings = Setting::first();
+        return view('payout', compact('Settings'));
     }
 
     public function handlePaypalCallback(Request $request)
@@ -88,27 +89,39 @@ class PayoutController extends Controller
     {
         // Validate request
         $request->validate([
+            'paypal_email' => 'required',
             'total_amount' => 'required|numeric|min:1',
         ]);
 
         $total_amount = $request->total_amount;
-        $amount_to_payout = $total_amount - ($total_amount * 0.05);
-
-        // Check if user has a PayPal email
-        if (!Auth::user()->paypal_email) {
-            return redirect()->route('payout')->with('message', 'Paypal Email Not Found!');
-        }
+        $paypal_email = $request->paypal_email;
+        $payout_fee = Setting::first()->withdrawal_fee;
+        
+        // Calculate fee and final payout
+        $fee_amount = ($total_amount * $payout_fee) / 100;
+        $amount_to_payout = $total_amount - $fee_amount;
 
         // Check if user has enough balance
         if (Auth::user()->balance < $total_amount) {
             return redirect()->route('payout')->with('message', 'Not enough balance left!');
         }
 
-        // Get PayPal credentials
-        $clientId = Setting::first()->paypal_client_id;
-        $clientSecret = Setting::first()->paypal_secret;
-        // $paypalEnv = config('paypal.env', 'sandbox');
-        $paypalUrl = "https://api-m.paypal.com";
+        $settings = Setting::first();
+        $paypal_mode = $settings->paypal_mode; // 0 = sandbox, 1 = live
+
+        if ($paypal_mode == 1) {
+            // Live
+            $paypalUrl = "https://api-m.paypal.com";
+            $clientId = $settings->paypal_client_id;
+            $clientSecret = $settings->paypal_secret;
+            $merchantId = $settings->paypal_merchant_id;
+        } else {
+            // Sandbox
+            $paypalUrl = "https://api-m.sandbox.paypal.com";
+            $clientId = $settings->paypal_client_id_demo;
+            $clientSecret = $settings->paypal_secret_demo;
+            $merchantId = $settings->paypal_merchant_id_demo;
+        }
 
         try {
             $client = new Client();
@@ -141,7 +154,7 @@ class PayoutController extends Controller
                     'items' => [
                         [
                             'recipient_type' => "EMAIL",
-                            'receiver' => Auth::user()->paypal_email,
+                            'receiver' => $paypal_email,
                             'amount' => [
                                 'value' => $total_amount,
                                 'currency' => "USD",
@@ -186,7 +199,8 @@ class PayoutController extends Controller
             ])->with('payout_email', Auth::user()->paypal_email);
 
             
-        } catch (\Exception $e) {
+        } 
+        catch (\Exception $e) {
             Log::error("PayPal Payout Error: " . $e->getMessage());
             
             $transaction = new Transaction();
