@@ -97,28 +97,28 @@
 
          <!-- Quick Actions -->
          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-            <a href="deposit.html"
+            <a href="{{ route('deposit') }}"
                class="bg-white p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
                <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-2">
                   <i class="fas fa-arrow-down"></i>
                </div>
                <span class="text-gray-700 text-sm">Deposit</span>
             </a>
-            <a href="withdraw.html"
+            <a href="{{ route('payout') }}"
                class="bg-white p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
                <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-2">
                   <i class="fas fa-arrow-up"></i>
                </div>
                <span class="text-gray-700 text-sm">Withdraw</span>
             </a>
-            <a href="order-card.html"
+            <a href="{{ route('order_cards') }}"
                class="bg-white p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
                <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-2">
                   <i class="fas fa-credit-card"></i>
                </div>
                <span class="text-gray-700 text-sm">Order Card</span>
             </a>
-            <a href="create_virtual_account.php"
+            <a href="{{ route('order_banks') }}"
                class="bg-white p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
                <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-2">
                   <i class="fas fa-university"></i>
@@ -209,7 +209,7 @@
                         <p class="mt-1 text-sm text-gray-500">Create a virtual card for online shopping with
                            enhanced security.</p>
                         <div class="mt-3">
-                           <a href="order-card.html"
+                           <a href="{{ route('order_cards') }}"
                               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
                               Order Now
                            </a>
@@ -228,7 +228,7 @@
                         <p class="mt-1 text-sm text-gray-500">Create a virtual bank account to receive payments
                            securely.</p>
                         <div class="mt-3">
-                           <a href="create_virtual_account.php"
+                           <a href="{{ route('order_banks') }}"
                               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
                               Create Account
                            </a>

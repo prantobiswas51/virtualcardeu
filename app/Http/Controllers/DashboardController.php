@@ -39,7 +39,8 @@ class DashboardController extends Controller
 
     public function activity()
     {
-        $transactions = Transaction::where('user_id', Auth::id())->get();
+        $transactions = Transaction::paginate(3);
+        // $transactions = Transaction::where('user_id', Auth::id())->get();
         return view('activity', compact('transactions'));
     }
 
