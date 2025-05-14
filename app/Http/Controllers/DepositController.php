@@ -30,15 +30,43 @@ class DepositController extends Controller
 
     public function __construct()
     {
-        $paypal = config('paypal');
-        $this->_api_context = new ApiContext(new OAuthTokenCredential(Setting::first()->paypal_client_id, Setting::first()->paypal_secret));
-        $this->_api_context->setConfig($paypal['settings']);
+        $settings = Setting::first(); // Load settings from DB
+        $paypalMode = $settings->paypal_mode; // 1 = Live, 0 = Sandbox
+
+        // Set credentials based on mode
+        if ($paypalMode == 1) {
+            // Live
+            $clientId = $settings->paypal_client_id;
+            $clientSecret = $settings->paypal_secret;
+            $mode = 'live';
+        } else {
+            // Sandbox
+            $clientId = $settings->paypal_client_id_demo;
+            $clientSecret = $settings->paypal_secret_demo;
+            $mode = 'sandbox';
+        }
+
+        // Create PayPal API Context
+        $this->_api_context = new \PayPal\Rest\ApiContext(
+            new \PayPal\Auth\OAuthTokenCredential($clientId, $clientSecret)
+        );
+
+        // Set custom config (no env)
+        $this->_api_context->setConfig([
+            'mode' => $mode,
+            'http.ConnectionTimeOut' => 30,
+            'log.LogEnabled' => true,
+            'log.FileName' => storage_path('logs/paypal.log'),
+            'log.LogLevel' => 'ERROR',
+        ]);
     }
+
 
     // Deposit page return + currency
     public function index()
     {
-       return view('deposit');
+       $Settings = Setting::first();
+       return view('deposit', compact('Settings'));
     }
 
     public function feeCheck(Request $request)
@@ -49,7 +77,6 @@ class DepositController extends Controller
         return view('deposit_fee', compact(['method', 'amount']));
     }
 
-    // Paypal
     // Paypal
     public function postPayWithPaypal(Request $request)
     {
@@ -126,8 +153,10 @@ class DepositController extends Controller
             if ($result->getState() === 'approved') {
                 Session::put('success', 'Payment successful!');
 
+                $settings = Setting::first();
+                $fee_percentage = $settings->deposit_fee; // e.g., 5 for 5%
                 $total_amount = $result->transactions[0]->amount->total;
-                $deposit_amount = $total_amount / 1.1;
+                $deposit_amount = $total_amount / (1 + ($fee_percentage / 100));
                 $transaction_fee = $total_amount - $deposit_amount;
                 $amount_to_add = $deposit_amount;
 
