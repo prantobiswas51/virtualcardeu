@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('expiry_date');
             $table->string('type');
             $table->string('cvc');
-            $table->string('company');
             $table->string('registered_at')->nullable();
             $table->enum('status', ['Active', 'Inactive', 'Expired'])->default('Inactive');
             $table->timestamps();

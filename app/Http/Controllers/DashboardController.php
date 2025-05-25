@@ -13,7 +13,8 @@ class DashboardController extends Controller
 {
 
     public function index(){
-        $transactions = Transaction::where('user_id', Auth::id())->get();        
+        // $transactions = Transaction::paginate(3);
+        $transactions = Transaction::where('user_id', Auth::id())->paginate(3);
         return view('dashboard', compact('transactions'));
     }
 
@@ -47,16 +48,16 @@ class DashboardController extends Controller
     public function cards()
     {
         $myCards = Card::where('user_id', Auth::id())->get();
-        $available_cards = Card::whereNull('user_id')
-        ->where('status', 'Inactive')
-        ->selectRaw('type, company, amount, COUNT(*) as total') // Use COUNT to aggregate
-        ->groupBy('type', 'company', 'amount')
-        ->get();
-        return view('mycards', compact('myCards', 'available_cards'));
+        return view('mycards', compact('myCards'));
     }
 
     public function order_cards(){
-        return view('new_card');
+        $available_cards = Card::whereNull('user_id')
+        ->where('status', 'Inactive')
+        ->selectRaw('type, amount, COUNT(*) as total') // Use COUNT to aggregate
+        ->groupBy('type', 'amount')
+        ->get();
+        return view('new_card', compact('available_cards'));
     }
 
     public function banks()

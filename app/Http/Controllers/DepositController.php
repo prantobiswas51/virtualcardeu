@@ -31,18 +31,18 @@ class DepositController extends Controller
     public function __construct()
     {
         $settings = Setting::first(); // Load settings from DB
-        $paypalMode = $settings->paypal_mode; // 1 = Live, 0 = Sandbox
+        $paypalMode = $settings->paypal_mode ?? 'If you are admin, update Update Settings!'; // 1 = Live, 0 = Sandbox
 
         // Set credentials based on mode
         if ($paypalMode == 1) {
             // Live
-            $clientId = $settings->paypal_client_id;
-            $clientSecret = $settings->paypal_secret;
+            $clientId = $settings->paypal_client_id ?? 'If you are admin, update Update Settings!';
+            $clientSecret = $settings->paypal_secret ?? 'If you are admin, update Update Settings!';
             $mode = 'live';
         } else {
             // Sandbox
-            $clientId = $settings->paypal_client_id_demo;
-            $clientSecret = $settings->paypal_secret_demo;
+            $clientId = $settings->paypal_client_id_demo ?? 'If you are admin, update Update Settings!';
+            $clientSecret = $settings->paypal_secret_demo ?? 'If you are admin, update Update Settings!';
             $mode = 'sandbox';
         }
 

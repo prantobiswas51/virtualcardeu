@@ -13,7 +13,6 @@ class CardController extends Controller
     public function requestCard(Request $request)
     {
         $request->validate([
-            'company' => 'required|string',
             'type' => 'required|string',
             'amount' => 'required|numeric',
         ]);
@@ -22,7 +21,7 @@ class CardController extends Controller
 
         // Check if the user has sufficient balance
         if ($user->balance < $request->amount) {
-            return redirect()->route('cards')->with('message', 'Not enough balance.');
+            return redirect()->route('order_cards')->with('message', 'Not enough balance.');
         }
 
         try {
@@ -31,7 +30,6 @@ class CardController extends Controller
             // Find an available card, locking it to prevent race conditions
             $card = Card::where('user_id', null)
             ->where('status', 'Inactive')
-            ->where('company', $request->company)
             ->where('type', $request->type)
             ->where('amount', $request->amount)
             ->lockForUpdate()
@@ -39,7 +37,7 @@ class CardController extends Controller
 
             if (!$card) {
                 DB::rollBack();
-                return redirect()->route('cards')->with('message', 'No card found, try another or please contact admin.');
+                return redirect()->route('order_cards')->with('message', 'No card found, try another or please contact admin.');
             }
 
             // Deduct balance and assign the card

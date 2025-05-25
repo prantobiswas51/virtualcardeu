@@ -17,7 +17,7 @@
 
 </head>
 
-<body class="font-sans">
+<body class="font-sans ">
 
     <div class="flex flex-col min-h-screen">
 

@@ -115,7 +115,7 @@
                                         <span class="font-medium">$<span id="deposit_amount">0.00</span></span>
                                     </li>
                                     <li class="flex justify-between">
-                                        <span>Processing Fee ({{ $Settings->withdrawal_fee }}%)</span>
+                                        <span>Processing Fee ({{ $Settings->withdrawal_fee ?? 'If you are admin, update Update Settings!'}}%)</span>
                                         <span class="font-medium">$<span id="fee_amount">0.00</span></span>
                                     </li>
                                     <li class="flex justify-between border-t border-gray-200 pt-2 mt-2">

@@ -39,7 +39,7 @@ class SettingResource extends Resource
                 Toggle::make('paypal_mode')->label('Is Live'),
 
                 TextInput::make('deposit_fee')->label('Deposit Fee')->default(0),
-                TextInput::make('withdrawal_fee')->label('Deposit Fee')->default(0),
+                TextInput::make('withdrawal_fee')->label('Withdrawal Fee')->default(0),
             ])->columns(1);
     }
 
@@ -56,6 +56,7 @@ class SettingResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

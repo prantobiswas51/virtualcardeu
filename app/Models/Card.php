@@ -10,7 +10,6 @@ class Card extends Model
         'user_id',
         'number',
         'amount',
-        'company',
         'expiry_date',
         'type',
         'status',

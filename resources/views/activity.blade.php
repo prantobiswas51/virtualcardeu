@@ -98,23 +98,23 @@
 
                             <div class="col-span-2 text-sm font-medium  text-center">
                                 @if ($transaction->type === 'withdrawal')
-                                    <span class="text-red-800">-${{$transaction->amount }}</span>
+                                <span class="text-red-800">-${{$transaction->amount }}</span>
                                 @else
-                                    <span class="text-green-800">+${{$transaction->amount }}</span>
+                                <span class="text-green-800">+${{$transaction->amount }}</span>
                                 @endif
                             </div>
 
                             <div class="col-span-2 text-center">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                    @if ($transaction->status === 'approved') text-green-800 bg-green-100
-                                    @elseif ($transaction->status === 'pending') text-yellow-800 bg-yellow-100
+                                    @if ($transaction->status === 'approved') 
+                                        text-green-800 bg-green-100
+                                    @elseif ($transaction->status === 'pending') 
+                                        text-yellow-800 bg-yellow-100
                                     @else
                                         text-red-600 bg-red-100
                                     @endif">
                                     {{ ucfirst($transaction->status) }}
                                 </span>
-
-
 
                             </div>
                             <div class="col-span-2 text-right">
@@ -125,12 +125,14 @@
                         </div>
                         @endforeach
 
-                        <!-- Pagination -->
-                        <div class="bg-white text-gray-50 px-4">
-                            {{ $transactions->links() }}
-                        </div>
-
                     </div>
                 </div>
             </div>
+
+            <!-- Pagination -->
+            <div class=" text-gray-50 pl-4 mt-2">
+                {{ $transactions->links() }}
+            </div>
+
+           
 </x-app-layout>
