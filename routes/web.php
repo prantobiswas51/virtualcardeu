@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BankController;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,11 +27,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/activity', [DashboardController::class, 'activity'])->name('activity');
     Route::get('/support', [DashboardController::class, 'support'])->name('support');
 
+    // Manage Cards
     Route::get('/cards', [DashboardController::class, 'cards'])->name('cards');
     Route::get('/cards/new', [DashboardController::class, 'order_cards'])->name('order_cards');
+    Route::post('/cards/request_card', [CardController::class, 'requestCard'])->name('request_card');
 
-    Route::get('/banks', [DashboardController::class, 'banks'])->name('banks');
-    Route::get('/banks/new', [DashboardController::class, 'order_banks'])->name('order_banks');
+    // Manage Banks
+    Route::get('/banks', [BankController::class, 'banks'])->name('banks');
+    Route::get('/banks/new', [BankController::class, 'order_banks'])->name('order_banks');
+    Route::post('/banks/request', [BankController::class, 'request_bank'])->name('request_bank');
+    Route::get('/my-banks/{id}', [BankController::class, 'show'])->name('my_banks.show'); //Working
 
     Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
     Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');
@@ -77,8 +83,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/payout/crypto', [PayoutController::class, 'createCryptoPayout'])->name('crypto_payout');
 
     // Card Management
-    Route::post('/cards/request_card', [CardController::class, 'requestCard'])->name('request_card');
-
 
 });
 

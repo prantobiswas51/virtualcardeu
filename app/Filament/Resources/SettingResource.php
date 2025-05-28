@@ -38,8 +38,13 @@ class SettingResource extends Resource
 
                 Toggle::make('paypal_mode')->label('Is Live'),
 
-                TextInput::make('deposit_fee')->label('Deposit Fee')->default(0),
-                TextInput::make('withdrawal_fee')->label('Withdrawal Fee')->default(0),
+                TextInput::make('deposit_fee')->label('Deposit Fee - (Ex- 5%)')->default(0),
+                TextInput::make('withdrawal_fee')->label('Withdrawal Fee - (Ex- 5%)')->default(0),
+
+                TextInput::make('bank_setup_fee')->label('Bank Setup Fee - (Ex- 10$)')->default(0),
+                TextInput::make('bank_maintenance_fee')->label('Bank Maintenance Fee - (Ex- 3$)')->default(0),
+                TextInput::make('incoming_transfer_fee')->label('Incoming Transfer Fee - (Ex- 1%)')->default(0),
+                TextInput::make('card_issuance_fee')->label('Card Issuance Fee - (Ex- 10$)')->default(0),
             ])->columns(1);
     }
 

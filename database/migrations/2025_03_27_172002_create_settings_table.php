@@ -23,6 +23,11 @@ return new class extends Migration
 
             $table->string('deposit_fee')->nullable();
             $table->string('withdrawal_fee')->nullable();
+            
+            $table->string('bank_setup_fee')->nullable();
+            $table->string('bank_maintenance_fee')->nullable();
+            $table->string('incoming_transfer_fee')->nullable();
+            $table->string('card_issuance_fee')->nullable();
 
             $table->timestamps();
         });

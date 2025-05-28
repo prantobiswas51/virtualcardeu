@@ -16,7 +16,13 @@ class Setting extends Model
         'paypal_secret_demo',
         'paypal_merchant_id_demo',
         'paypal_mode',
+
         'deposit_fee',
-        'withdrawal_fee'
+        'withdrawal_fee',
+        
+        'bank_setup_fee',
+        'bank_maintenance_fee',
+        'incoming_transfer_fee',
+        'card_issuance_fee',
     ];
 }

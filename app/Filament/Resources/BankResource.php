@@ -27,18 +27,31 @@ class BankResource extends Resource
         return $form
             ->schema([
                 TextInput::make('bank_name'),
-                TextInput::make('account_name'),
-                TextInput::make('account_title'),
+                Select::make('bank_location')->options([
+                    'USA' => 'USA',
+                    'England' => 'England',
+                    'Japan' => 'Japan'
+                ]),
+                TextInput::make('account_holder_name'),
+                Select::make('account_type')->options([
+                    'Checking' => 'Checking',
+                    'Savings' => 'Savings'
+                ]),
+                Select::make('currency')->options([
+                    'USD' => 'USD',
+                    'GBP' => 'GBP',
+                    'EURO' => 'EURO'
+                ]),
                 TextInput::make('routing_number'),
-                TextInput::make('bank_code'),
-                TextInput::make('branch_code'),
-                TextInput::make('swift_code'),
+                TextInput::make('bank_account_number'),
+                TextInput::make('bic'),
+                TextInput::make('iban'),
+                TextInput::make('bank_short_code'),
                 Select::make('status')->options([
                     'Active' => 'Active',
                     'Inactive' => 'Inactive',
                     'Expired' => 'Expired',
-                ]),
-                TextInput::make('mobile_number'),
+                ])->default('Inactive'),
             ]);
     }
 
@@ -47,14 +60,15 @@ class BankResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('bank_name'),
-                TextColumn::make('account_name'),
-                TextColumn::make('account_title'),
+                TextColumn::make('bank_location'),
+                TextColumn::make('account_holder_name'),
+                TextColumn::make('account_type'),
                 TextColumn::make('routing_number'),
-                TextColumn::make('bank_code'),
-                TextColumn::make('branch_code'),
-                TextColumn::make('swift_code'),
+                TextColumn::make('bank_account_number'),
+                TextColumn::make('bic'),
+                TextColumn::make('iban'),
+                TextColumn::make('bank_short_code'),
                 TextColumn::make('status'),
-                TextColumn::make('mobile_number'),
                 TextColumn::make('registered_at'),
             ])
             ->filters([
