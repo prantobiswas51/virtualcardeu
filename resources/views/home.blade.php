@@ -11,13 +11,14 @@
     <header>
         <div class="container">
             <div class="logo">
-                <a href="index.html">VirtualBank</a>
+                <a href="{{ route('home') }}">VirtualBank</a>
             </div>
             <nav>
                 <ul>
-                    <li><a href="index.html" class="active">Home</a></li>
-                    <li><a href="pricing.html">Pricing</a></li>
-                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="{{ route('home') }}">Home</a></li>
+                    <li><a href="{{ route('pricing') }}">Pricing</a></li>
+                    <li><a href="{{ route('support') }}">Contact</a></li>
+
                     @auth
                         <li><a href="{{ route('dashboard') }}" class="btn-login">Dashboard</a></li>
                     @else

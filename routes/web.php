@@ -17,6 +17,7 @@ use SocialiteProviders\Manager\Config as SocialiteConfig;
 use SocialiteProviders\PayPal\Provider as PayPalProvider;
 
 Route::get('/', function () { return view('home'); })->name('home');
+Route::get('/pricing', function () { return view('pricing'); })->name('pricing');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
