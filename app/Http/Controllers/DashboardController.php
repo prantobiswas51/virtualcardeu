@@ -45,20 +45,6 @@ class DashboardController extends Controller
         return view('activity', compact('transactions'));
     }
 
-    public function cards()
-    {
-        $myCards = Card::where('user_id', Auth::id())->get();
-        return view('mycards', compact('myCards'));
-    }
-
-    public function order_cards(){
-        $available_cards = Card::whereNull('user_id')
-        ->where('status', 'Inactive')
-        ->selectRaw('type, amount, COUNT(*) as total') // Use COUNT to aggregate
-        ->groupBy('type', 'amount')
-        ->get();
-        return view('new_card', compact('available_cards'));
-    }
 
     public function settings()
     {

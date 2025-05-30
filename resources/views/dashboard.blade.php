@@ -1,244 +1,146 @@
 <x-app-layout>
 
-   {{-- <div class="wlt py-4">
-      <p class="text-white">My Wallet</p>
-      <p class="text-green-500 font-bold text-2xl">$ {{ Auth::user()->balance }}</p>
-   </div>
-   <!-- cards -->
-   <div class="card flex gap-2">
-      <div class="p-4 bg-gray-800 text-white border  border-green-300 max-w-[300px] my-2 rounded-lg">
-         <div class="bg-purple-400/20 h-12 w-12 flex items-center justify-center rounded-[50px]">
-            <x-heroicon-s-clipboard class="w-8 h-8 text-purple-600" />
-         </div>
-         <h3>Set up your wallet</h3>
-         <p class="text-gray-500 text-sm">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque dolore
-            deserunt veniam dicta possimus cupiditate.</p>
-      </div>
-      <div class="p-4 bg-gray-800 text-white border  border-green-300 max-w-[300px] my-2 rounded-lg">
-         <div class="bg-green-400/20 h-12 w-12 flex items-center justify-center rounded-[50px]">
-            <x-heroicon-s-clipboard class="w-8 h-8 text-green-600" />
-         </div>
-         <h3>Create your collection</h3>
-         <p class="text-gray-500 text-sm">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque dolore
-            deserunt veniam dicta possimus cupiditate.</p>
-      </div>
-
-
-   </div>
-   <!-- transaction -->
-   <div class="transaction">
-      <p class="font-bold text-white py-4">Transactions</p>
-   </div>
-   <!-- eth -->
-
-   <div class="eth flex justify-between my-2">
-
-      <table class="w-full text-sm text-gray-400">
-         <thead class=" text-left py-1  rounded-md">
-            <th class="rounded-l-md bg-gray-600 p-2">Date</th>
-            <th class="bg-gray-600 ">Payment Method</th>
-            <th class="bg-gray-600 ">Transanction ID</th>
-            <th class="bg-gray-600 ">Amount</th>
-            <th class="bg-gray-600 ">Status</th>
-            <th class="bg-gray-600 rounded-r-md">Payment Type</th>
-         </thead>
-
-         @if($transactions->isEmpty())
-         <tbody>
-            <tr>
-               <td colspan="6" class="text-center mt-2 text-white my-4 bg-red-600 py-2">No Transactions Found</td>
-            </tr>
-         </tbody>
-         @else
-         @foreach ($transactions as $transaction)
-         <tbody>
-            <tr class=" border-b border-gray-600">
-               <td class="py-3">{{ $transaction->created_at->format('M j, Y') }}</td>
-               <td>{{ $transaction->payment_method }}</td>
-               <td>{{ $transaction->payment_id }}</td>
-               <td>${{ $transaction->amount }}</td>
-               <td>
-                  <button class="
-                           {{ $transaction->status === 'failed' ? 'bg-red-800' : '' }}
-                           {{ $transaction->status === 'success' ? 'bg-green-800' : '' }}
-                           {{ $transaction->status === 'pending' ? 'bg-yellow-800' : '' }}
-                           p-1 px-2 rounded-md">
-                     {{ $transaction->status }}
-                  </button>
-
-               </td>
-               <td>{{ $transaction->type }}</td>
-            </tr>
-         </tbody>
-         @endforeach
-         @endif
-
-      </table>
-
-
-
-   </div> --}}
-
-
    <!-- Main Content -->
-   <div class="flex-1 p-4 md:p-6 pb-20 bg-gray-100 md:pb-6">
-      <div class="max-w-7xl mx-auto">
-         <!-- User Welcome & Balance -->
-         <div class="mb-6">
-            <h1 class="text-2xl font-bold text-gray-900">Welcome back, {{ Auth::user()->name }}</h1>
-            <div class="bg-primary text-white mt-4 rounded-lg p-6">
-               <p class="text-sm mb-1">Available Balance</p>
-               <div class="flex items-end">
-                  <h2 class="text-3xl font-bold">$ {{ Auth::user()->balance }}</h2>
-                  <span class="text-white opacity-80 ml-2 text-sm mb-1">USD</span>
+
+
+   <div class=" flex flex-col w-full lg:flex-row">
+
+      <div class="flex-1 p-6 lg:p-8">
+
+         <div class="p-16 bg-sky-600 rounded-lg my-4"
+            style="background-image: url('/assets/dash.jpg');background-size:cover;">
+            <div class=" rounded-lg  p-6 mb-8 relative overflow-hidden backdrop-blur-md border shadow-lg">
+
+               <div class="absolute inset-0 bg-gradient-to-br  opacity-80 rounded-lg"></div>
+               <div class="absolute inset-0 bg-no-repeat bg-right-bottom opacity-20"
+                  style='background-image: url("data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="70" cy="70" r="40" fill="white"/></svg>"); background-size: 100px;'>
                </div>
+
+               <div class="relative z-10 text-white ">
+                  <p class="text-sm text-gray-200 mb-2">Your balance</p>
+                  <p class="text-4xl font-bold mb-6">{{ Auth::user()->balance }} USD</p>
+                  <div class="flex space-x-4">
+                     <button
+                        class="flex-1 bg-white text-purple-600 py-3 rounded-lg flex items-center justify-center space-x-2 shadow hover:bg-gray-50 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                           xmlns="http://www.w3.org/2000/svg">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        <span>Deposit</span>
+                     </button>
+                     <button
+                        class="flex-1 bg-white text-purple-600 py-3 rounded-lg flex items-center justify-center space-x-2 shadow hover:bg-gray-50 transition">
+                        <svg class="w-5 h-5 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                           xmlns="http://www.w3.org/2000/svg">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M8 7l4-4m0 0l4 4m-4-4v18"></path>
+                        </svg>
+                        <span>Send</span>
+                     </button>
+                     <button
+                        class="flex-1 bg-white text-purple-600 py-3 rounded-lg flex items-center justify-center space-x-2 shadow hover:bg-gray-50 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                           xmlns="http://www.w3.org/2000/svg">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                        </svg>
+                        <span>Card</span>
+                     </button>
+                  </div>
+               </div>
+
             </div>
          </div>
 
-         <!-- Quick Actions -->
-         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-            <a href="{{ route('deposit') }}"
-               class="bg-white p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
-               <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-2">
-                  <i class="fas fa-arrow-down"></i>
-               </div>
-               <span class="text-gray-700 text-sm">Deposit</span>
-            </a>
-            <a href="{{ route('payout') }}"
-               class="bg-white p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
-               <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-2">
-                  <i class="fas fa-arrow-up"></i>
-               </div>
-               <span class="text-gray-700 text-sm">Withdraw</span>
-            </a>
-            <a href="{{ route('order_cards') }}"
-               class="bg-white p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
-               <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-2">
-                  <i class="fas fa-credit-card"></i>
-               </div>
-               <span class="text-gray-700 text-sm">Order Card</span>
-            </a>
-            <a href="{{ route('order_banks') }}"
-               class="bg-white p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
-               <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-2">
-                  <i class="fas fa-university"></i>
-               </div>
-               <span class="text-gray-700 text-sm">Create Bank</span>
-            </a>
-         </div>
+         <section class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent transactions</h2>
 
-         <!-- Recent Transactions -->
+            <div class="overflow-x-auto">
+               <table class="w-full text-sm text-left text-gray-500">
+                  <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                     <tr>
+                        <th scope="col" class="px-4 py-3">Merchant</th>
+                        <th scope="col" class="px-4 py-3">Date</th>
+                        <th scope="col" class="px-4 py-3">Card Number</th>
+                        <th scope="col" class="px-4 py-3 text-right">Amount</th>
+                        <th scope="col" class="px-4 py-3 text-right">Status</th>
+                     </tr>
+                  </thead>
+                  <tbody>
 
-         <div class="mb-8">
-            <div class="flex justify-between items-center mb-4">
-               <h2 class="text-xl font-semibold text-gray-900">Recent Transactions</h2>
-               <a href="{{ route('activity') }}" class="text-primary text-sm hover:underline">View all</a>
+                     @foreach ($transactions as $transaction)
+                     <tr class="border-b hover:bg-gray-50">
+                        <td class="px-4 py-3 font-medium text-gray-900">{{ $transaction->merchant }}</td>
+                        <td class="px-4 py-3">{{ $transaction->created_at->format('d M Y, h:i A') }}</td>
+                        <td class="px-4 py-3">{{ $transaction->card_id }}</td>
+                        <td class="px-4 py-3 text-right text-red-600 font-medium">${{ $transaction->amount }}</td>
+                        <td class="px-4 py-3 text-right">
+                           <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">{{
+                              $transaction->status }}</span>
+                        </td>
+                     </tr>
+                     @endforeach
+
+                  </tbody>
+               </table>
             </div>
-            <div class="bg-white rounded-lg shadow-sm overflow-hidden">
 
-               <div class="divide-y divide-gray-200">
+         </section>
 
-                  @foreach ($transactions as $transaction)
-                  <div class="p-4 hover:bg-gray-50">
-                     <div class="flex justify-between items-center">
-                        <div class="flex items-start">
-                           <div
-                              class="h-10 w-10 rounded-full bg-green-50 flex items-center justify-center text-green-600 mr-3">
-                              <i class="fas fa-arrow-down"></i>
-                           </div>
-                           <div>
-                              <p class="text-sm font-medium text-gray-900">Deposit</p>
-                              <p class="text-xs text-gray-500">{{ $transaction->created_at->diffForHumans() }}</p>
-                           </div>
-                        </div>
-                        <span class="text-green-600 font-medium">${{ $transaction->amount }}</span>
-                     </div>
-                  </div>
-                  @endforeach
 
-                  {{-- <div class="p-4 hover:bg-gray-50">
-                     <div class="flex justify-between items-center">
-                        <div class="flex items-start">
-                           <div
-                              class="h-10 w-10 rounded-full bg-red-50 flex items-center justify-center text-red-600 mr-3">
-                              <i class="fas fa-arrow-up"></i>
-                           </div>
-                           <div>
-                              <p class="text-sm font-medium text-gray-900">Withdrawal to PayPal</p>
-                              <p class="text-xs text-gray-500">Apr 12, 2025</p>
-                           </div>
-                        </div>
-                        <span class="text-red-600 font-medium">-$250.00</span>
-                     </div>
-                  </div>
-
-                  <div class="p-4 hover:bg-gray-50">
-                     <div class="flex justify-between items-center">
-                        <div class="flex items-start">
-                           <div
-                              class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 mr-3">
-                              <i class="fas fa-credit-card"></i>
-                           </div>
-                           <div>
-                              <p class="text-sm font-medium text-gray-900">Virtual Card Order</p>
-                              <p class="text-xs text-gray-500">Apr 10, 2025</p>
-                           </div>
-                        </div>
-                        <span class="text-red-600 font-medium">-$25.00</span>
-                     </div>
-                  </div> --}}
-
-               </div>
-            </div>
-         </div>
-
-         <!-- Your Services -->
-         <div>
-            <div class="flex justify-between items-center mb-4">
-               <h2 class="text-xl font-semibold text-gray-900">Your Services</h2>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-               <div class="bg-white rounded-lg shadow-sm p-5">
-                  <div class="flex items-start">
-                     <div
-                        class="flex-shrink-0 h-10 w-10 rounded-md bg-blue-50 flex items-center justify-center text-primary">
-                        <i class="fas fa-credit-card"></i>
-                     </div>
-                     <div class="ml-4">
-                        <h3 class="text-lg font-medium text-gray-900">Virtual Card</h3>
-                        <p class="mt-1 text-sm text-gray-500">Create a virtual card for online shopping with
-                           enhanced security.</p>
-                        <div class="mt-3">
-                           <a href="{{ route('order_cards') }}"
-                              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
-                              Order Now
-                           </a>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="bg-white rounded-lg shadow-sm p-5">
-                  <div class="flex items-start">
-                     <div
-                        class="flex-shrink-0 h-10 w-10 rounded-md bg-blue-50 flex items-center justify-center text-primary">
-                        <i class="fas fa-university"></i>
-                     </div>
-                     <div class="ml-4">
-                        <h3 class="text-lg font-medium text-gray-900">Virtual Bank Account</h3>
-                        <p class="mt-1 text-sm text-gray-500">Create a virtual bank account to receive payments
-                           securely.</p>
-                        <div class="mt-3">
-                           <a href="{{ route('order_banks') }}"
-                              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
-                              Create Account
-                           </a>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
       </div>
+
+      <aside class=" bg-white p-6 lg:p-8 border-l border-gray-200">
+         <section class="mb-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">How to start with VirtualCardEU portal?</h2>
+            <ul class="space-y-4">
+               <li class="flex items-start">
+                  <span
+                     class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-3 mt-1">1</span>
+                  <div>
+                     <p class="font-medium text-gray-700">Deposit money</p>
+                     <p class="text-gray-500 text-sm">Deposit money to your account</p>
+                  </div>
+               </li>
+               <li class="flex items-start">
+                  <span
+                     class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-3 mt-1">2</span>
+                  <div>
+                     <p class="font-medium text-gray-700">Receive payments</p>
+                     <p class="text-gray-500 text-sm">Receive international payments</p>
+                  </div>
+               </li>
+               <li class="flex items-start">
+                  <span
+                     class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-3 mt-1">3</span>
+                  <div>
+                     <p class="font-medium text-gray-700">Send payments</p>
+                     <p class="text-gray-500 text-sm">Send international payments</p>
+                  </div>
+               </li>
+            </ul>
+         </section>
+
+         <section class="mb-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent activity</h2>
+            <div class="flex items-start bg-green-50 rounded-lg p-4">
+               <svg class="w-6 h-6 text-green-500 mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+               </svg>
+               <div>
+                  <p class="font-medium text-gray-700">Account registered</p>
+                  <p class="text-gray-500 text-sm">Account registered on 2023-05-30</p>
+               </div>
+            </div>
+         </section>
+
+
+      </aside>
+
    </div>
+
 
 </x-app-layout>

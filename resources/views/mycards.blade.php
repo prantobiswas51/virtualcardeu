@@ -100,48 +100,36 @@
                         <option value="4256">Mastercard (...5678)</option>
                     </select>
                 </div>
+                
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm text-left text-gray-500">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
                                 <th scope="col" class="px-4 py-3">Merchant</th>
                                 <th scope="col" class="px-4 py-3">Date</th>
-                                <th scope="col" class="px-4 py-3">Card</th>
+                                <th scope="col" class="px-4 py-3">Card Number</th>
                                 <th scope="col" class="px-4 py-3 text-right">Amount</th>
                                 <th scope="col" class="px-4 py-3 text-right">Status</th>
                             </tr>
                         </thead>
                         <tbody>
+                        
+                            @foreach ($transactions as $transaction)
                             <tr class="border-b hover:bg-gray-50">
-                                <td class="px-4 py-3 font-medium text-gray-900">Amazon</td>
-                                <td class="px-4 py-3">Apr 17, 2025</td>
-                                <td class="px-4 py-3">Mastercard (...5678)</td>
-                                <td class="px-4 py-3 text-right text-red-600 font-medium">-$45.99</td>
-                                <td class="px-4 py-3 text-right"><span
-                                        class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Completed</span>
+                                <td class="px-4 py-3 font-medium text-gray-900">{{ $transaction->merchant }}</td>
+                                <td class="px-4 py-3">{{ $transaction->created_at->format('d M Y, h:i A') }}</td>
+                                <td class="px-4 py-3">{{ $transaction->card_id }}</td>
+                                <td class="px-4 py-3 text-right text-red-600 font-medium">${{ $transaction->amount }}</td>
+                                <td class="px-4 py-3 text-right">
+                                    <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">{{ $transaction->status }}</span>
                                 </td>
                             </tr>
-                            <tr class="border-b hover:bg-gray-50">
-                                <td class="px-4 py-3 font-medium text-gray-900">Netflix</td>
-                                <td class="px-4 py-3">Apr 15, 2025</td>
-                                <td class="px-4 py-3">Mastercard (...5678)</td>
-                                <td class="px-4 py-3 text-right text-red-600 font-medium">-$14.99</td>
-                                <td class="px-4 py-3 text-right"><span
-                                        class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Completed</span>
-                                </td>
-                            </tr>
-                            <tr class="border-b hover:bg-gray-50">
-                                <td class="px-4 py-3 font-medium text-gray-900">DigiWallet Top-up</td>
-                                <td class="px-4 py-3">Apr 10, 2025</td>
-                                <td class="px-4 py-3">Mastercard (...5678)</td>
-                                <td class="px-4 py-3 text-right text-green-600 font-medium">+$300.00</td>
-                                <td class="px-4 py-3 text-right"><span
-                                        class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Completed</span>
-                                </td>
-                            </tr>
+                            @endforeach
+
                         </tbody>
                     </table>
                 </div>
+
                 <div class="p-4 border-t">
                     <a href="activity.html" class="text-primary text-sm hover:underline">View all transactions</a>
                 </div>

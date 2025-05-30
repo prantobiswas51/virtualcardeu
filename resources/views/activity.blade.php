@@ -87,7 +87,6 @@
                             </div>
                             <div class="col-span-3">
                                 <div class="text-sm font-medium text-gray-900">{{ $transaction->payment_method }}</div>
-                                <div class="text-xs text-gray-500">To: {{ $transaction->payer_email }}</div>
                             </div>
                             <div class="col-span-2 text-sm text-gray-500">
                                 <div class="">{{
@@ -134,5 +133,5 @@
                 {{ $transactions->links() }}
             </div>
 
-           
+        </div>
 </x-app-layout>

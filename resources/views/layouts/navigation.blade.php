@@ -1,9 +1,8 @@
-
 <header class="bg-sky-100 shadow-sm" id="nav_header">
    <div class=" mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
          <div class="flex items-center">
-            <a href="#" class="flex-shrink-0 flex items-center">
+            <a href="{{ route('home') }}" class="flex-shrink-0 flex items-center">
                <span class="text-2xl font-bold text-primary">VirtualCardEU</span>
             </a>
          </div>
@@ -14,7 +13,8 @@
             <div class="hidden md:ml-6 md:flex md:items-center md:space-x-6">
 
                {{-- Notification --}}
-               <a href="{{ route('notifications') }}" class="text-gray-800 hover:text-primary px-3 py-2 text-sm font-medium">
+               <a href="{{ route('notifications') }}"
+                  class="text-gray-800 hover:text-primary px-3 py-2 text-sm font-medium">
                   <i class="fas fa-lg fa-bell"></i>
                </a>
 

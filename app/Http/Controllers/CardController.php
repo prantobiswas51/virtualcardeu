@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Card;
+use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -55,5 +56,21 @@ class CardController extends Controller
             DB::rollBack();
             return redirect()->route('cards')->with('message', 'Something went wrong. Please try again.');
         }
+    }
+
+    public function cards()
+    {
+        $transactions = Transaction::where('payment_method','Card')->get();
+        $myCards = Card::where('user_id', Auth::id())->get();
+        return view('mycards', compact('myCards', 'transactions'));
+    }
+
+    public function order_cards(){
+        $available_cards = Card::whereNull('user_id')
+        ->where('status', 'Inactive')
+        ->selectRaw('type, amount, COUNT(*) as total') // Use COUNT to aggregate
+        ->groupBy('type', 'amount')
+        ->get();
+        return view('new_card', compact('available_cards'));
     }
 }

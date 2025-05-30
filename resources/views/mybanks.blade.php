@@ -20,7 +20,9 @@
     </div>
 
     <main class="flex-1 p-4 md:p-6 pb-20 md:pb-6">
+
         <div class="max-w-7xl mx-auto">
+
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-2xl font-bold text-gray-800">Virtual Bank Accounts</h1>
                 <a href="{{ route('order_banks') }}"
@@ -105,8 +107,59 @@
                 <p class="text-red-500">You have no Bank</p>
                 @endif
             </div>
+
+            <!-- Card Transactions -->
+            <div class="bg-white rounded-lg shadow-sm my-6">
+                <div class="p-4 border-b flex justify-between items-center">
+                    <h2 class="text-lg font-semibold text-gray-900">Recent Card Transactions</h2>
+                    <select class="text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                        <option value="all">All Cards</option>
+                        <option value="4256">Mastercard (...5678)</option>
+                    </select>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-gray-500">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-4 py-3">Merchant</th>
+                                <th scope="col" class="px-4 py-3">Date</th>
+                                <th scope="col" class="px-4 py-3">Card Number</th>
+                                <th scope="col" class="px-4 py-3 text-right">Amount</th>
+                                <th scope="col" class="px-4 py-3 text-right">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach ($transactions as $transaction)
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="px-4 py-3 font-medium text-gray-900">{{ $transaction->merchant }}</td>
+                                <td class="px-4 py-3">{{ $transaction->created_at->format('d M Y, h:i A') }}</td>
+                                <td class="px-4 py-3">{{ $transaction->card_id }}</td>
+                                <td class="px-4 py-3 text-right text-red-600 font-medium">${{ $transaction->amount }}
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">{{
+                                        $transaction->status }}</span>
+                                </td>
+                            </tr>
+                            @endforeach
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="p-4 border-t">
+                    <a href="activity.html" class="text-primary text-sm hover:underline">View all transactions</a>
+                </div>
+            </div>
+
         </div>
+
+
     </main>
+
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

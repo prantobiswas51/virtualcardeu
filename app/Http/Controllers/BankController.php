@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bank;
 use App\Models\Setting;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,8 +13,9 @@ class BankController extends Controller
 
     public function banks()
     {
+        $transactions = Transaction::where('payment_method','Bank')->get();
         $my_banks = Bank::where('user_id', Auth::id())->get();
-        return view('mybanks', compact('my_banks'));
+        return view('mybanks', compact('my_banks','transactions'));
     }
 
     public function order_banks()

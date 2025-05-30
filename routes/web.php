@@ -28,8 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/support', [DashboardController::class, 'support'])->name('support');
 
     // Manage Cards
-    Route::get('/cards', [DashboardController::class, 'cards'])->name('cards');
-    Route::get('/cards/new', [DashboardController::class, 'order_cards'])->name('order_cards');
+    Route::get('/cards', [CardController::class, 'cards'])->name('cards');
+    Route::get('/cards/new', [CardController::class, 'order_cards'])->name('order_cards');
     Route::post('/cards/request_card', [CardController::class, 'requestCard'])->name('request_card');
 
     // Manage Banks
