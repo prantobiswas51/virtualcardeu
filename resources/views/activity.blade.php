@@ -1,5 +1,7 @@
 <x-app-layout>
-    <div class="flex-1 bg-gray-100 p-4 md:p-6 pb-20 md:pb-6">
+
+    <div class="flex-1 p-4 md:p-6 pb-20 md:pb-6">
+
         <div class="max-w-4xl mx-auto">
             <div class="mb-6 flex justify-between items-center">
                 <div>
@@ -19,6 +21,7 @@
 
             <!-- Filter Options -->
             <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+
                 <div class="flex flex-wrap gap-4 justify-between">
                     <div class="w-full md:w-auto">
                         <label for="transaction-type" class="block text-sm font-medium text-gray-700 mb-1">Transaction
@@ -80,10 +83,19 @@
                         <!-- PayPal Withdrawal 1 -->
                         <div class="px-6 py-4 grid grid-cols-12 items-center hover:bg-gray-50">
                             <div class="col-span-1">
-                                <div
-                                    class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary">
-                                    <i class="fab fa-paypal"></i>
-                                </div>
+                                @if ($transaction->payment_method === "Card")
+                                    <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 mr-3">
+                                                <i class="fas fa-credit-card"></i>
+                                            </div>
+                                @elseif($transaction->payment_method === "Bank")
+                                    <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary">
+                                        <i class="fa-solid fa-money-check-dollar"></i>
+                                    </div>
+                                @else
+                                    <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary">
+                                        <i class="fab fa-paypal"></i>
+                                    </div>
+                                @endif
                             </div>
                             <div class="col-span-3">
                                 <div class="text-sm font-medium text-gray-900">{{ $transaction->payment_method }}</div>
@@ -105,7 +117,7 @@
 
                             <div class="col-span-2 text-center">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                    @if ($transaction->status === 'approved') 
+                                    @if ($transaction->status === 'Approved') 
                                         text-green-800 bg-green-100
                                     @elseif ($transaction->status === 'pending') 
                                         text-yellow-800 bg-yellow-100
@@ -134,4 +146,5 @@
             </div>
 
         </div>
+    </div>
 </x-app-layout>

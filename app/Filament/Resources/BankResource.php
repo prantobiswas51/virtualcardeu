@@ -46,6 +46,7 @@ class BankResource extends Resource
                 TextInput::make('bank_account_number'),
                 TextInput::make('bic'),
                 TextInput::make('iban'),
+                TextInput::make('bank_balance'),
                 TextInput::make('bank_short_code'),
                 Select::make('status')->options([
                     'Active' => 'Active',

@@ -43,6 +43,9 @@
             <!-- Main Content -->
             {{ $slot }}
 
+            @auth
+                @include('layouts.sidebar')
+            @endauth
         </main>
 
     </div>

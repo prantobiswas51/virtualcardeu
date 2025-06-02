@@ -31,6 +31,8 @@
 
             </div>
 
+            <div class=" p-2 px-4 rounded-[50px]">#{{ Auth::id() }}</div>
+            <div class=" p-2 px-4 rounded-[50px]">{{ Auth::user()->name }}</div>
             <div class="bg-sky-300 p-2 px-4 rounded-[50px]">${{ Auth::user()->balance }}</div>
 
             <div class="ml-4 flex items-center md:ml-6">

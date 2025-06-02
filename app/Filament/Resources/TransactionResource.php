@@ -11,9 +11,11 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\Transaction;
 use Filament\Resources\Resource;
+use Illuminate\Support\Facades\DB;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TransactionResource\Pages;
@@ -74,6 +76,53 @@ class TransactionResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+
+                Tables\Actions\Action::make('approve')
+                    ->label('Approve')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->requiresConfirmation() // Ask for confirmation before approving
+                    ->modalHeading('Approve Transaction')
+                    ->modalDescription('Are you sure you want to approve this transaction and update the bank balance?')
+                    ->visible(fn (Transaction $record): bool => $record->status === 'Pending' && $record->type === 'Incoming' && !is_null($record->bank_id)) // Only show if pending, incoming, and has a bank_id
+                    ->action(function (Transaction $record) {
+                        DB::beginTransaction();
+                        try {
+                            // Update transaction status
+                            $record->status = 'Approved';
+                            $record->save();
+
+                            // Update bank balance if it's an incoming transaction
+                            if ($record->type === 'Incoming' && $record->bank_id) {
+                                $bank = Bank::findOrFail($record->bank_id);
+                                $bank->bank_balance -= $record->amount;
+                                $bank->save();
+
+                                $user = User::findOrFail($record->user_id);
+                                $user->balance += $record->amount;
+                                $user->save();
+
+                            }
+
+                            DB::commit();
+
+                            Notification::make()
+                                ->title('Transaction approved successfully!')
+                                ->success()
+                                ->send();
+
+                        } catch (\Exception $e) {
+                            DB::rollBack();
+
+                            Notification::make()
+                                ->title('Error approving transaction!')
+                                ->body($e->getMessage())
+                                ->danger()
+                                ->send();
+                        }
+                    }),
+
+                    // end here
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

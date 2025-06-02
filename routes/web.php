@@ -37,7 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/banks', [BankController::class, 'banks'])->name('banks');
     Route::get('/banks/new', [BankController::class, 'order_banks'])->name('order_banks');
     Route::post('/banks/request', [BankController::class, 'request_bank'])->name('request_bank');
-    Route::get('/my-banks/{id}', [BankController::class, 'show'])->name('my_banks.show'); //Working
+    Route::post('/banks/transfer', [BankController::class, 'transfer_bank_balance'])->name('transfer_bank_balance');
 
     Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
     Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');

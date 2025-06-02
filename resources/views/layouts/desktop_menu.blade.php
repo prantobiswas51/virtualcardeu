@@ -55,7 +55,7 @@
          </li>
          <li>
             <a href="{{ route('support') }}"
-               class="flex items-center p-3 rounded-lg {{ request()->routeIs('profile.edit') ? 'bg-blue-50 text-primary' : 'text-gray-700 hover:bg-blue-50 hover:text-primary' }}">
+               class="flex items-center p-3 rounded-lg {{ request()->routeIs('support') ? 'bg-blue-50 text-primary' : 'text-gray-700 hover:bg-blue-50 hover:text-primary' }}">
                <i class="fas fa-phone w-6"></i>
                <span class="ml-3">Support</span>
             </a>

@@ -13,9 +13,9 @@ class BankController extends Controller
 
     public function banks()
     {
-        $transactions = Transaction::where('payment_method','Bank')->get();
+        $transactions = Transaction::where('payment_method', 'Bank')->get();
         $my_banks = Bank::where('user_id', Auth::id())->get();
-        return view('mybanks', compact('my_banks','transactions'));
+        return view('mybanks', compact('my_banks', 'transactions'));
     }
 
     public function order_banks()
@@ -54,9 +54,8 @@ class BankController extends Controller
         $user->balance -= $total_fee;
         $user->save();
 
-        return back()->with('message', 'Bank account successfully assigned.');
+        return redirect()->route('banks')->with('message', 'Bank account successfully assigned.');
     }
-
 
     public function show($id)
     {
@@ -66,5 +65,30 @@ class BankController extends Controller
             return response()->json(['message' => 'Bank not found'], 404);
         }
         return response()->json($bank);
+    }
+
+    public function transfer_bank_balance(Request $request)
+    {
+
+        $request->validate([
+            'bank_id' => 'required|exists:banks,id',
+            'bank_balance' => 'required|numeric|min:0',
+        ]);
+
+        // 2. Find the bank by its ID
+        $bank = Bank::findOrFail($request->bank_id);
+        $transaction = new Transaction();
+
+        // 3. Update the bank's balance
+        $transaction->user_id = Auth::id();
+        $transaction->bank_id = $request->bank_id;
+        $transaction->payment_method = "Bank";
+        $transaction->amount = $request->bank_balance;
+        $transaction->status = "Pending";
+        $transaction->type = "Incoming";
+        $transaction->save();
+
+        // 4. Return a success response
+        return redirect()->back()->with('message', 'Transfer requested, please wait for approval!');
     }
 }
