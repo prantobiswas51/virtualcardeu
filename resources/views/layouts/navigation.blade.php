@@ -23,11 +23,7 @@
                   <x-heroicon-s-cog-6-tooth class="w-4 h-4 sm:w-6 sm:h-6" />
                </a>
 
-               {{-- Logout --}}
-               <a href="{{ route('force_logout') }}"
-                  class="text-gray-800 hover:text-primary px-3 py-2 text-sm font-medium">
-                  <i class="fas fa-lg fa-sign-out-alt"></i>
-               </a>
+
 
             </div>
 
@@ -56,6 +52,7 @@
 
                </div>
             </div>
+
             @else
             <div class=" flex p-4 items-center gap-3">
                <a class="py-2 flex" href="/login">

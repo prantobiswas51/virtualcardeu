@@ -9,7 +9,7 @@
                     <p class="text-gray-600 mt-1">Manage your virtual cards</p>
                 </div>
                 <a href="{{ route('order_cards') }}"
-                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-secondary">
+                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm rounded-md shadow-sm text-white bg-primary hover:bg-secondary">
                     <i class="fas fa-plus mr-2"></i> New Card
                 </a>
             </div>
@@ -18,16 +18,15 @@
             <div class="overflow-x-auto mb-6">
                 <div class="flex space-x-6 pb-4">
                     @foreach ($myCards as $myCard)
-                    <div class="min-w-[430px] max-w-xs flex-shrink-0 bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="min-w-[400px] md:min-w-[435px] max-w-xs flex-shrink-0 bg-white rounded-lg shadow-sm overflow-hidden">
                         <div class="p-1">
-                            <div
-                                class="h-48 bg-gradient-to-r from-primary to-secondary rounded-lg shadow-md p-6 text-white relative overflow-hidden">
+                            <div  class="h-48 bg-gradient-to-r from-primary to-secondary rounded-lg shadow-md p-6 text-white relative overflow-hidden">
                                 <div
                                     class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -mt-12 -mr-12">
                                 </div>
                                 <div class="flex flex-col justify-between h-full">
                                     <div>
-                                        <div class="text-sm uppercase mb-1">Virtual Card</div>
+                                        <div class="text-sm uppercase mb-1">Personal Virtual Card</div>
                                         <div class="flex items-center">
                                             <i class="fas fa-globe mr-2"></i>
                                             {{ $myCard->type }}
@@ -45,7 +44,7 @@
                                                 <div>{{ $myCard->expiry_date }}</div>
                                             </div>
                                             <div class="w-12">
-                                                @if ($myCard->type === 'Mastercard Reloadable' || $myCard->type === 'Mastercard One Time')
+                                                @if ($myCard->type === 'Reloadable Mastercard' || $myCard->type === 'One Time Mastercard')
                                                 <i class="fa-brands fa-cc-mastercard text-3xl"></i>
                                                 @else
                                                 <i class="fab fa-cc-visa text-3xl"></i>
@@ -58,24 +57,29 @@
                         </div>
 
                         <div class="p-4 border-t">
+
                             <div class="flex justify-between mb-2">
                                 <div>
-                                    <h3 class="font-medium text-gray-900">Personal Card</h3>
                                     <p class="text-gray-500 text-sm">USD Currency</p>
                                 </div>
-                                <span class="bg-green-100 text-green-800 text-xs px-2 rounded-full flex items-center">
+                                <div class="bg-green-100 text-green-800 px-2 text-xs rounded-full flex items-center">
                                     <i class="fas fa-check-circle mr-1"></i> {{ $myCard->status }}
-                                </span>
+                                </div>
                             </div>
+
                             <div class="flex justify-between text-sm mb-4">
                                 <span class="text-gray-500">Balance:</span>
                                 <span class="font-semibold text-gray-900">${{ $myCard->amount }}</span>
                             </div>
                             <div class="flex justify-between space-x-2">
-                                <button
+                                @if ($myCard->type === "Mastercard Reloadable" || $myCard->type === "Visa Reloadable")
+                                    <button
                                     class="flex-1 bg-primary text-white py-2 px-3 rounded-md hover:bg-secondary transition-colors text-sm">
                                     <i class="fas fa-money-bill-wave mr-1"></i> Top Up
                                 </button>
+                                @else
+                                    
+                                @endif
                                 <button
                                     class="flex-1 border border-gray-300 text-gray-700 py-2 px-3 rounded-md hover:bg-gray-50 transition-colors text-sm">
                                     <i class="fas fa-eye mr-1"></i> Details
@@ -95,17 +99,18 @@
             <!-- Card Transactions -->
             <div class="bg-white rounded-lg shadow-sm mb-6">
                 <div class="p-4 border-b flex justify-between items-center">
-                    <h2 class="text-lg font-semibold text-gray-900">Recent Card Transactions</h2>
-                    <select class="text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                    <h2 class=" font-semibold text-gray-900">Recent Card Transactions</h2>
+                    {{-- <select class=" border-gray-300 rounded-md focus:ring-primary focus:border-primary">
                         <option value="all">All Cards</option>
-                        <option value="4256">Mastercard (...5678)</option>
-                    </select>
+                        <option value="4256">{{  }}</option>
+                    </select> --}}
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="w-full text-sm text-left text-gray-500">
+                    <table class="w-full  text-left text-gray-500">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
+                                <th scope="col" class="px-4 py-3">ID</th>
                                 <th scope="col" class="px-4 py-3">Merchant</th>
                                 <th scope="col" class="px-4 py-3">Date</th>
                                 <th scope="col" class="px-4 py-3">Card Number</th>
@@ -113,20 +118,22 @@
                                 <th scope="col" class="px-4 py-3 text-right">Status</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="text-xs">
 
                             @foreach ($transactions as $transaction)
-                            <tr class="border-b hover:bg-gray-50">
-                                <td class="px-4 py-3 font-medium text-gray-900">{{ $transaction->merchant }}</td>
-                                <td class="px-4 py-3">{{ $transaction->created_at->format('d M Y, h:i A') }}</td>
-                                <td class="px-4 py-3">{{ $transaction->card_id }}</td>
-                                <td class="px-4 py-3 text-right text-red-600 font-medium">${{ $transaction->amount }}
-                                </td>
-                                <td class="px-4 py-3 text-right">
-                                    <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">{{
-                                        $transaction->status }}</span>
-                                </td>
-                            </tr>
+                            <tr class="border-b text-xs hover:bg-gray-50">
+                                    <td class="px-4 py-3  text-gray-900">{{ $transaction->id }}</td>
+                                    <td class="px-4 py-3  text-gray-900">{{ $transaction->merchant }}</td>
+                                    <td class="px-4 py-3 w-40  whitespace-nowrap">
+                                        {{ $transaction->created_at->format('d M Y, h:i A') }}
+                                    </td>
+
+                                    <td class="px-4 py-3">{{ $transaction->card_id }}</td>
+                                    <td class="px-4 py-3 text-right text-red-600 ">${{ $transaction->amount }} </td>
+                                    <td class="px-4 py-3 text-right">
+                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">{{ $transaction->status }}</span>
+                                    </td>
+                                </tr>
                             @endforeach
 
                         </tbody>

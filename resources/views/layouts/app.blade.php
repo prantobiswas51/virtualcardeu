@@ -17,45 +17,60 @@
 
 </head>
 
-<body class="font-sans ">
+<body class="font-sans">
 
-    <div class="flex flex-col min-h-screen">
+    @auth
+    <div class="hidden lg:block fixed h-full w-1/6 bg-gray-100">
+        @include('layouts.desktop_menu')
+    </div>
+    @endauth
 
-        {{-- Main Header --}}
-        @include('layouts.navigation')
+    <div class="bg-gray-200 lg:ml-[16.66%] lg:w-5/6 flex flex-col lg:flex-row h-screen relative">
 
         @if(session('message'))
-        <div class="flex justify-center">
+        <div class="fixed top-[100px] left-1/2 transform -translate-x-1/2 z-50">
             <div
-                class="alert alert-success flex justify-between flex-row items-center top-20 absolute w-[600px] bg-green-600 shadow-lg rounded-md p-2 pl-5">
+                class="bg-green-600 text-white shadow-lg rounded-md px-6 py-3 w-auto max-w-full text-center animate-fade-in">
                 {{ session('message') }}
             </div>
         </div>
+
+        <style>
+            @keyframes fade-in {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .animate-fade-in {
+                animation: fade-in 0.3s ease-out;
+            }
+        </style>
         @endif
 
-        <main class="flex-1 flex bg-gray-100 flex-col md:flex-row">
 
-            <!-- Desktop Side Navigation -->
-            @auth
-                @include('layouts.desktop_menu')
-            @endauth
-
-            <!-- Main Content -->
+        <!-- Main Content -->
+        <div class="w-full lg:w-3/4 lg:pr-[5%] overflow-y-auto">
             {{ $slot }}
+        </div>
 
-            @auth
-                @include('layouts.sidebar')
-            @endauth
-        </main>
+        <!-- Sidebar -->
+        <div class="hidden lg:block fixed right-0 top-0 h-screen w-1/4 bg-gray-50 p-4 overflow-y-auto">
+            @include('layouts.sidebar')
+        </div>
 
     </div>
 
     @auth
-        @include('layouts.mobile_menu')
+    @include('layouts.mobile_menu')
     @endauth
 
 </body>
 
 </html>
-
-

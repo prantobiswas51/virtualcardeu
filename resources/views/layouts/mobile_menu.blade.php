@@ -41,25 +41,26 @@
 
 <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-md z-50">
     <div class="flex justify-between px-6 py-3">
-        <a href="{{ route('home') }}" class="text-primary flex flex-col items-center justify-center">
+
+        <a href="{{ route('home') }}" class="text-gray-600 hover:text-primary flex flex-col items-center justify-center">
             <i class="fas fa-home text-lg"></i>
             <span class="text-xs mt-1">Home</span>
         </a>
-        <a href="{{ route('dashboard') }}" class="text-primary flex flex-col items-center justify-center">
-            <i class="fas fa-home text-lg"></i>
+
+        <a href="{{ route('dashboard') }}" class="text-gray-600 hover:text-primary flex flex-col items-center justify-center">
+            <i class="fa-solid fa-id-card-clip text-lg"></i>
             <span class="text-xs mt-1">Dashboard</span>
         </a>
-        {{-- <a href="wallet.html" class="text-gray-600 hover:text-primary flex flex-col items-center justify-center">
-            <i class="fas fa-wallet text-lg"></i>
-            <span class="text-xs mt-1">Wallet</span>
-        </a> --}}
-        <a href="{{ route('activity') }}"
-            class="text-gray-600 hover:text-primary flex flex-col items-center justify-center">
+
+        <a href="{{ route('activity') }}" class="text-gray-600 hover:text-primary flex flex-col items-center justify-center">
             <i class="fas fa-chart-line text-lg"></i>
             <span class="text-xs mt-1">Activity</span>
         </a>
-        <a href="{{ route('force_logout') }}" class="text-gray-800 hover:text-primary px-3 py-2 text-sm font-medium">
-            <i class="fas fa-lg fa-sign-out-alt"></i>
+
+        <a href="{{ route('force_logout') }}" class="text-gray-600 hover:text-primary flex flex-col items-center justify-center">
+            <i class="fas text-lg fa-sign-out-alt"></i>
+            <span class="text-xs mt-1">Logout</span>
         </a>
+
     </div>
 </div>

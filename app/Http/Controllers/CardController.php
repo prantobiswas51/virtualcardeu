@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Card;
+use App\Models\Setting;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -19,15 +20,15 @@ class CardController extends Controller
         ]);
 
         $user = Auth::user();
+        $settings = Setting::first();
 
         // Check if the user has sufficient balance
-        if ($user->balance < $request->amount) {
-            return redirect()->route('order_cards')->with('message', 'Not enough balance.');
+        if ($user->balance < ($request->amount + $settings->card_issuance_fee)) {
+            return redirect()->route('order_cards')->with('message', 'Not enough balance, Please deposit.');
         }
 
         try {
             DB::beginTransaction();
-            // dd('hi');
             // Find an available card, locking it to prevent race conditions
             $card = Card::where('user_id', null)
             ->where('status', 'Inactive')
@@ -42,7 +43,7 @@ class CardController extends Controller
             }
 
             // Deduct balance and assign the card
-            $user->decrement('balance', $request->amount);
+            $user->decrement('balance', ($request->amount + $settings->card_issuance_fee));
             
             $card->update([
                 'user_id' => $user->id,
@@ -71,6 +72,8 @@ class CardController extends Controller
         ->selectRaw('type, amount, COUNT(*) as total') // Use COUNT to aggregate
         ->groupBy('type', 'amount')
         ->get();
-        return view('new_card', compact('available_cards'));
+        $settings = Setting::first();
+
+        return view('new_card', compact('available_cards', 'settings'));
     }
 }

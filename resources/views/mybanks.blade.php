@@ -41,10 +41,13 @@
                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
                     placeholder="Enter amount to transfer..." aria-label="Amount to transfer">
 
+
                 <button type="submit"
                     class="w-full py-3 px-6 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-200">
                     Request Transfer
                 </button>
+
+
             </form>
 
         </div>
@@ -56,7 +59,12 @@
         <div class="max-w-4xl mx-auto">
             <div class="max-w-7xl mx-auto">
                 <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-2xl font-bold text-gray-800">Virtual Bank Accounts</h1>
+                    
+                    <div class="">
+                        <h1 class="text-2xl font-bold text-gray-900">Order Virtual Card</h1>
+                        <p class="text-gray-600 mt-1">Create a virtual card for secure online transactions</p>
+                    </div>
+
                     <a href="{{ route('order_banks') }}"
                         class="bg-primary hover:bg-secondary text-white px-4 py-2 rounded-lg flex items-center">
                         <i class="fas fa-plus mr-2"></i> Create Account
@@ -68,8 +76,12 @@
                         {{-- Loop through $my_banks here in Blade --}}
                         @if (!$my_banks->isEmpty())
                         @foreach($my_banks as $my_bank)
-                        <div class="min-w-[420px] max-w-xs flex-shrink-0 bg-white rounded-lg shadow-md overflow-hidden">
+
+
+                        <div
+                            class="min-w-[400px] md:min-w-[435px] max-w-xs flex-shrink-0 bg-white rounded-lg shadow-md overflow-hidden">
                             <div class="p-6 bg-gradient-to-r from-primary to-secondary text-white">
+
                                 <div class="flex justify-between items-start">
                                     <div>
                                         <p class="text-sm opacity-80">Bank Name</p>
@@ -81,7 +93,7 @@
                                     </span>
                                 </div>
 
-                                <div class="flex flex-col sm:flex-row mt-4 justify-between gap-y-2">
+                                <div class="flex flex-row mt-4 justify-between gap-y-2">
                                     <div>
                                         <p class="text-sm opacity-80">Bank Location</p>
                                         <h3>{{ $my_bank->bank_location }}</h3>
@@ -96,15 +108,16 @@
                                     </div>
                                 </div>
 
-                                <div class="flex flex-col sm:flex-row mt-4 justify-between gap-y-2">
+                                <div class="flex flex-row mt-4 justify-between gap-y-2">
                                     <div>
                                         <p class="text-sm opacity-80">Account Number</p>
                                         <h3 class="text-xl font-bold">{{ $my_bank->bank_account_number }}</h3>
                                     </div>
                                     @if ($my_bank->currency === "USD")
-                                        <div class="">
-                                            <img src="{{ asset('/assets/usd_flag.png') }}" class="rounded-[50px] max-h-12 max-w-12" alt="">
-                                        </div>
+                                    <div class="">
+                                        <img src="{{ asset('/assets/usd_flag.png') }}"
+                                            class="rounded-[50px] max-h-12 max-w-12" alt="">
+                                    </div>
                                     @endif
                                 </div>
                             </div>
@@ -114,20 +127,23 @@
                                     <div>
                                         <p class="text-sm text-gray-500">Available Balance</p>
                                         <p class="text-2xl font-bold text-gray-800">
-                                            {{ $my_bank->currency_symbol }} {{ number_format($my_bank->bank_balance, 2) }}
+                                            {{ $my_bank->currency_symbol }} {{ number_format($my_bank->bank_balance, 2)
+                                            }}
                                         </p>
                                     </div>
                                     <div>
                                         @if ($my_bank->status === "Active")
-                                        <span class="inline-flex px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
+                                        <span
+                                            class="inline-flex px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
                                             <i class="fas fa-check-circle mr-1"></i> {{ ucfirst($my_bank->status) }}
                                         </span>
                                         @else
-                                            <span class="inline-flex px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">
+                                        <span
+                                            class="inline-flex px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">
                                             <i class="fas fa-check-circle mr-1"></i> {{ ucfirst($my_bank->status) }}
                                         </span>
                                         @endif
-                                        
+
                                     </div>
                                 </div>
 
@@ -144,6 +160,8 @@
                                 </div>
                             </div>
                         </div>
+
+
                         @endforeach
                         @else
                         <p class="text-red-500">You have no Bank</p>
@@ -163,8 +181,9 @@
                         <table class="w-full text-sm text-left text-gray-500">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                 <tr>
+                                    <th scope="col" class="px-4 py-3">ID</th>
                                     <th scope="col" class="px-4 py-3">Merchant</th>
-                                    <th scope="col" class="px-4 py-3">Date</th>
+                                    <th scope="col" class="px-4 py-3 w-[20px]">Date</th>
                                     <th scope="col" class="px-4 py-3">Bank Number</th>
                                     <th scope="col" class="px-4 py-3 text-right">Amount</th>
                                     <th scope="col" class="px-4 py-3 text-right">Status</th>
@@ -173,16 +192,17 @@
                             <tbody>
 
                                 @foreach ($transactions as $transaction)
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="px-4 py-3 font-medium text-gray-900">{{ $transaction->merchant }}</td>
-                                    <td class="px-4 py-3">{{ $transaction->created_at->format('d M Y, h:i A') }}</td>
-                                    <td class="px-4 py-3">{{ $transaction->card_id }}</td>
-                                    <td class="px-4 py-3 text-right text-red-600 font-medium">${{ $transaction->amount
-                                        }}
+                                <tr class="border-b text-xs hover:bg-gray-50">
+                                    <td class="px-4 py-3  text-gray-900">{{ $transaction->id }}</td>
+                                    <td class="px-4 py-3  text-gray-900">{{ $transaction->merchant }}</td>
+                                    <td class="px-4 py-3 w-40  whitespace-nowrap">
+                                        {{ $transaction->created_at->format('d M Y, h:i A') }}
                                     </td>
+
+                                    <td class="px-4 py-3">{{ $transaction->card_id }}</td>
+                                    <td class="px-4 py-3 text-right text-red-600 ">${{ $transaction->amount }} </td>
                                     <td class="px-4 py-3 text-right">
-                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">{{
-                                            $transaction->status }}</span>
+                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">{{ $transaction->status }}</span>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -192,7 +212,8 @@
                     </div>
 
                     <div class="p-4 border-t">
-                        <a href="activity.html" class="text-primary text-sm hover:underline">View all transactions</a>
+                        <a href="{{ route('activity') }}" class="text-primary text-sm hover:underline">View all
+                            transactions</a>
                     </div>
                 </div>
 
@@ -308,7 +329,6 @@
                 });
             });
 
-            
             closeModalButton.addEventListener('click', function () {
                 accountModal.style.display = 'none'; // Hide the modal
             });
@@ -322,28 +342,59 @@
         });
 
         function request_bank_transfer(bankId) {
-        const transfer_modal = document.getElementById('transfer_modal');
-        const close_bank_modal = document.getElementById('close_bank_modal');
-        const transfer_bank_id_input = document.getElementById('transfer_bank_id'); // Get the hidden input
+            const transfer_modal = document.getElementById('transfer_modal');
+            const close_bank_modal = document.getElementById('close_bank_modal');
+            const transfer_bank_id_input = document.getElementById('transfer_bank_id'); // Get the hidden input
 
-        // Set the value of the hidden input field
-        transfer_bank_id_input.value = bankId;
+            // Set the value of the hidden input field
+            transfer_bank_id_input.value = bankId;
 
-        transfer_modal.style.display = "flex";
+            transfer_modal.style.display = "flex";
 
-        close_bank_modal.addEventListener('click', function () {
-            transfer_modal.style.display = 'none';
-            transfer_bank_id_input.value = ''; // Clear the value when closing the modal
-        });
-
-        // Optional: Close modal if clicking outside
-        transfer_modal.addEventListener('click', function (event) {
-            if (event.target === transfer_modal) {
+            close_bank_modal.addEventListener('click', function () {
                 transfer_modal.style.display = 'none';
-                transfer_bank_id_input.value = ''; // Clear the value when closing
-            }
+                transfer_bank_id_input.value = ''; // Clear the value when closing the modal
+            });
+
+            // Optional: Close modal if clicking outside
+            transfer_modal.addEventListener('click', function (event) {
+                if (event.target === transfer_modal) {
+                    transfer_modal.style.display = 'none';
+                    transfer_bank_id_input.value = ''; // Clear the value when closing
+                }
+            });
+        }
+
+        // new modal
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('#transfer_modal form');
+            const amountInput = form.querySelector('input[name="bank_balance"]');
+            const bankIdInput = form.querySelector('#transfer_bank_id');
+
+            form.addEventListener('submit', function (e) {
+                const enteredAmount = parseFloat(amountInput.value);
+                const bank = @json($my_banks); // all banks
+
+                const selectedBank = bank.find(b => b.id == bankIdInput.value);
+
+                if (!selectedBank) {
+                    alert('Invalid bank selected.');
+                    e.preventDefault();
+                    return;
+                }
+
+                if (isNaN(enteredAmount) || enteredAmount <= 0) {
+                    alert('Enter a valid transfer amount.');
+                    e.preventDefault();
+                    return;
+                }
+
+                if (enteredAmount > parseFloat(selectedBank.bank_balance)) {
+                    alert('Not enough balance');
+                    e.preventDefault();
+                }
+            });
         });
-    }
 
     </script>
 </x-app-layout>

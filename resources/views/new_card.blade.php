@@ -62,7 +62,7 @@
                                 </li>
                                 <li class="flex justify-between">
                                     <span>Card Issuance Fee</span>
-                                    <p id="cardFee" class="text-red-500">-$10.00</p>
+                                    <p id="cardFee" class="text-red-500">-${{ $settings->card_issuance_fee }}</p>
                                 </li>
                                 <li class="flex justify-between">
                                     <span>Total Cost</span>
@@ -120,7 +120,7 @@
                         </form>
 
                         @else
-                        <p class="text-red-500 text-2xl text-center">No Available Card</p>
+                        <p class="text-red-500 text-2xl pt-4 text-center">Something went wrong! Please try again later...</p>
                         @endif
 
                     </div>
@@ -185,7 +185,7 @@
             function updateSelectedText() {
                 let selectedType = $typeSelect.val();
                 let selectedAmount = $amountSelect.val();
-                let fee = 10; // Fixed card issue fee
+                let fee = parseFloat(@json($settings->card_issuance_fee));
                 let total = parseFloat(selectedAmount) + fee;
 
                 // Updated to show just Type and Amount as Company is removed

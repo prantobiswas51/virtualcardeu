@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('iban')->nullable();
             $table->string('bank_short_code')->nullable();
             
-            $table->string('bank_balance')->nullable();
+            $table->string('bank_balance')->default('0');
 
             $table->enum('status', ['Active', 'Inactive', 'Expired'])->default('Inactive');
             $table->string('registered_at')->nullable();

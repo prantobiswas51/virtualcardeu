@@ -71,7 +71,7 @@
                     <div
                         class="bg-gray-50 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider grid grid-cols-12">
                         <div class="col-span-1"></div>
-                        <div class="col-span-3">Transaction</div>
+                        <div class="col-span-3 text-xs">Transaction</div>
                         <div class="col-span-2">Date</div>
                         <div class="col-span-2 text-center">Amount</div>
                         <div class="col-span-2 text-center">Status</div>
@@ -98,16 +98,16 @@
                                 @endif
                             </div>
                             <div class="col-span-3">
-                                <div class="text-sm font-medium text-gray-900">{{ $transaction->payment_method }}</div>
+                                <div class="text-xs  text-gray-900">{{ $transaction->payment_method }}</div>
                             </div>
-                            <div class="col-span-2 text-sm text-gray-500">
+                            <div class="col-span-2 text-xs text-gray-500">
                                 <div class="">{{
                                     \Carbon\Carbon::parse($transaction->created_at)->format('d M, Y') }}</div>
                                 <div class="">{{
                                     \Carbon\Carbon::parse($transaction->created_at)->format('h:i A') }}</div>
                             </div>
 
-                            <div class="col-span-2 text-sm font-medium  text-center">
+                            <div class="col-span-2 text-xs font-medium  text-center">
                                 @if ($transaction->type === 'withdrawal')
                                 <span class="text-red-800">-${{$transaction->amount }}</span>
                                 @else

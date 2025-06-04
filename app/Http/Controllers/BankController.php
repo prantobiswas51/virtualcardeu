@@ -6,6 +6,7 @@ use App\Models\Bank;
 use App\Models\Setting;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class BankController extends Controller
@@ -40,21 +41,38 @@ class BankController extends Controller
             'bank_id' => 'required|numeric',
         ]);
 
-        $bank = Bank::findOrFail($request->bank_id);
+        DB::beginTransaction();
 
-        $bank->update([
-            'user_id' => Auth::id(),
-            'status' => 'Active'
-        ]);
+        try {
+            $bank = Bank::findOrFail($request->bank_id);
 
-        $user = Auth::user();
-        $settings = Setting::first();
+            $user = Auth::user();
+            $settings = Setting::first();
 
-        $total_fee = $settings->bank_setup_fee + $settings->bank_maintenance_fee;
-        $user->balance -= $total_fee;
-        $user->save();
+            $total_fee = $settings->bank_setup_fee + $settings->bank_maintenance_fee;
 
-        return redirect()->route('banks')->with('message', 'Bank account successfully assigned.');
+            if ($user->balance < $total_fee) {
+                DB::rollBack();
+                return redirect()->route('order_banks')->with('message', 'Not enough balance, Please deposit.');
+            }
+
+            // Update bank assignment
+            $bank->update([
+                'user_id' => $user->id,
+                'status' => 'Active'
+            ]);
+
+            // Deduct fee
+            $user->balance -= $total_fee;
+            $user->save();
+
+            DB::commit();
+
+            return redirect()->route('banks')->with('message', 'Bank account successfully assigned.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('message', 'Something went wrong. Please try again.');
+        }
     }
 
     public function show($id)
