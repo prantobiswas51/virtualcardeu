@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Card;
 use App\Models\Setting;
 use App\Models\Transaction;
-use Carbon\Carbon;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -52,6 +53,12 @@ class CardController extends Controller
             ]);
 
             DB::commit();
+
+            $notification = new Notification;
+            $notification->user_id = Auth::id();
+            $notification->content = "Card account ending with " . substr($card->number, -4) . " successfully assigned.";
+            $notification->save();
+
             return redirect()->route('cards')->with('message', 'Card generated successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -61,8 +68,15 @@ class CardController extends Controller
 
     public function cards()
     {
-        $transactions = Transaction::where('payment_method','Card')->get();
+        $transactions = Transaction::where('payment_method','Card')->where('user_id' , Auth::id())->get();
         $myCards = Card::where('user_id', Auth::id())->get();
+        
+        $user = Auth::user();
+
+        if (!$user->card) {
+            return redirect()->route('order_cards');
+        }
+
         return view('mycards', compact('myCards', 'transactions'));
     }
 

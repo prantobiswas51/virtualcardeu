@@ -4,10 +4,11 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Panel;
+use App\Models\Card;
 use Illuminate\Notifications\Notifiable;
+use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Filament\Models\Contracts\FilamentUser;
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -45,6 +46,13 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
-    
+    public function card()
+    {
+        return $this->hasOne(Card::class);
+    }
 
+    public function bank()
+    {
+        return $this->hasOne(Bank::class);
+    }
 }

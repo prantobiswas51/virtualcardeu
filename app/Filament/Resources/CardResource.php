@@ -29,13 +29,11 @@ class CardResource extends Resource
                 TextInput::make('number')->maxLength(30)->unique()->visibleOn('create'),
                 TextInput::make('expiry_date')->maxLength(10),
                 Select::make('type')->options([
-                    'Reloadable Mastercard' => 'Reloadable Mastercard',
-                    'One Time Mastercard' => 'One Time Mastercard',
-                    'Reloadable Visa' => 'Reloadable Visa',
-                    'One Time Visa' => 'One Time Visa',
+                    'Temporary Card' => 'Temporary Card',
+                    'Reloadable Visa Card' => 'Reloadable Visa Card',
                 ]),
                 TextInput::make('cvc')->numeric()->maxLength(3),
-                TextInput::make('amount')->numeric(),
+                TextInput::make('amount')->numeric()->default(0),
                 TextInput::make('status')->default('Inactive'),
             ]);
     }

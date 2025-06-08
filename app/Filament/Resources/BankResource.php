@@ -35,7 +35,7 @@ class BankResource extends Resource
                 TextInput::make('account_holder_name'),
                 Select::make('account_type')->options([
                     'Checking' => 'Checking',
-                    'Savings' => 'Savings'
+                    // 'Savings' => 'Savings'
                 ]),
                 Select::make('currency')->options([
                     'USD' => 'USD',

@@ -1,6 +1,6 @@
-<div class="flex flex-col p-6">
+{{-- <div class="flex flex-col p-6">
 
-    <section class="mb-8">
+    {{-- <section class="mb-8">
         <h2 class="text-xl font-semibold text-gray-800 mb-4">How to start with VirtualCardEU portal?</h2>
         <ul class="space-y-4">
             <li class="flex items-start">
@@ -32,9 +32,9 @@
 
     <section class="mb-8">
         <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent activity</h2>
-        <div class="flex items-start bg-green-50 rounded-lg p-4">
+        <div class="flex items-start bg-primary/10 rounded-lg p-4">
 
-            <svg class="w-6 h-6 text-green-500 mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            <svg class="w-6 h-6 text-primary mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -46,5 +46,5 @@
             </div>
 
         </div>
-    </section>
-</div>
+    </section> 
+</div> --}}

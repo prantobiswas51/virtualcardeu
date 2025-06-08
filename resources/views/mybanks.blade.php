@@ -199,7 +199,8 @@
                                         {{ $transaction->created_at->format('d M Y, h:i A') }}
                                     </td>
 
-                                    <td class="px-4 py-3">{{ $transaction->card_id }}</td>
+                                    <td class="px-4 py-3">...{{ substr($transaction->bank->bank_account_number, -3) }}</td>
+
                                     <td class="px-4 py-3 text-right text-red-600 ">${{ $transaction->amount }} </td>
                                     <td class="px-4 py-3 text-right">
                                         <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">{{ $transaction->status }}</span>
@@ -231,7 +232,7 @@
             const accountDetailsDiv = document.getElementById('account-details');
             const viewDetailsButtons = document.querySelectorAll('.view-details');
 
-            viewDetailsButtons.forEach(button => {
+           viewDetailsButtons.forEach(button => {
                 button.addEventListener('click', function () {
                     const bankId = this.dataset.id; // Get the bank ID from the data-id attribute
                     accountDetailsDiv.innerHTML = '<div class="text-center p-4">Loading bank details...</div>'; // Show loading message

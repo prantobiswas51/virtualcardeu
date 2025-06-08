@@ -1,6 +1,22 @@
-<div class="hidden md:block">
+<div class="hidden md:block ">
 
    <p class="font-bold text-primary text-3xl font-mono p-6">VirtualCardEU</p>
+
+
+   <a href="{{ route('profile.edit') }}" class="flex items-center mx-4">
+
+      @if(Auth::user()->profile_photo && file_exists(storage_path('app/public/' . Auth::user()->profile_photo)))
+      <img class="min-w-10 min-h-10 max-w-10 max-h-10 rounded-[50px]"
+         src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt="Profile Photo">
+      @else
+      <img class="min-w-10 min-h-10 max-w-10 max-h-10 rounded-[50px]" src="{{ asset('assets/avatar.png') }}"
+         alt="Avatar">
+      @endif
+      <div class="flex justify-between items-center w-full">
+         <div class="ml-2">{{ Auth::user()->name }}</div>
+         <div class="ml-2 text-blue-800 font-bold text-sm">${{ Auth::user()->balance }}</div>
+      </div>
+   </a>
 
    <div class="h-full px-3 py-4 overflow-y-auto">
       <ul class="space-y-2">
@@ -35,34 +51,12 @@
                <span class="ml-3">Transactions</span>
             </a>
          </li>
-         <li>
-            <a href="{{ route('deposit') }}"
-               class="flex items-center p-3 rounded-lg {{ request()->routeIs('deposit') ? 'bg-blue-50 text-primary' : 'text-gray-700 hover:bg-blue-50 hover:text-primary' }}">
-               <i class="fas fa-arrow-down w-6"></i>
-               <span class="ml-3">Deposit</span>
-            </a>
-         </li>
-         <li>
-            <a href="{{ route('payout') }}"
-               class="flex items-center p-3 rounded-lg {{ request()->routeIs('payout') ? 'bg-blue-50 text-primary' : 'text-gray-700 hover:bg-blue-50 hover:text-primary' }}">
-               <i class="fas fa-arrow-up w-6"></i>
-               <span class="ml-3">Withdraw</span>
-            </a>
-         </li>
-
+        
          <li>
             <a href="{{ route('support') }}"
                class="flex items-center p-3 rounded-lg {{ request()->routeIs('support') ? 'bg-blue-50 text-primary' : 'text-gray-700 hover:bg-blue-50 hover:text-primary' }}">
                <i class="fas fa-phone w-6"></i>
                <span class="ml-3">Support</span>
-            </a>
-         </li>
-
-         <li>
-            <a href="{{ route('notifications') }}"
-               class="flex items-center p-3 rounded-lg {{ request()->routeIs('support') ? 'bg-blue-50 text-primary' : 'text-gray-700 hover:bg-blue-50 hover:text-primary' }}">
-               <i class="fas fa-lg fa-bell"></i>
-               <span class="ml-3">Notifications</span>
             </a>
          </li>
 
@@ -73,22 +67,7 @@
                <span class="ml-3">Logout</span>
             </a>
          </li>
-         <li>
-            <a href="{{ route('profile.edit') }}" class="flex items-center ">
 
-               @if(Auth::user()->profile_photo && file_exists(storage_path('app/public/' . Auth::user()->profile_photo)))
-               <img class="min-w-10 min-h-10 max-w-10 max-h-10 rounded-[50px]"
-                  src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt="Profile Photo">
-               @else
-               <img class="min-w-10 min-h-10 max-w-10 max-h-10 rounded-[50px]" src="{{ asset('assets/avatar.png') }}"
-                  alt="Avatar">
-               @endif
-               <div class="flex justify-between  w-full">
-                  <div class="ml-2">{{ Auth::user()->name }}</div>
-                  <div class="ml-2">${{ Auth::user()->balance }}</div>
-               </div>
-            </a>
-         </li>
 
          @if (Auth::user()->role === 'Admin')
          <li class="" style="border-top: 1px solid black;">
@@ -102,5 +81,9 @@
 
       </ul>
 
+   </div>
+
+   <div class=" bottom-0 fixed w-full bg-cover">
+      <img src="{{ asset('assets/nav_banner.jpeg') }}" alt="">      
    </div>
 </div>

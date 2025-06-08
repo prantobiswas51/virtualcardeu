@@ -44,7 +44,7 @@
                                                 <div>{{ $myCard->expiry_date }}</div>
                                             </div>
                                             <div class="w-12">
-                                                @if ($myCard->type === 'Reloadable Mastercard' || $myCard->type === 'One Time Mastercard')
+                                                @if ($myCard->type != 'Reloadable Visa Card')
                                                 <i class="fa-brands fa-cc-mastercard text-3xl"></i>
                                                 @else
                                                 <i class="fab fa-cc-visa text-3xl"></i>
@@ -72,7 +72,7 @@
                                 <span class="font-semibold text-gray-900">${{ $myCard->amount }}</span>
                             </div>
                             <div class="flex justify-between space-x-2">
-                                @if ($myCard->type === "Mastercard Reloadable" || $myCard->type === "Visa Reloadable")
+                                @if ($myCard->type != 'Reloadable Visa Card')
                                     <button
                                     class="flex-1 bg-primary text-white py-2 px-3 rounded-md hover:bg-secondary transition-colors text-sm">
                                     <i class="fas fa-money-bill-wave mr-1"></i> Top Up

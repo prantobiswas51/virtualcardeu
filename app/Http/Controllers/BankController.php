@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bank;
+use App\Models\Notification;
 use App\Models\Setting;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -14,8 +15,16 @@ class BankController extends Controller
 
     public function banks()
     {
-        $transactions = Transaction::where('payment_method', 'Bank')->get();
+        $transactions = Transaction::where('payment_method', 'Bank')->where('user_id', Auth::id())->get();
         $my_banks = Bank::where('user_id', Auth::id())->get();
+
+        $user = Auth::user();
+
+        if (!$user->bank) {
+            return redirect()->route('order_banks');
+        }
+
+
         return view('mybanks', compact('my_banks', 'transactions'));
     }
 
@@ -68,6 +77,11 @@ class BankController extends Controller
 
             DB::commit();
 
+            $notification = new Notification;
+            $notification->user_id = Auth::id();
+            $notification->content = "Bank account ending with " . substr($bank->bank_account_number, -4) . " successfully assigned.";
+            $notification->save();
+
             return redirect()->route('banks')->with('message', 'Bank account successfully assigned.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -104,6 +118,7 @@ class BankController extends Controller
         $transaction->amount = $request->bank_balance;
         $transaction->status = "Pending";
         $transaction->type = "Incoming";
+        $transaction->merchant = "Bank to Balance";
         $transaction->save();
 
         // 4. Return a success response

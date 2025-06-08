@@ -22,47 +22,54 @@
             <!-- Filter Options -->
             <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
 
-                <div class="flex flex-wrap gap-4 justify-between">
-                    <div class="w-full md:w-auto">
-                        <label for="transaction-type" class="block text-sm font-medium text-gray-700 mb-1">Transaction
-                            Type</label>
-                        <select id="transaction-type"
-                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md">
-                            <option value="all">All Transactions</option>
-                            <option value="deposit">Deposits</option>
-                            <option value="withdrawal">Withdrawals</option>
-                            <option value="fee">Fees</option>
-                        </select>
+                <form method="GET" action="{{ route('activity') }}">
+                    <div class="flex flex-wrap gap-4 justify-between">
+                        <div class="w-full md:w-auto">
+                            <label for="transaction-type"
+                                class="block text-sm font-medium text-gray-700 mb-1">Transaction Type</label>
+                            <select name="type" id="transaction-type" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md">
+                                <option value="">All Transactions</option>
+                                <option value="deposit" {{ request('type')=='deposit' ? 'selected' : '' }}>Deposits
+                                </option>
+                                <option value="withdrawal" {{ request('type')=='withdrawal' ? 'selected' : '' }}>
+                                    Withdrawals</option>
+                                <option value="fee" {{ request('type')=='fee' ? 'selected' : '' }}>Fees</option>
+                            </select>
+                        </div>
+                        <div class="w-full md:w-auto">
+                            <label for="date-range" class="block text-sm font-medium text-gray-700 mb-1">Date
+                                Range</label>
+                            <select name="date" id="date-range" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md">
+                                <option value="">All Time</option>
+                                <option value="last7" {{ request('date')=='last7' ? 'selected' : '' }}>Last 7 days
+                                </option>
+                                <option value="last30" {{ request('date')=='last30' ? 'selected' : '' }}>Last 30 days
+                                </option>
+                                <option value="last90" {{ request('date')=='last90' ? 'selected' : '' }}>Last 90 days
+                                </option>
+                            </select>
+                        </div>
+                        <div class="w-full md:w-auto">
+                            <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                            <select name="status" id="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md">
+                                <option value="">All Statuses</option>
+                                <option value="completed" {{ request('status')=='completed' ? 'selected' : '' }}>
+                                    Completed</option>
+                                <option value="pending" {{ request('status')=='pending' ? 'selected' : '' }}>Pending
+                                </option>
+                                <option value="processing" {{ request('status')=='processing' ? 'selected' : '' }}>
+                                    Processing</option>
+                                <option value="failed" {{ request('status')=='failed' ? 'selected' : '' }}>Failed
+                                </option>
+                            </select>
+                        </div>
+                        <div class="w-full md:w-auto flex items-end">
+                            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">Apply Filters</button>
+                        </div>
                     </div>
-                    <div class="w-full md:w-auto">
-                        <label for="date-range" class="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
-                        <select id="date-range"
-                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md">
-                            <option value="all">All Time</option>
-                            <option value="last7">Last 7 days</option>
-                            <option value="last30">Last 30 days</option>
-                            <option value="last90">Last 90 days</option>
-                            <option value="custom">Custom Range</option>
-                        </select>
-                    </div>
-                    <div class="w-full md:w-auto">
-                        <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                        <select id="status"
-                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md">
-                            <option value="all">All Statuses</option>
-                            <option value="completed">Completed</option>
-                            <option value="pending">Pending</option>
-                            <option value="processing">Processing</option>
-                            <option value="failed">Failed</option>
-                        </select>
-                    </div>
-                    <div class="w-full md:w-auto flex items-end">
-                        <button type="button"
-                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
-                            Apply Filters
-                        </button>
-                    </div>
-                </div>
+                </form>
+
+
             </div>
 
             <!-- Transactions List -->
@@ -84,17 +91,20 @@
                         <div class="px-6 py-4 grid grid-cols-12 items-center hover:bg-gray-50">
                             <div class="col-span-1">
                                 @if ($transaction->payment_method === "Card")
-                                    <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 mr-3">
-                                                <i class="fas fa-credit-card"></i>
-                                            </div>
+                                <div
+                                    class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 mr-3">
+                                    <i class="fas fa-credit-card"></i>
+                                </div>
                                 @elseif($transaction->payment_method === "Bank")
-                                    <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary">
-                                        <i class="fa-solid fa-money-check-dollar"></i>
-                                    </div>
+                                <div
+                                    class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary">
+                                    <i class="fa-solid fa-money-check-dollar"></i>
+                                </div>
                                 @else
-                                    <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary">
-                                        <i class="fab fa-paypal"></i>
-                                    </div>
+                                <div
+                                    class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-primary">
+                                    <i class="fab fa-paypal"></i>
+                                </div>
                                 @endif
                             </div>
                             <div class="col-span-3">

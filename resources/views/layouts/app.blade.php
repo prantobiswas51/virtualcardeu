@@ -20,12 +20,12 @@
 <body class="font-sans">
 
     @auth
-    <div class="hidden lg:block fixed h-full w-1/6 bg-gray-100">
+    <div class="hidden lg:block fixed h-full w-1/6 bg-white">
         @include('layouts.desktop_menu')
     </div>
     @endauth
 
-    <div class="bg-gray-200 lg:ml-[16.66%] lg:w-5/6 flex flex-col lg:flex-row h-screen relative">
+    <div class="bg-gray-200 lg:ml-[16.66%] lg:w-5/6 flex flex-col lg:flex-row min-h-screen relative">
 
         @if(session('message'))
         <div class="fixed top-[100px] left-1/2 transform -translate-x-1/2 z-50">
@@ -56,12 +56,12 @@
 
 
         <!-- Main Content -->
-        <div class="w-full lg:w-3/4 lg:pr-[5%] overflow-y-auto">
+        <div class="w-full  lg:w-3/4 lg:pr-[5%]">
             {{ $slot }}
         </div>
 
         <!-- Sidebar -->
-        <div class="hidden lg:block fixed right-0 top-0 h-screen w-1/4 bg-gray-50 p-4 overflow-y-auto">
+        <div class="hidden lg:block  w-1/4 p-4 ">
             @include('layouts.sidebar')
         </div>
 

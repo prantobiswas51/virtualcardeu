@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\BankController;
+use App\Models\Bank;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BankController;
 use App\Http\Controllers\CardController;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\CryptoController;
@@ -16,8 +17,12 @@ use App\Http\Controllers\DashboardController;
 use SocialiteProviders\Manager\Config as SocialiteConfig;
 use SocialiteProviders\PayPal\Provider as PayPalProvider;
 
-Route::get('/', function () { return view('home'); })->name('home');
-Route::get('/pricing', function () { return view('pricing'); })->name('pricing');
+Route::get('/', function () {
+    return view('home');
+})->name('home');
+Route::get('/pricing', function () {
+    return view('pricing');
+})->name('pricing');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -41,6 +46,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
     Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');
+    Route::post('/notifications/mark-all-as-read', [DashboardController::class, 'mark_all_asRead'])
+        ->middleware('auth')->name('notifications_mark_all_asRead');
 
     Route::post('/upload_profile_photo', [ProfileController::class, 'uploadProfilePhoto'])->name('upload_photo');
     Route::post('/update_info', [ProfileController::class, 'update_other_info'])->name('update_other_info');
@@ -71,7 +78,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/payout', [PayoutController::class, 'index'])->name('payout');
     Route::get('/payout/paypal/success', [PayoutController::class, 'success'])->name('payout_success');
 
-    Route::get('/payout/paypal/form', function () { 
+    Route::get('/payout/paypal/form', function () {
         return view('paypal_payout');
     });
 
@@ -83,8 +90,24 @@ Route::middleware('auth')->group(function () {
     // crypto payout
     Route::post('/payout/crypto', [PayoutController::class, 'createCryptoPayout'])->name('crypto_payout');
 
-    // Card Management
+    // Bank View 
+    Route::middleware('auth')->group(function () {
+        Route::get('/my-banks/{id}', function ($id) {
+            $bank = Bank::find($id); // Use findOrFail if you want Laravel to automatically handle 404s for missing IDs
 
+            if (!$bank) {
+                // Optional: return a more specific message for not found
+                return response()->json(['message' => 'Bank account not found.'], 404);
+            }
+
+            // Make sure the bank belongs to the authenticated user for security
+            if ($bank->user_id !== Auth::id()) {
+                return response()->json(['message' => 'Unauthorized access.'], 403); // Forbidden
+            }
+
+            return response()->json($bank);
+        });
+    });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

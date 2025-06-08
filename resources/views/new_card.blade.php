@@ -57,7 +57,7 @@
                             <h3 class="text-md font-medium text-gray-900 mb-2">Fee Information</h3>
                             <ul class="space-y-2 text-sm text-gray-600">
                                 <li class="flex justify-between">
-                                    <span>Card Type</span>
+                                    <span>Card Type y</span>
                                     <p id="selectedCardType" class="text-green-500">Select Card</p>
                                 </li>
                                 <li class="flex justify-between">
@@ -85,21 +85,22 @@
                             @csrf
 
                             <div>
-                                <label class="block mb-1">Card Type</label>
+                                <label class="block mb-1 text-md">Card Type x</label>
                                 <select name="type" id="type"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
-                                    {{-- onchange handled by jQuery --}}
+                                    class="w-full text-sm px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                                    <option selected disabled>Select Card</option>
                                     @foreach ($av_grouped_cards as $type => $amountsGroup)
                                     <option value="{{ $type }}">{{ $type }}</option>
                                     @endforeach
                                 </select>
                             </div>
 
-                            <div>
-                                <label class="block mb-1">Select Amount</label>
+                            {{-- The div containing the amount field --}}
+                            <div id="amount-field-container">
+                                <label class="block mb-1 text-md">Select Amount</label>
                                 <select name="amount" id="amount"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
-                                    {{-- Initial options will be for the first 'type' --}}
+                                    class="w-full text-sm px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                                    <option selected disabled>Select amount</option> {{-- Added disabled --}}
                                     @foreach ($av_grouped_cards->first() as $amount => $cards)
                                     <option value="{{ $amount }}">${{ $amount }}.00</option>
                                     @endforeach
@@ -120,7 +121,8 @@
                         </form>
 
                         @else
-                        <p class="text-red-500 text-2xl pt-4 text-center">Something went wrong! Please try again later...</p>
+                        <p class="text-red-500 text-2xl pt-4 text-center">Something went wrong! Please try again
+                            later...</p>
                         @endif
 
                     </div>
@@ -186,13 +188,20 @@
                 let selectedType = $typeSelect.val();
                 let selectedAmount = $amountSelect.val();
                 let fee = parseFloat(@json($settings->card_issuance_fee));
-                let total = parseFloat(selectedAmount) + fee;
 
-                // Updated to show just Type and Amount as Company is removed
-                $selectedCardType.text(`${selectedType} - $${parseFloat(selectedAmount).toFixed(2)}`);
-                $cardFee.text(`-$${fee.toFixed(2)}`);
-                $totalCost.text(`-$${total.toFixed(2)}`);
+                if (selectedType && selectedAmount && !isNaN(parseFloat(selectedAmount))) {
+                    let total = parseFloat(selectedAmount) + fee;
+
+                    $selectedCardType.text(`${selectedType} - $${parseFloat(selectedAmount).toFixed(2)}`);
+                    $cardFee.text(`-$${fee.toFixed(2)}`);
+                    $totalCost.text(`-$${total.toFixed(2)}`);
+                } else {
+                    $selectedCardType.text("Select Type");
+                    $cardFee.text(`-$${fee.toFixed(2)}`);
+                    $totalCost.text(`-$0.00`);
+                }
             }
+
 
             function updateAmountOptions() {
                 let selectedType = $typeSelect.val();
@@ -215,6 +224,39 @@
             $typeSelect.on("change", updateAmountOptions);
             $amountSelect.on("change", updateSelectedText);
             updateAmountOptions();
+        });
+
+   
+        $(document).ready(function() {
+            // Get references to the select elements and the amount field container
+            const $cardTypeSelect = $('#type');
+            const $amountFieldContainer = $('#amount-field-container');
+
+            // Function to handle the visibility of the amount field
+            function toggleAmountField() {
+                if ($cardTypeSelect.val() === 'Reloadable Visa Card') {
+                    $amountFieldContainer.hide(); // Hide the amount field
+                } else {
+                    $amountFieldContainer.show(); // Show the amount field
+                }
+            }
+
+            // Call the function on page load to set initial state
+            toggleAmountField();
+
+            $cardTypeSelect.on('change', function() {
+                toggleAmountField();
+            });
+
+            // If the "Select Card" option is chosen, ensure the amount field is visible
+            // This handles cases where user might select "Select Card" after choosing Reloadable
+            $cardTypeSelect.on('change', function() {
+                if ($cardTypeSelect.val() === 'Select Card' || $cardTypeSelect.val() === 'Temporary Card') {
+                    $amountFieldContainer.show();
+                } else if ($cardTypeSelect.val() === 'Reloadable Visa Card') {
+                    $amountFieldContainer.hide();
+                }
+            });
         });
     </script>
 </x-app-layout>
