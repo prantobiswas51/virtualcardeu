@@ -75,12 +75,7 @@
                             </ul>
                         </div>
 
-                        @php
-                        // Ensure $available_cards is passed from the controller and is a Collection
-                        $av_grouped_cards = $available_cards->groupBy(['type', 'amount']);
-                        @endphp
 
-                        @if(!$av_grouped_cards->isEmpty())
                         <form action="{{ route('request_card') }}" method="POST" class="space-y-4">
                             @csrf
 
@@ -89,9 +84,9 @@
                                 <select name="type" id="type"
                                     class="w-full text-sm px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
                                     <option selected disabled>Select Card</option>
-                                    @foreach ($av_grouped_cards as $type => $amountsGroup)
-                                    <option value="{{ $type }}">{{ $type }}</option>
-                                    @endforeach
+                                    <option value="Temporary Card">Temporary Card</option>
+                                    <option value="Reloadable Visa Card">Reloadable Visa Card</option>
+
                                 </select>
                             </div>
 
@@ -101,9 +96,25 @@
                                 <select name="amount" id="amount"
                                     class="w-full text-sm px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
                                     <option selected disabled>Select amount</option> {{-- Added disabled --}}
-                                    @foreach ($av_grouped_cards->first() as $amount => $cards)
-                                    <option value="{{ $amount }}">${{ $amount }}.00</option>
-                                    @endforeach
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                    <option value="20">20</option>
+                                    <option value="25">25</option>
+                                    <option value="30">30</option>
+                                    <option value="35">35</option>
+                                    <option value="40">40</option>
+                                    <option value="45">45</option>
+                                    <option value="50">50</option>
+                                    <option value="60">60</option>
+                                    <option value="70">70</option>
+                                    <option value="80">80</option>
+                                    <option value="90">90</option>
+                                    <option value="100">100</option>
+                                    <option value="150">150</option>
+                                    <option value="200">200</option>
+                                    <option value="300">300</option>
+
                                 </select>
                             </div>
 
@@ -119,12 +130,6 @@
                                     Service</a> and <a href="#" class="text-primary hover:underline">Privacy Policy</a>
                             </p>
                         </form>
-
-                        @else
-                        <p class="text-red-500 text-2xl pt-4 text-center">Something went wrong! Please try again
-                            later...</p>
-                        @endif
-
                     </div>
                 </div>
             </div>
@@ -174,89 +179,46 @@
     </div>
 
     <script>
-        // Get grouped data from PHP, converted to JSON
-        let groupedCards = @json($av_grouped_cards);
-
         $(document).ready(function() {
-            let $typeSelect = $("#type");
-            let $amountSelect = $("#amount");
-            let $totalCost = $("#totalCost");
-            let $selectedCardType = $("#selectedCardType");
-            let $cardFee = $("#cardFee");
+        let $typeSelect = $("#type");
+        let $amountSelect = $("#amount");
+        let $amountFieldContainer = $("#amount-field-container");
+        let $totalCost = $("#totalCost");
+        let $selectedCardType = $("#selectedCardType");
+        let $cardFee = $("#cardFee");
 
-            function updateSelectedText() {
-                let selectedType = $typeSelect.val();
-                let selectedAmount = $amountSelect.val();
-                let fee = parseFloat(@json($settings->card_issuance_fee));
+        function updateSelectedText() {
+            let selectedType = $typeSelect.val();
+            let selectedAmount = $amountSelect.val();
+            let fee = parseFloat(@json($settings->card_issuance_fee));
 
-                if (selectedType && selectedAmount && !isNaN(parseFloat(selectedAmount))) {
-                    let total = parseFloat(selectedAmount) + fee;
-
-                    $selectedCardType.text(`${selectedType} - $${parseFloat(selectedAmount).toFixed(2)}`);
-                    $cardFee.text(`-$${fee.toFixed(2)}`);
-                    $totalCost.text(`-$${total.toFixed(2)}`);
-                } else {
-                    $selectedCardType.text("Select Type");
-                    $cardFee.text(`-$${fee.toFixed(2)}`);
-                    $totalCost.text(`-$0.00`);
-                }
+            // Show/hide amount field based on card type
+            if (selectedType === 'Reloadable Visa Card') {
+                $amountFieldContainer.hide();
+                selectedAmount = 0; // Treat amount as 0 for reloadable
+            } else {
+                $amountFieldContainer.show();
             }
 
+            if (selectedType && !isNaN(parseFloat(selectedAmount))) {
+                let total = parseFloat(selectedAmount) + fee;
 
-            function updateAmountOptions() {
-                let selectedType = $typeSelect.val();
-                $amountSelect.empty();
-
-                // Populate based on selected type
-                if (groupedCards[selectedType]) {
-                    for (let amount in groupedCards[selectedType]) {
-                        $amountSelect.append(`<option value="${amount}">$${parseFloat(amount).toFixed(2)}</option>`);
-                    }
-                }
-
-                if ($amountSelect.val() === null && $amountSelect.find('option').length > 0) {
-                    $amountSelect.val($amountSelect.find('option:first').val());
-                }
-
-                updateSelectedText(); // Update displayed text after amounts change
+                $selectedCardType.text(`${selectedType} - $${parseFloat(selectedAmount).toFixed(2)}`);
+                $cardFee.text(`-$${fee.toFixed(2)}`);
+                $totalCost.text(`-$${total.toFixed(2)}`);
+            } else {
+                $selectedCardType.text("Select Type");
+                $cardFee.text(`-$${fee.toFixed(2)}`);
+                $totalCost.text(`-$0.00`);
             }
+        }
 
-            $typeSelect.on("change", updateAmountOptions);
-            $amountSelect.on("change", updateSelectedText);
-            updateAmountOptions();
-        });
+        $typeSelect.on("change", updateSelectedText);
+        $amountSelect.on("change", updateSelectedText);
 
-   
-        $(document).ready(function() {
-            // Get references to the select elements and the amount field container
-            const $cardTypeSelect = $('#type');
-            const $amountFieldContainer = $('#amount-field-container');
-
-            // Function to handle the visibility of the amount field
-            function toggleAmountField() {
-                if ($cardTypeSelect.val() === 'Reloadable Visa Card') {
-                    $amountFieldContainer.hide(); // Hide the amount field
-                } else {
-                    $amountFieldContainer.show(); // Show the amount field
-                }
-            }
-
-            // Call the function on page load to set initial state
-            toggleAmountField();
-
-            $cardTypeSelect.on('change', function() {
-                toggleAmountField();
-            });
-
-            // If the "Select Card" option is chosen, ensure the amount field is visible
-            // This handles cases where user might select "Select Card" after choosing Reloadable
-            $cardTypeSelect.on('change', function() {
-                if ($cardTypeSelect.val() === 'Select Card' || $cardTypeSelect.val() === 'Temporary Card') {
-                    $amountFieldContainer.show();
-                } else if ($cardTypeSelect.val() === 'Reloadable Visa Card') {
-                    $amountFieldContainer.hide();
-                }
-            });
-        });
+        updateSelectedText(); // Initial call on page load
+    });
     </script>
+
+
 </x-app-layout>

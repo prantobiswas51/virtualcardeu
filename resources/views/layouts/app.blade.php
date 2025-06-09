@@ -54,6 +54,33 @@
         </style>
         @endif
 
+        @if(session('alert'))
+        <div class="fixed top-[100px] left-1/2 transform -translate-x-1/2 z-50">
+            <div
+                class="bg-red-600 text-white shadow-lg rounded-md px-6 py-3 w-auto max-w-full text-center animate-fade-in">
+                {{ session('alert') }}
+            </div>
+        </div>
+
+        <style>
+            @keyframes fade-in {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .animate-fade-in {
+                animation: fade-in 0.3s ease-out;
+            }
+        </style>
+        @endif
+
 
         <!-- Main Content -->
         <div class="w-full  lg:w-3/4 lg:pr-[5%]">

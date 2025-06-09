@@ -45,18 +45,6 @@
                     </div>
 
 
-                    @php
-                    $account_types = $available_banks->keys(); // top-level keys: account_type
-                    $currencies = collect();
-
-                    foreach ($available_banks as $currencyGroup) {
-                    $currencies = $currencies->merge($currencyGroup->keys());
-                    }
-
-                    $currencies = $currencies->unique()->values(); // remove duplicates
-                    @endphp
-
-
                     <form class="space-y-6" method="post" action="{{ route('request_bank') }}">
                         @csrf
                         <input type="hidden" name="user_id" value="{{ Auth::id() }}">
@@ -67,9 +55,7 @@
                             <select name="account_type" id="account_type"
                                 class="w-full text-sm px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
                                 <option value="" class="">Select Account Type</option>
-                                @foreach ($account_types as $account_type)
-                                <option class="text-md" value="{{ $account_type }}">{{ ucfirst($account_type) }}</option>
-                                @endforeach
+                                <option class="text-md" value="Checking">Checking</option>
                             </select>
                         </div>
 
@@ -78,22 +64,12 @@
                             <select name="currency" id="currency"
                                 class="w-full text-sm px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
                                 <option value="">Select Currency</option>
-                                @foreach ($currencies as $currency)
-                                <option value="{{ $currency }}">{{ strtoupper($currency) }}</option>
-                                @endforeach
+                                <option value="USD">USD</option>
+                                <option value="EURO">EURO</option>
+                                <option value="GBP">GBP</option>
+
                             </select>
                         </div>
-
-                        <div>
-                            <label for="account_number" class="block text-sm font-medium text-gray-700 mb-1">Account
-                                Number</label>
-                            <select name="account_number" id="account_number"
-                                class="w-full text-sm px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
-                                <option value="">Select Account Number</option>
-                            </select>
-                        </div>
-
-                        <input type="hidden" name="bank_id" id="bank_id">
 
                         <div class="bg-gray-50 p-4 rounded-lg">
                             <h3 class="text-md font-medium text-gray-900 mb-2">Fee Information</h3>
@@ -174,56 +150,5 @@
             </div>
         </div>
     </main>
-    <script>
-        const bankData = {!! $available_banks_json !!};
-
-        const accountTypeSelect = document.getElementById('account_type');
-        const currencySelect = document.getElementById('currency');
-        const accountNumberSelect = document.getElementById('account_number');
-
-        accountTypeSelect.addEventListener('change', function () {
-            const selectedType = this.value;
-
-            // Clear existing options
-            currencySelect.innerHTML = '<option value="">Select Currency</option>';
-            accountNumberSelect.innerHTML = '<option value="">Select Account Number</option>';
-
-            if (bankData[selectedType]) {
-                Object.keys(bankData[selectedType]).forEach(currency => {
-                    let option = document.createElement('option');
-                    option.value = currency;
-                    option.textContent = currency.toUpperCase();
-                    currencySelect.appendChild(option);
-                });
-            }
-        });
-
-        currencySelect.addEventListener('change', function () {
-            const selectedType = accountTypeSelect.value;
-            const selectedCurrency = this.value;
-
-            // Clear existing options
-            accountNumberSelect.innerHTML = '<option value="">Select Account Number</option>';
-            document.getElementById('bank_id').value = '';
-
-            if (bankData[selectedType] && bankData[selectedType][selectedCurrency]) {
-                bankData[selectedType][selectedCurrency].forEach(bank => {
-                    let option = document.createElement('option');
-                    // Extract the last three digits for display
-                    const lastThreeDigits = bank.bank_account_number.slice(-3);
-                    option.value = bank.bank_account_number; // Keep full number in value for submission
-                    option.textContent = '... ' + lastThreeDigits; // Display only last 3 digits with ellipsis
-                    option.dataset.id = bank.id; // store ID in data attribute
-                    accountNumberSelect.appendChild(option);
-                });
-            }
-        });
-
-        accountNumberSelect.addEventListener('change', function () {
-            const selectedOption = this.options[this.selectedIndex];
-            const bankId = selectedOption.dataset.id || '';
-            document.getElementById('bank_id').value = bankId;
-        });
-    </script>
 
 </x-app-layout>

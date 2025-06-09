@@ -46,15 +46,15 @@ class BankController extends Controller
 
     public function request_bank(Request $request)
     {
+
         $request->validate([
-            'bank_id' => 'required|numeric',
+            'account_type' => 'required|string',
+            'currency' => 'required|string',
         ]);
 
         DB::beginTransaction();
 
         try {
-            $bank = Bank::findOrFail($request->bank_id);
-
             $user = Auth::user();
             $settings = Setting::first();
 
@@ -63,6 +63,17 @@ class BankController extends Controller
             if ($user->balance < $total_fee) {
                 DB::rollBack();
                 return redirect()->route('order_banks')->with('message', 'Not enough balance, Please deposit.');
+            }
+
+            // Find the first available bank with matching account_type and currency
+            $bank = Bank::whereNull('user_id')
+                ->where('account_type', $request->account_type)
+                ->where('currency', $request->currency)
+                ->first();
+
+            if (!$bank) {
+                DB::rollBack();
+                return redirect()->back()->with('message', 'Something went wrong, please try again later.');
             }
 
             // Update bank assignment
@@ -78,7 +89,7 @@ class BankController extends Controller
             DB::commit();
 
             $notification = new Notification;
-            $notification->user_id = Auth::id();
+            $notification->user_id = $user->id;
             $notification->content = "Bank account ending with " . substr($bank->bank_account_number, -4) . " successfully assigned.";
             $notification->save();
 
@@ -88,6 +99,7 @@ class BankController extends Controller
             return redirect()->back()->with('message', 'Something went wrong. Please try again.');
         }
     }
+
 
     public function show($id)
     {

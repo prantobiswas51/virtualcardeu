@@ -72,7 +72,7 @@
                                 <span class="font-semibold text-gray-900">${{ $myCard->amount }}</span>
                             </div>
                             <div class="flex justify-between space-x-2">
-                                @if ($myCard->type != 'Reloadable Visa Card')
+                                @if ($myCard->type != 'Temporary Card')
                                     <button
                                     class="flex-1 bg-primary text-white py-2 px-3 rounded-md hover:bg-secondary transition-colors text-sm">
                                     <i class="fas fa-money-bill-wave mr-1"></i> Top Up
