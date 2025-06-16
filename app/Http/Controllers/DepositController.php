@@ -61,7 +61,6 @@ class DepositController extends Controller
         ]);
     }
 
-
     // Deposit page return + currency
     public function index()
     {
