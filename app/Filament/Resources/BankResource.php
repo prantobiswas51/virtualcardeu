@@ -26,26 +26,33 @@ class BankResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('bank_name'),
+                TextInput::make('bank_name')->required(),
                 Select::make('bank_location')->options([
                     'USA' => 'USA',
                     'England' => 'England',
                     'Japan' => 'Japan'
-                ]),
+                ])->required(),
                 TextInput::make('account_holder_name'),
                 Select::make('account_type')->options([
                     'Checking' => 'Checking',
                     // 'Savings' => 'Savings'
-                ]),
+                ])->required(),
                 Select::make('currency')->options([
                     'USD' => 'USD',
                     'GBP' => 'GBP',
                     'EURO' => 'EURO'
-                ]),
+                ])->required(),
                 TextInput::make('routing_number'),
+                TextInput::make('routing_aba'),
+
+                Select::make('transfer_type')->options([
+                    'ACH' => 'ACH',
+                    'Local Transfer' => 'Local Transfer'
+                ]),
                 TextInput::make('bank_account_number'),
                 TextInput::make('bic'),
                 TextInput::make('iban'),
+                TextInput::make('bank_address'),
                 TextInput::make('bank_balance'),
                 TextInput::make('bank_short_code'),
                 Select::make('status')->options([

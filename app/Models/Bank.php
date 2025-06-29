@@ -9,6 +9,11 @@ class Bank extends Model
     protected $fillable = [
         'user_id',
         'bank_name',
+
+        'transfer_type',
+        'bank_address',
+        'routing_aba',
+
         'bank_location',
         'account_holder_name',
         'account_type',

@@ -30,6 +30,7 @@ class BankController extends Controller
 
     public function order_banks()
     {
+        
         $available_banks = Bank::where('status', 'Inactive')->get()->groupBy([
             fn($bank) => $bank->account_type,
             fn($bank) => $bank->currency
@@ -51,6 +52,13 @@ class BankController extends Controller
             'account_type' => 'required|string',
             'currency' => 'required|string',
         ]);
+
+        $user = Auth::user();
+        $bankCount = $user->bank()->count(); // Adjust based on your relation
+
+        if ($bankCount >= 3) {
+            return redirect()->route('order_banks')->with('message', 'You can only purchase up to 3 banks.');
+        }
 
         DB::beginTransaction();
 

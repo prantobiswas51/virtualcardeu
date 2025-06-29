@@ -16,6 +16,10 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('bank_name');
             $table->string('bank_location');
+
+            $table->string('transfer_type')->nullable();
+            $table->string('routing_aba')->nullable();
+
             $table->string('account_type');
             $table->string('account_holder_name')->nullable();
             $table->string('currency')->default('USD');
