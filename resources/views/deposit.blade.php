@@ -23,7 +23,8 @@
                                     <div class="flex gap-3 border-b">
                                         <div class="payment_method p-2 px-4 flex items-center justify-center cursor-pointer hover:text-blue-700"
                                             onclick="selectPaymentMethod(this, 'paypal')">
-                                            <img class="w-8 mr-2" src="{{ asset('assets/paypal.png') }}" alt=""> PayPal
+                                            <img class="w-8 mr-2" src="{{ asset('assets/paypal.png') }}" alt="">
+                                            PayPal
                                         </div>
 
                                         <div class="payment_method p-2  px-4 flex items-center justify-center cursor-pointer hover:text-blue-700"
@@ -34,7 +35,8 @@
 
                                         <div class="payment_method p-2  px-4  flex items-center justify-center cursor-pointer hover:text-blue-700"
                                             onclick="selectPaymentMethod(this, 'crypto')">
-                                            <img class="w-8 mr-2" src="{{ asset('assets/crypto.png') }}" alt=""> Crypto
+                                            <img class="w-8 mr-2" src="{{ asset('assets/crypto.png') }}" alt="">
+                                            Crypto
                                         </div>
                                     </div>
 
@@ -75,21 +77,22 @@
                     <!-- Payment Form -->
                     <div id="payment_form" class="mt-6">
 
-                        <form class="space-y-6" id="deposit_form" action="{{ route('deposit_paypal') }}" method="POST" >
+                        <form class="space-y-6" id="deposit_form" action="{{ route('deposit_paypal') }}" method="POST">
                             @csrf
 
                             {{-- Payment Method --}}
                             <input type="hidden" id="selected_method" value="">
 
                             <div>
-                                <label for="amount" class="block text-sm font-medium text-gray-700 mb-1">Amount to Deposit (USD)</label>
+                                <label for="amount" class="block text-sm font-medium text-gray-700 mb-1">Amount to
+                                    Deposit (USD)</label>
                                 <div class="mt-1 relative rounded-md shadow-sm">
                                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <span class="text-gray-500 sm:text-sm">$</span>
                                     </div>
 
                                     {{-- Total amount --}}
-                                    <input type="text" name="amount" id="amount"
+                                    <input type="text" id="amount"
                                         class="focus:ring-primary focus:border-primary block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md py-3"
                                         placeholder="10.00">
 
@@ -115,7 +118,8 @@
                                         <span class="font-medium">$<span id="deposit_amount">0.00</span></span>
                                     </li>
                                     <li class="flex justify-between">
-                                        <span>Processing Fee ({{ $Settings->withdrawal_fee ?? 'If you are admin, update Update Settings!'}}%)</span>
+                                        <span>Processing Fee
+                                            ({{ $Settings->withdrawal_fee ?? 'If you are admin, update Update Settings!' }}%)</span>
                                         <span class="font-medium">$<span id="fee_amount">0.00</span></span>
                                     </li>
                                     <li class="flex justify-between border-t border-gray-200 pt-2 mt-2">
@@ -193,7 +197,6 @@
 
 
     <script>
-
         function selectPaymentMethod(element, method) {
             document.getElementById('selected_method').value = method;
 
@@ -207,16 +210,26 @@
             element.classList.remove('border-b-2', 'border-sky-400');
             element.classList.add('border-b-2', 'border-sky-400', 'text-sky-400');
 
+            // Update the form action dynamically
+            const depositForm = document.getElementById('deposit_form');
+            if (method === 'paypal') {
+                depositForm.action = "{{ route('deposit_paypal') }}";
+            } else if (method === 'payeer') {
+                depositForm.action = "{{ route('deposit_payeer') }}";
+            } else if (method === 'crypto') {
+                depositForm.action = "{{ route('deposit_crypto') }}";
+            }
+
             checkSelection();
         }
 
-        document.querySelector('#amount')?.addEventListener('input', function () {
+        document.querySelector('#amount')?.addEventListener('input', function() {
             document.querySelectorAll('.payment_amount').forEach(element => {
                 element.classList.remove('bg-blue-400', 'text-white');
                 element.classList.add('bg-gray-50', 'text-black');
             });
 
-            checkSelection(); // Ensure the "Next" button is updated properly
+            checkSelection();
         });
 
 
@@ -224,12 +237,12 @@
             document.getElementById('amount').value = amount;
 
             document.querySelectorAll('.payment_amount').forEach(div => {
-                div.classList.remove('bg-blue-400', 'text-white');
+                div.classList.remove('bg-primary', 'text-white');
                 div.classList.add('bg-gray-50', 'text-black');
             });
 
             element.classList.remove('bg-gray-50', 'text-black');
-            element.classList.add('bg-blue-400', 'text-white');
+            element.classList.add('bg-primary', 'text-white');
 
             updateFeeSummary(); // add this
             checkSelection();
@@ -240,7 +253,7 @@
             const paymentMethod = document.getElementById('selected_method').value;
             const amount = document.getElementById('amount').value;
             const submitButton = document.getElementById('next_button');
-            document.getElementById('update_payment_method').innerText =  paymentMethod;
+            document.getElementById('update_payment_method').innerText = paymentMethod;
 
             if (paymentMethod && amount) {
                 submitButton.classList.remove('bg-gray-600');
@@ -279,40 +292,15 @@
         }
 
 
-        document.querySelector('#amount')?.addEventListener('input', function () {
+        document.querySelector('#amount')?.addEventListener('input', function() {
             document.querySelectorAll('.payment_amount').forEach(element => {
-                element.classList.remove('bg-blue-400', 'text-white');
+                element.classList.remove('bg-primary', 'text-white');
                 element.classList.add('bg-gray-50', 'text-black');
             });
 
             updateFeeSummary(); // add this
             checkSelection();
         });
-
     </script>
 
 </x-app-layout>
-
-{{-- Currency Selector --}}
-{{--
-<div class="w-full my-4 hidden" id="currencies_div">
-    <p class="py-2">Select currency you want to pay</p>
-    <select name="currency" id="currency" class="w-full p-2 border bg-gray-800 border-gray-300 rounded">
-        <option value="">Currencies</option>
-        @if (!empty($currencies['currencies']))
-        @foreach ($currencies['currencies'] as $currency)
-        <option value="{{ $currency }}">{{ strtoupper($currency) }}</option>
-        @endforeach
-        @endif
-
-    </select>
-</div>
-
-// Show or hide currencies_div based on selected method
-// const currenciesDiv = document.getElementById('currencies_div');
-// if (method === 'crypto') {
-// currenciesDiv.classList.remove('hidden');
-// } else {
-// currenciesDiv.classList.add('hidden');
-// }
---}}

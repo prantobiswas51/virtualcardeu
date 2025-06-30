@@ -17,7 +17,7 @@
                 <ul>
                     <li><a href="{{ route('home') }}">Home</a></li>
                     <li><a href="{{ route('pricing') }}">Pricing</a></li>
-                    <li><a href="{{ route('support') }}">Contact</a></li>
+                    <li><a href="{{ route('contact') }}">Contact</a></li>
 
                     @auth
                         <li><a href="{{ route('dashboard') }}" class="btn-login">Dashboard</a></li>

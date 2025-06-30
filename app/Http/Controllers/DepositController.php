@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 
 use PayPal\Api\RedirectUrls;
 use PayPal\Api\PaymentExecution;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -26,7 +27,6 @@ class DepositController extends Controller
 {
 
     private $_api_context;
-    private $apiKey;
 
     public function __construct()
     {
@@ -61,19 +61,10 @@ class DepositController extends Controller
         ]);
     }
 
-    // Deposit page return + currency
     public function index()
     {
-       $Settings = Setting::first();
-       return view('deposit', compact('Settings'));
-    }
-
-    public function feeCheck(Request $request)
-    {
-        $method = $request->selected_method;
-        $amount = $request->total_amount;
-
-        return view('deposit_fee', compact(['method', 'amount']));
+        $Settings = Setting::first();
+        return view('deposit', compact('Settings'));
     }
 
     // Paypal
@@ -100,17 +91,29 @@ class DepositController extends Controller
         $payment = new Payment();
         $payment->setIntent('sale')->setPayer($payer)->setTransactions(array($transaction))->setRedirectUrls($redirectUrls);
 
+
+
         try {
             $payment->create($this->_api_context);
         } catch (\PayPal\Exception\PayPalConnectionException $ex) {
-            if (Config::get('app.debug')) {
-                Session::put('error', 'Connection Timeout');
-                return Redirect::route('deposit');
-            } else {
-                Session::put('error', 'Something went wrong! Sorry for inconveninet');
-                return Redirect::route('deposit');
+            // Log the real PayPal error
+            Log::error('PayPal Connection Exception: ' . $ex->getMessage());
+            Log::error('PayPal Error Data: ' . $ex->getData());
+
+            // Show full error if in debug mode
+            if (config('app.debug')) {
+                return response()->json([
+                    'error' => 'PayPal API Error',
+                    'message' => $ex->getMessage(),
+                    'data' => json_decode($ex->getData(), true),
+                ], 500);
             }
+
+            // Otherwise, show user-friendly message
+            Session::put('error', 'Something went wrong with PayPal. Please try again.');
+            return Redirect::route('deposit');
         }
+
 
         foreach ($payment->getLinks() as $link) {
             if ($link->getRel() == 'approval_url') {
@@ -254,7 +257,7 @@ class DepositController extends Controller
     public function handleWebhook(Request $request)
     {
         $data = $request->all();
-        
+
         // Log the webhook data for debugging
         \Illuminate\Support\Facades\Log::info('Payment webhook received', $data);
 
@@ -359,7 +362,7 @@ class DepositController extends Controller
     {
         // Log the success
         \Illuminate\Support\Facades\Log::info('Payeer payment successful');
-        
+
         // Update user balance and create transaction
         $user = Auth::user();
         if ($user) {
@@ -388,7 +391,7 @@ class DepositController extends Controller
     {
         // Log the failure
         \Illuminate\Support\Facades\Log::error('Payeer payment failed');
-        
+
         return view('payeer_fail')->with('error', 'Payment failed. Please try again or contact support.');
     }
 }

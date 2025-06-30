@@ -14,15 +14,21 @@ use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\DepositController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TicketController;
 use SocialiteProviders\Manager\Config as SocialiteConfig;
 use SocialiteProviders\PayPal\Provider as PayPalProvider;
 
 Route::get('/', function () {
     return view('home');
 })->name('home');
+
 Route::get('/pricing', function () {
     return view('pricing');
 })->name('pricing');
+
+Route::get('/contact', function () {
+    return view('contact');
+})->name('contact');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -31,7 +37,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/activity', [DashboardController::class, 'activity'])->name('activity');
-    Route::get('/support', [DashboardController::class, 'support'])->name('support');
+
+    Route::get('/support', [TicketController::class, 'index'])->name('support');
+    Route::post('/support/create', [TicketController::class, 'create_ticket'])->name('create_ticket');
 
     // Manage Cards
     Route::get('/cards', [CardController::class, 'cards'])->name('cards');
@@ -46,8 +54,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
     Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');
-    Route::post('/notifications/mark-all-as-read', [DashboardController::class, 'mark_all_asRead'])
-        ->middleware('auth')->name('notifications_mark_all_asRead');
+    Route::post('/notifications/mark-all-as-read', [DashboardController::class, 'mark_all_asRead'])->middleware('auth')->name('notifications_mark_all_asRead');
 
     Route::post('/upload_profile_photo', [ProfileController::class, 'uploadProfilePhoto'])->name('upload_photo');
     Route::post('/update_info', [ProfileController::class, 'update_other_info'])->name('update_other_info');
@@ -57,7 +64,7 @@ Route::middleware('auth')->group(function () {
 
     // payments
     Route::get('/deposit', [DepositController::class, 'index'])->name('deposit');
-    Route::get('/deposit/fee_check', [DepositController::class, 'feeCheck'])->name('deposit_fee_check');
+    // Route::get('/deposit/fee_check', [DepositController::class, 'feeCheck'])->name('deposit_fee_check');
 
     // paypal payment
     Route::post('/deposit/paypal', [DepositController::class, 'postPayWithPaypal'])->name('deposit_paypal');
