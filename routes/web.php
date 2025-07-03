@@ -38,8 +38,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/activity', [DashboardController::class, 'activity'])->name('activity');
 
+    // Ticket control
     Route::get('/support', [TicketController::class, 'index'])->name('support');
     Route::post('/support/create', [TicketController::class, 'create_ticket'])->name('create_ticket');
+    Route::get('/ticket/{id}', [TicketController::class, 'show_ticket'])->name('view_ticket');
+    Route::post('/ticket/{ticket}/reply', [TicketController::class, 'ticket_reply'])->name('ticket_reply');
+
 
     // Manage Cards
     Route::get('/cards', [CardController::class, 'cards'])->name('cards');

@@ -56,4 +56,9 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->hasOne(Bank::class);
     }
+
+    public function ticket()
+    {
+        return $this->hasOne(Ticket::class);
+    }
 }

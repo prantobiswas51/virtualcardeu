@@ -17,19 +17,6 @@
                 <form action="{{ route('create_ticket') }}" method="POST" class="space-y-5">
                     @csrf
 
-                    <div>
-                        <label for="name" class="block font-medium text-sm text-gray-700">Name</label>
-                        <input type="text" name="name" id="name"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary"
-                            required value="{{ old('email', auth()->user()->name) }}">
-                    </div>
-
-                    <div>
-                        <label for="email" class="block font-medium text-sm text-gray-700">Email</label>
-                        <input type="email" name="email" id="email"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary"
-                            required value="{{ old('email', auth()->user()->email) }}">
-                    </div>
 
                     <div>
                         <label for="number" class="block font-medium text-sm text-gray-700">Phone Number
@@ -63,6 +50,49 @@
                         Our team typically responds within 24–48 hours.
                     </p>
                 </form>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm mt-4 p-4">
+                <h2 class="text-lg font-bold">List of Tickets</h2>
+
+                <div class="overflow-x-auto border rounded-lg shadow-sm">
+                    <table class="min-w-full divide-y divide-gray-200 text-sm">
+                        <thead class="bg-gray-100 text-gray-700">
+                            <tr>
+                                <th class="px-4 py-2 text-left font-semibold">Name</th>
+                                <th class="px-4 py-2 text-left font-semibold">Subject</th>
+                                <th class="px-4 py-2 text-left font-semibold">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            @forelse ($tickets as $ticket)
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-2">{{ Auth::user()->name }}</td>
+                                    
+                                    <td class="px-4 py-2">
+                                        <a href="{{ route('view_ticket', ['id' => $ticket->id]) }}"
+                                            class="text-blue-600 hover:underline">
+                                            {{ $ticket->subject }}
+                                        </a>
+                                    </td>
+
+                                    <td class="px-4 py-2">
+                                        <span
+                                            class="inline-block px-2 py-1 text-xs font-medium rounded-full {{ $ticket->status === 'Open' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                                            {{ ucfirst($ticket->status) }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="3" class="px-4 py-2 text-center text-gray-500">
+                                        No tickets found.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
