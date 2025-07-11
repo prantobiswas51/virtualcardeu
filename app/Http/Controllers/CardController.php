@@ -101,9 +101,6 @@ class CardController extends Controller
         }
     }
 
-
-
-
     public function cards()
     {
         $transactions = Transaction::where('payment_method', 'Card')->where('user_id', Auth::id())->get();
@@ -128,5 +125,12 @@ class CardController extends Controller
         $settings = Setting::first();
 
         return view('new_card', compact('available_cards', 'settings'));
+    }
+
+    public function transactions($cardId)
+    {
+        $transactions = Transaction::where('card_id', $cardId)->get();
+
+        return response()->json($transactions);
     }
 }

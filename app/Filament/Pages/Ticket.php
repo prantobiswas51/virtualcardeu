@@ -8,7 +8,9 @@ use Illuminate\Contracts\View\View;
 
 class Ticket extends Page
 {
-    protected static ?string $navigationIcon = 'heroicon-o-ticket'; // Icon for the sidebar
+    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-right'; // Icon for the sidebar
+    protected static ?string $navigationGroup = 'Tickets';
+    protected static ?string $navigationLabel = 'Ticket Chat';
 
     protected static string $view = 'filament.pages.ticket'; // Path to the view
 

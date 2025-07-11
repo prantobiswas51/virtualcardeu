@@ -1,5 +1,5 @@
 
-<div class="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-md z-50">
+<div class="md:hidden fixed bottom-0  left-0 right-0 bg-white shadow-md z-50">
     <div class="flex justify-between px-6 py-3">
 
         <a href="{{ route('dashboard') }}"

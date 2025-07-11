@@ -26,7 +26,7 @@
         </div>
     @endauth
 
-    <div class="bg-gray-200 lg:ml-[16.66%] lg:w-5/6 flex flex-col lg:flex-row min-h-screen relative">
+    <div class="bg-gray-200 lg:ml-[16.66%] lg:w-5/6 flex flex-col lg:flex-row min-h-screen relative ">
 
         @if (session('message'))
             <div class="fixed top-[100px] left-1/2 transform -translate-x-1/2 z-50">
