@@ -36,7 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/activity', [DashboardController::class, 'activity'])->name('activity');
+    Route::get('/transactions', [DashboardController::class, 'activity'])->name('activity');
 
     // Ticket control
     Route::get('/support', [TicketController::class, 'index'])->name('support');
@@ -51,6 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/cards/request_card', [CardController::class, 'requestCard'])->name('request_card');
     
     Route::get('/cards/{card}/transactions', [CardController::class, 'transactions']);
+    Route::post('/cards/topup', [CardController::class, 'card_topup'])->name('card_topup');
 
 
     // Manage Banks

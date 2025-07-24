@@ -53,12 +53,9 @@
                             <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
                             <select name="status" id="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md">
                                 <option value="">All Statuses</option>
-                                <option value="completed" {{ request('status')=='completed' ? 'selected' : '' }}>
-                                    Completed</option>
-                                <option value="pending" {{ request('status')=='pending' ? 'selected' : '' }}>Pending
-                                </option>
-                                <option value="processing" {{ request('status')=='processing' ? 'selected' : '' }}>
-                                    Processing</option>
+                                <option value="completed" {{ request('status')=='completed' ? 'selected' : '' }}>Completed</option>
+                                <option value="pending" {{ request('status')=='pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="processing" {{ request('status')=='processing' ? 'selected' : '' }}>Processing</option>
                                 <option value="failed" {{ request('status')=='failed' ? 'selected' : '' }}>Failed
                                 </option>
                             </select>
@@ -129,7 +126,7 @@
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
                                     @if ($transaction->status === 'Approved') 
                                         text-green-800 bg-green-100
-                                    @elseif ($transaction->status === 'pending') 
+                                    @elseif ($transaction->status === 'Pending') 
                                         text-yellow-800 bg-yellow-100
                                     @else
                                         text-red-600 bg-red-100

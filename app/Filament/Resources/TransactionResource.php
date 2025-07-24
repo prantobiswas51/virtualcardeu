@@ -52,7 +52,12 @@ class TransactionResource extends Resource
                 ]),
                 TextInput::make('payment_id'),
                 TextInput::make('amount')->numeric(),
-                TextInput::make('status'),
+                Select::make('status')->options([
+                    'Pending' => 'Pending',
+                    'Approved' => 'Approved',
+                    'Insufficient Balance' => 'Insufficient Balance',
+                    'Canceled' => 'Canceled'
+                ]),
                 TextInput::make('type')->default('Unknown'),
                 TextInput::make('merchant')->label('Merchant (Ex-Amazon)'),
             ]);
@@ -101,6 +106,70 @@ class TransactionResource extends Resource
                                 $user->balance += $record->amount;
                                 $user->save();
 
+                            }
+
+                            DB::commit();
+
+                            Notification::make()
+                                ->title('Transaction approved successfully!')
+                                ->success()
+                                ->send();
+
+                        } catch (\Exception $e) {
+                            DB::rollBack();
+
+                            Notification::make()
+                                ->title('Error approving transaction!')
+                                ->body($e->getMessage())
+                                ->danger()
+                                ->send();
+                        }
+                    }),
+
+                    Tables\Actions\Action::make('approve')
+                    ->label('Approve')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->requiresConfirmation() // Ask for confirmation before approving
+                    ->modalHeading('Approve Transaction')
+                    ->modalDescription('Are you sure you want to approve this transaction and update the Card balance?')
+                    ->visible(fn (Transaction $record): bool => $record->status === 'Pending' || $record->status === 'Insufficient Balance' && $record->type === 'Topup' && !is_null($record->card_id))
+                    ->action(function (Transaction $record) {
+                        DB::beginTransaction();
+                        try {
+                            // Fetch user
+                            $user = User::findOrFail($record->user_id);
+
+                            // Check if user has sufficient balance
+                            if ($user->balance < $record->amount) {
+                                DB::rollBack();
+
+                                $record->status = 'Insufficient Balance';
+                                $record->save();
+
+                                Notification::make()
+                                    ->title('Insufficient Balance')
+                                    ->body("User does not have enough balance to complete the Topup.")
+                                    ->danger()
+                                    ->send();
+                                return;
+                            }
+
+
+
+                            // Update transaction status
+                            $record->status = 'Approved';
+                            $record->save();
+
+                            // Update card balance if it's an topup transaction
+                            if ($record->type === 'Topup' && $record->card_id) {
+                                $card = Card::findOrFail($record->card_id);
+                                $card->amount += $record->amount;
+                                $card->save();
+
+                                $user = User::findOrFail($record->user_id);
+                                $user->balance -= $record->amount;
+                                $user->save();
                             }
 
                             DB::commit();

@@ -133,4 +133,34 @@ class CardController extends Controller
 
         return response()->json($transactions);
     }
+
+    public function card_topup(Request $request)
+    {
+        
+        // Validate request
+        $request->validate([
+            'topup_amount' => 'required|numeric|min:1',
+            'card_id' => 'required|exists:cards,id', // assuming card_id is submitted
+        ]);
+
+        $user = Auth::user();
+
+        // Check if user has enough balance
+        if ($user->balance < $request->topup_amount) {
+            return redirect()->back()->with('alert', 'Not enough balance');
+        }
+
+        // Create transaction
+        $transaction = new Transaction();
+        $transaction->user_id = $user->id;
+        $transaction->card_id = $request->card_id;
+        $transaction->payment_method = 'Card';
+        $transaction->merchant = 'MasterCard'; 
+        $transaction->amount = $request->topup_amount;
+        $transaction->status = 'Pending'; 
+        $transaction->type = 'Topup';
+        $transaction->save();
+
+        return redirect()->back()->with('message', 'Top-up Requested, Please wait for approval.');
+    }
 }

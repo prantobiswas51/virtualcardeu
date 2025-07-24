@@ -13,6 +13,20 @@
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+            (function(){
+            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+            s1.async=true;
+            s1.src='https://embed.tawk.to/687f485bc5482b191c83a3df/1j0oj5a7i';
+            s1.charset='UTF-8';
+            s1.setAttribute('crossorigin','*');
+            s0.parentNode.insertBefore(s1,s0);
+            })();
+    </script>
+    <!--End of Tawk.to Script-->
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 
@@ -21,65 +35,65 @@
 <body class="font-sans">
 
     @auth
-        <div class="hidden lg:block fixed h-full w-1/6 bg-white">
-            @include('layouts.desktop_menu')
-        </div>
+    <div class="hidden lg:block fixed h-full w-1/6 bg-white">
+        @include('layouts.desktop_menu')
+    </div>
     @endauth
 
     <div class="bg-gray-200 lg:ml-[16.66%] lg:w-5/6 flex flex-col lg:flex-row min-h-screen relative ">
 
         @if (session('message'))
-            <div class="fixed top-[100px] left-1/2 transform -translate-x-1/2 z-50">
-                <div
-                    class="bg-green-600 text-white shadow-lg rounded-md px-6 py-3 w-auto max-w-full text-center animate-fade-in">
-                    {{ session('message') }}
-                </div>
+        <div class="fixed top-[100px] left-1/2 transform -translate-x-1/2 z-50">
+            <div
+                class="bg-green-600 text-white shadow-lg rounded-md px-6 py-3 w-auto max-w-full text-center animate-fade-in">
+                {{ session('message') }}
             </div>
+        </div>
 
-            <style>
-                @keyframes fade-in {
-                    from {
-                        opacity: 0;
-                        transform: translateY(-10px);
-                    }
-
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
+        <style>
+            @keyframes fade-in {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
                 }
 
-                .animate-fade-in {
-                    animation: fade-in 0.3s ease-out;
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
                 }
-            </style>
+            }
+
+            .animate-fade-in {
+                animation: fade-in 0.3s ease-out;
+            }
+        </style>
         @endif
 
         @if (session('alert'))
-            <div class="fixed top-[100px] left-1/2 transform -translate-x-1/2 z-50">
-                <div
-                    class="bg-red-600 text-white shadow-lg rounded-md px-6 py-3 w-auto max-w-full text-center animate-fade-in">
-                    {{ session('alert') }}
-                </div>
+        <div class="fixed top-[100px] left-1/2 transform -translate-x-1/2 z-50">
+            <div
+                class="bg-red-600 text-white shadow-lg rounded-md px-6 py-3 w-auto max-w-full text-center animate-fade-in">
+                {{ session('alert') }}
             </div>
+        </div>
 
-            <style>
-                @keyframes fade-in {
-                    from {
-                        opacity: 0;
-                        transform: translateY(-10px);
-                    }
-
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
+        <style>
+            @keyframes fade-in {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
                 }
 
-                .animate-fade-in {
-                    animation: fade-in 0.3s ease-out;
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
                 }
-            </style>
+            }
+
+            .animate-fade-in {
+                animation: fade-in 0.3s ease-out;
+            }
+        </style>
         @endif
 
 
@@ -96,7 +110,7 @@
     </div>
 
     @auth
-        @include('layouts.mobile_menu')
+    @include('layouts.mobile_menu')
     @endauth
     @livewireScripts
 

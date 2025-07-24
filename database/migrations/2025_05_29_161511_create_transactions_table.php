@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('payer_email')->nullable();
             $table->string('merchant')->nullable();
             $table->decimal('amount', 10, 2); // 525
-            $table->string('status')->default('Pending'); //pending, failed, success
-            $table->enum('type', ['Deposit', 'Withdrawal', 'Outgoing', 'Incoming', 'Unknown']);
+            $table->enum('status', ['Pending', 'Approved', 'Insufficient Balance', 'Canceled'])->default('Pending'); //pending, failed, success
+            $table->enum('type', ['Deposit', 'Withdrawal', 'Outgoing', 'Incoming', 'Topup', 'Unknown']);
             $table->timestamps();
         });
     }

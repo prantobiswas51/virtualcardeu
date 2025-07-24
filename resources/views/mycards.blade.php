@@ -146,24 +146,21 @@
                 </div>
             </div>
 
-            <div class="card-details-actions pb-4 flex justify-center">
-                <button class="action-btn bg-red-500 text-white py-2 px-4 rounded-md flex items-center">
-                    <i class="fas fa-trash mr-2"></i> Delete Card
-                </button>
-            </div>
-
-            <div class="max-w-4xl mx-auto">
+            <div class="max-w-4xl mx-auto hidden" id="topUpSection">
                 <h2 class="text-lg bg-gray-200 p-2 px-6 mb-4">Top Up</h2>
-                <form action="{{ route('cards') }}" class="max-w-xl mx-auto pb-4 px-6 md:px-0">
+                <form action="{{ route('card_topup') }}" method="POST" class="max-w-xl mx-auto pb-4 px-6 md:px-0">
+                    @csrf
                     <label for="">Amount to Top Up</label>
-                    <input type="number" placeholder="$30" class="p-1 px-2 w-full border-gray-300 rounded-md"> <br>
+                    <!-- Hidden card_id input (will be filled dynamically by JS) -->
+                    <input type="hidden" name="card_id" id="topupCardId">
+                    
+                    <input type="number" name="topup_amount" placeholder="$30" class="p-1 px-2 w-full border-gray-300 rounded-md"> <br>
                     <button class="p-2 border rounded-md my-2 bg-primary text-white px-4">Confirm Topup</button>
                 </form>
             </div>
 
             <div class="max-w-4xl mx-auto">
                 <h2 class="text-lg font-semibold bg-gray-200 p-4 rounded-t-md">Transactions</h2>
-
                 <div class="overflow-x-auto bg-white shadow-md rounded-b-md ">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-100">
@@ -191,19 +188,29 @@
 
         </div>
 
-
+ 
     </div>
 
     <script>
         // Open modal function to dynamically populate the modal
         function openCardDetailsModal(cardId, cardType, cardNumber, cardHolder, purchaseDate, balance, status) {
             // Populate the modal with dynamic data
+            document.getElementById('topupCardId').value = cardId;
             document.getElementById('cardName').textContent = cardType;
             document.getElementById('cardType').textContent = cardType;
             document.getElementById('cardNumber').textContent = cardNumber;
             document.getElementById('cardHolder').textContent = cardHolder;
             document.getElementById('purchaseDate').textContent = purchaseDate;
             document.getElementById('cardBalance').textContent = `$${balance}`;
+
+            // Show or hide top-up section based on card type
+            const topUpSection = document.getElementById('topUpSection');
+            if (cardType === 'Reloadable Visa Card') {
+                topUpSection.classList.remove('hidden');
+            } else {
+                topUpSection.classList.add('hidden');
+            }
+
 
             // Set the card status dynamically
             const cardStatusElement = document.getElementById('cardStatus');
@@ -219,18 +226,28 @@
                     <button class="status-btn bg-green-500 text-white py-1 px-3 rounded">Active</button>
                     <button class="status-btn bg-gray-500 text-white py-1 px-3 rounded">Locked</button>
                     <button class="status-btn bg-gray-500 text-white py-1 px-3 rounded">Inactive</button>
+
+                    <button class="action-btn bg-red-500 text-white py-2 px-4 rounded-md flex items-center">
+                        <i class="fas fa-trash mr-2"></i> Delete Card
+                    </button>
                 `;
             } else if (status === 'Locked') {
                 statusButtonsHTML = `
                     <button class="status-btn bg-gray-500 text-white py-1 px-3 rounded">Active</button>
                     <button class="status-btn bg-green-500 text-white py-1 px-3 rounded">Locked</button>
                     <button class="status-btn bg-gray-500 text-white py-1 px-3 rounded">Inactive</button>
+                    <button class="action-btn bg-red-500 text-white py-2 px-4 rounded-md flex items-center">
+                        <i class="fas fa-trash mr-2"></i> Delete Card
+                    </button>
                 `;
             } else if (status === 'Inactive') {
                 statusButtonsHTML = `
                     <button class="status-btn bg-green-500 text-white py-1 px-3 rounded">Active</button>
                     <button class="status-btn bg-gray-500 text-white py-1 px-3 rounded">Locked</button>
                     <button class="status-btn bg-green-500 text-white py-1 px-3 rounded">Inactive</button>
+                    <button class="action-btn bg-red-500 text-white py-2 px-4 rounded-md flex items-center">
+                        <i class="fas fa-trash mr-2"></i> Delete Card
+                    </button>
                 `;
             }
             cardStatusControlsElement.innerHTML = statusButtonsHTML;
@@ -243,7 +260,7 @@
                     tbody.innerHTML = '';
 
                     if (data.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="4" class="text-center">No transactions found</td></tr>`;
+                        tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4">No transactions found</td></tr>`;
                         return;
                     }
 
