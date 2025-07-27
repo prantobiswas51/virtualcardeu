@@ -33,6 +33,7 @@ class CardResource extends Resource
                     'Reloadable Visa Card' => 'Reloadable Visa Card',
                 ]),
                 TextInput::make('cvc')->numeric()->maxLength(3),
+                TextInput::make('user_id'),
                 TextInput::make('amount')->numeric()->default(0),
                 TextInput::make('status')->default('Inactive'),
             ]);

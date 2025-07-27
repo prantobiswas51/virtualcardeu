@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('merchant')->nullable();
             $table->decimal('amount', 10, 2); // 525
             $table->enum('status', ['Pending', 'Approved', 'Insufficient Balance', 'Canceled'])->default('Pending'); //pending, failed, success
-            $table->enum('type', ['Deposit', 'Withdrawal', 'Outgoing', 'Incoming', 'Topup', 'Unknown']);
+            $table->enum('type', ['Deposit', 'Withdrawal', 'Credit', 'Debit', 'Outgoing', 'Incoming', 'Topup', 'Unknown']);
             $table->timestamps();
         });
     }

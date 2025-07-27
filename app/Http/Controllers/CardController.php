@@ -104,7 +104,7 @@ class CardController extends Controller
     public function cards()
     {
         $transactions = Transaction::where('payment_method', 'Card')->where('user_id', Auth::id())->get();
-        $myCards = Card::where('user_id', Auth::id())->get();
+        $myCards = Card::where('user_id', Auth::id())->where('status', 'Active')->get();
 
         $user = Auth::user();
 
@@ -136,7 +136,7 @@ class CardController extends Controller
 
     public function card_topup(Request $request)
     {
-        
+
         // Validate request
         $request->validate([
             'topup_amount' => 'required|numeric|min:1',
@@ -155,12 +155,24 @@ class CardController extends Controller
         $transaction->user_id = $user->id;
         $transaction->card_id = $request->card_id;
         $transaction->payment_method = 'Card';
-        $transaction->merchant = 'MasterCard'; 
+        $transaction->merchant = 'MasterCard';
         $transaction->amount = $request->topup_amount;
-        $transaction->status = 'Pending'; 
+        $transaction->status = 'Pending';
         $transaction->type = 'Topup';
         $transaction->save();
 
         return redirect()->back()->with('message', 'Top-up Requested, Please wait for approval.');
+    }
+
+    public function delete_card(Card $card)
+    {
+
+        $card->status = 'Deleted';
+        $card->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Card deleted Successfully.',
+        ]);
     }
 }

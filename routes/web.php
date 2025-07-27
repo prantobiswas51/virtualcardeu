@@ -49,9 +49,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/cards', [CardController::class, 'cards'])->name('cards');
     Route::get('/cards/new', [CardController::class, 'order_cards'])->name('order_cards');
     Route::post('/cards/request_card', [CardController::class, 'requestCard'])->name('request_card');
-    
+
     Route::get('/cards/{card}/transactions', [CardController::class, 'transactions']);
     Route::post('/cards/topup', [CardController::class, 'card_topup'])->name('card_topup');
+
+    Route::post('/cards/{card}/delete', [CardController::class, 'delete_card'])->name('delete_card');
 
 
     // Manage Banks

@@ -44,10 +44,10 @@
                             '{{ $myCard->id }}',
                             '{{ $myCard->type }}',
                             '{{ $myCard->number }}',
-                            '{{ $myCard->holder }}',
-                            '{{ $myCard->purchase_date }}',
-                            '{{ $myCard->amount }}',
-                            '{{ $myCard->status }}'
+                            '{{ $myCard->amount }}',                            
+                            '{{ $myCard->status }}',
+                            '{{ $myCard->expiry_date }}',
+                            '{{ $myCard->cvc }}',
                         )" class="bg-gray-500/20 px-4 py-2 rounded-md text-gray-500 flex items-center">
                             <i class="fa-solid fa-circle-info mr-1"></i> Details
                         </button>
@@ -65,18 +65,22 @@
         </div>
     </div>
 
-    <!-- Card Details Modal -->
-    <div class="modal-overlay fixed inset-0 bg-gray-500 bg-opacity-50 hidden" id="cardDetailsModal">
 
-        <div class="modal-content h-screen pb-[100px] md:pb-0  overflow-y-auto bg-white rounded-lg max-w-4xl mx-auto  ">
-            <span
-                class="close-modal absolute top-2 right-2 text-2xl cursor-pointer bg-red-600 text-white px-2 rounded-full">&times;</span>
-            <div class="p-6 card-details-header flex justify-between items-center mb-4">
+    
+
+    <!-- Card Details Modal -->
+    <div class="modal-overlay fixed inset-0 bg-gray-500 bg-opacity-50 hidden pt-[50px]" id="cardDetailsModal">
+
+        <div class="modal-content max-h-[90vh] pb-[100px] md:pb-0  overflow-y-auto bg-white rounded-lg max-w-4xl mx-auto  ">
+            <span class="close-modal absolute top-2 right-2 text-2xl cursor-pointer bg-red-600 text-white px-2 rounded-full">&times;</span>
+
+            <div class="p-6 border-b card-details-header flex justify-between items-center">
                 <h3 class="text-xl font-semibold">Card Details</h3>
                 <div class="card-status py-1 px-3 rounded" id="cardStatus">Active</div>
             </div>
+
             {{-- Cards preview --}}
-            <div class="p-6 card-details-content grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class=" card-details-content grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="card-details-preview flex justify-center items-center">
                     <!-- Card preview will be inserted here -->
                     <div
@@ -120,27 +124,33 @@
                         <input type="hidden" id="cardName">
                     </div>
                     <div class="info-group mb-4">
-                        <label class="font-medium">Card Type</label>
+                        <label class="font-medium text-gray-400">Card Type</label>
                         <div class="info-value" id="cardType"> </div>
                     </div>
                     <div class="info-group mb-4">
-                        <label class="font-medium">Card Number</label>
-                        <div class="info-value" id="cardNumber"> </div>
+                        <label class="font-medium text-gray-400">Card Number</label>
+                        <div class="flex">
+                            <div class="info-value" id="cardNumber"> </div>
+                            <i class="fa fa-copy ml-2 hover:cursor-pointer" id="copy_card_number"> </i>
+                        </div>
                     </div>
                     <div class="info-group mb-4">
-                        <label class="font-medium">Card Holder</label>
-                        <div class="info-value" id="cardHolder"> </div>
-                    </div>
-                    <div class="info-group mb-4">
-                        <label class="font-medium">Purchase Date</label>
-                        <div class="info-value" id="purchaseDate"> </div>
-                    </div>
-                    <div class="info-group mb-4">
-                        <label class="font-medium">Available Balance</label>
+                        <label class="font-medium text-gray-400">Available Balance</label>
                         <div class="info-value" id="cardBalance">$0.00</div>
                     </div>
+
                     <div class="info-group mb-4">
-                        <label class="font-medium">Card Status</label>
+                        <label class="font-medium text-gray-400">Expiry Date</label>
+                        <div class="info-value" id="expiry_date"></div>
+                    </div>
+
+                    <div class="info-group mb-4 ">
+                        <label class="font-medium text-gray-400">CVC</label>
+                        <div class="info-value" id="cvc"></div>
+                    </div>
+
+                    <div class="info-group mb-4">
+                        <label class="font-medium text-gray-400">Card Status</label>
                         <div class="card-status-controls flex gap-2" id="cardStatusControls"></div>
                     </div>
                 </div>
@@ -193,14 +203,17 @@
 
     <script>
         // Open modal function to dynamically populate the modal
-        function openCardDetailsModal(cardId, cardType, cardNumber, cardHolder, purchaseDate, balance, status) {
+        function openCardDetailsModal(cardId, cardType, cardNumber, balance, status, expiry_date, cvc) {
+
             // Populate the modal with dynamic data
             document.getElementById('topupCardId').value = cardId;
             document.getElementById('cardName').textContent = cardType;
             document.getElementById('cardType').textContent = cardType;
+
+            document.getElementById('expiry_date').textContent = expiry_date;
+            document.getElementById('cvc').textContent = cvc;
+
             document.getElementById('cardNumber').textContent = cardNumber;
-            document.getElementById('cardHolder').textContent = cardHolder;
-            document.getElementById('purchaseDate').textContent = purchaseDate;
             document.getElementById('cardBalance').textContent = `$${balance}`;
 
             // Show or hide top-up section based on card type
@@ -210,6 +223,10 @@
             } else {
                 topUpSection.classList.add('hidden');
             }
+
+            
+
+
 
 
             // Set the card status dynamically
@@ -224,32 +241,21 @@
             if (status === 'Active') {
                 statusButtonsHTML = `
                     <button class="status-btn bg-green-500 text-white py-1 px-3 rounded">Active</button>
-                    <button class="status-btn bg-gray-500 text-white py-1 px-3 rounded">Locked</button>
                     <button class="status-btn bg-gray-500 text-white py-1 px-3 rounded">Inactive</button>
-
-                    <button class="action-btn bg-red-500 text-white py-2 px-4 rounded-md flex items-center">
-                        <i class="fas fa-trash mr-2"></i> Delete Card
-                    </button>
-                `;
-            } else if (status === 'Locked') {
-                statusButtonsHTML = `
-                    <button class="status-btn bg-gray-500 text-white py-1 px-3 rounded">Active</button>
-                    <button class="status-btn bg-green-500 text-white py-1 px-3 rounded">Locked</button>
-                    <button class="status-btn bg-gray-500 text-white py-1 px-3 rounded">Inactive</button>
-                    <button class="action-btn bg-red-500 text-white py-2 px-4 rounded-md flex items-center">
+                    <button class="action-btn bg-red-500 text-white py-2 px-4 rounded-md flex items-center" onclick="deleteCard(${cardId})">
                         <i class="fas fa-trash mr-2"></i> Delete Card
                     </button>
                 `;
             } else if (status === 'Inactive') {
                 statusButtonsHTML = `
-                    <button class="status-btn bg-green-500 text-white py-1 px-3 rounded">Active</button>
-                    <button class="status-btn bg-gray-500 text-white py-1 px-3 rounded">Locked</button>
+                    <button class="status-btn bg-gray-500 text-white py-1 px-3 rounded">Active</button>
                     <button class="status-btn bg-green-500 text-white py-1 px-3 rounded">Inactive</button>
-                    <button class="action-btn bg-red-500 text-white py-2 px-4 rounded-md flex items-center">
+                    <button class="action-btn bg-red-500 text-white py-2 px-4 rounded-md flex items-center" onclick="deleteCard(${cardId})">
                         <i class="fas fa-trash mr-2"></i> Delete Card
                     </button>
                 `;
             }
+
             cardStatusControlsElement.innerHTML = statusButtonsHTML;
 
             // Fetch related transactions
@@ -285,6 +291,35 @@
             document.getElementById('cardDetailsModal').classList.remove('hidden');
         }
 
+        function deleteCard(cardId) {
+
+                if (!confirm('Are you sure you want to delete this card?')) return;
+
+                const token = document.querySelector('meta[name="csrf-token"]').content;
+
+                // Send the delete request to the Laravel route
+                fetch(`/cards/${cardId}/delete`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                    body: JSON.stringify({ card_id: cardId }) // Sending cardId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log(data.message);
+                        document.getElementById('cardDetailsModal').classList.add('hidden');
+                    } else {
+                        alert('Failed to delete card');
+                    }
+                })
+                .catch(error => {
+                    console.log('Error: ' + error);
+                });
+            }
+
         // Close modal when clicking close button
         document.querySelector('.close-modal').addEventListener('click', function() {
             document.getElementById('cardDetailsModal').classList.add('hidden');
@@ -294,6 +329,34 @@
         window.addEventListener('click', function(event) {
             if (event.target == document.getElementById('cardDetailsModal')) {
                 document.getElementById('cardDetailsModal').classList.add('hidden');
+            }
+        });
+
+        // Copy to clipboard
+        document.getElementById("copy_card_number").addEventListener("click", function () {
+            const cardNumber = document.getElementById("cardNumber").innerText;
+
+            if (navigator.clipboard) {
+            navigator.clipboard.writeText(cardNumber)
+                .then(() => {
+                alert("Card number copied!");
+                // Optional: Add a visual confirmation like tooltip or toast
+                })
+                .catch(err => {
+                console.error("Copy failed:", err);
+                });
+            } else {
+            // Fallback for older browsers
+            const textarea = document.createElement("textarea");
+            textarea.value = cardNumber;
+            textarea.setAttribute("readonly", "");
+            textarea.style.position = "absolute";
+            textarea.style.left = "-9999px";
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textarea);
+                console.log("Card number copied!");
             }
         });
     </script>

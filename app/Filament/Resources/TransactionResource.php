@@ -33,14 +33,17 @@ class TransactionResource extends Resource
             ->schema([
                 Select::make('user_id')
                 ->label('User')
+                ->searchable()
                 ->options(User::pluck('name', 'id')), // adjust as needed
 
                 Select::make('card_id')
                 ->label('Card')
+                ->searchable()
                 ->options(Card::pluck('number', 'id')), // adjust as needed
 
                 Select::make('bank_id')
                     ->label('Bank')
+                    ->searchable()
                     ->options(Bank::pluck('bank_name', 'id')), // adjust as needed
 
                 Select::make('payment_method')->options([
@@ -58,7 +61,12 @@ class TransactionResource extends Resource
                     'Insufficient Balance' => 'Insufficient Balance',
                     'Canceled' => 'Canceled'
                 ]),
-                TextInput::make('type')->default('Unknown'),
+                Select::make('type')->options([
+                    'Debit' => 'Debit', 
+                    'Credit' => 'Credit',
+                    'Topup' => 'Topup',
+                    'Bank to Balance' => 'Bank to Balance',
+                ]),
                 TextInput::make('merchant')->label('Merchant (Ex-Amazon)'),
             ]);
     }
@@ -154,8 +162,6 @@ class TransactionResource extends Resource
                                     ->send();
                                 return;
                             }
-
-
 
                             // Update transaction status
                             $record->status = 'Approved';

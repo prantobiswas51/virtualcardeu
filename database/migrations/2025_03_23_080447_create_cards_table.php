@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('type');
             $table->string('cvc');
             $table->string('registered_at')->nullable();
-            $table->enum('status', ['Active', 'Inactive', 'Expired'])->default('Inactive');
+            $table->enum('status', ['Active', 'Inactive', 'Expired', 'Deleted'])->default('Inactive');
             $table->timestamps();
         });
     }
