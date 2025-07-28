@@ -32,14 +32,14 @@ class TransactionResource extends Resource
         return $form
             ->schema([
                 Select::make('user_id')
-                ->label('User')
-                ->searchable()
-                ->options(User::pluck('name', 'id')), // adjust as needed
+                    ->label('User')
+                    ->searchable()
+                    ->options(User::pluck('name', 'id')), // adjust as needed
 
                 Select::make('card_id')
-                ->label('Card')
-                ->searchable()
-                ->options(Card::pluck('number', 'id')), // adjust as needed
+                    ->label('Card')
+                    ->searchable()
+                    ->options(Card::pluck('number', 'id')), // adjust as needed
 
                 Select::make('bank_id')
                     ->label('Bank')
@@ -62,7 +62,7 @@ class TransactionResource extends Resource
                     'Canceled' => 'Canceled'
                 ]),
                 Select::make('type')->options([
-                    'Debit' => 'Debit', 
+                    'Debit' => 'Debit',
                     'Credit' => 'Credit',
                     'Topup' => 'Topup',
                     'Bank to Balance' => 'Bank to Balance',
@@ -96,24 +96,42 @@ class TransactionResource extends Resource
                     ->requiresConfirmation() // Ask for confirmation before approving
                     ->modalHeading('Approve Transaction')
                     ->modalDescription('Are you sure you want to approve this transaction and update the bank balance?')
-                    ->visible(fn (Transaction $record): bool => $record->status === 'Pending' && $record->type === 'Incoming' && !is_null($record->bank_id)) // Only show if pending, incoming, and has a bank_id
+                    ->visible(fn(Transaction $record): bool => $record->status === 'Pending' && ($record->type === 'Incoming' || $record->type === 'Debit' || $record->type === 'Credit')) // Only show if pending, incoming, and has a bank_id
                     ->action(function (Transaction $record) {
                         DB::beginTransaction();
                         try {
-                            // Update transaction status
+                            $previousStatus = $record->status;
+
+                            // Update status after financial changes
                             $record->status = 'Approved';
                             $record->save();
 
-                            // Update bank balance if it's an incoming transaction
-                            if ($record->type === 'Incoming' && $record->bank_id) {
-                                $bank = Bank::findOrFail($record->bank_id);
-                                $bank->bank_balance -= $record->amount;
-                                $bank->save();
+                            // Only process if not already approved
+                            if ($previousStatus !== 'Approved') {
+                                // Incoming transaction
+                                if ($record->type === 'Incoming' && $record->bank_id) {
+                                    $bank = Bank::findOrFail($record->bank_id);
+                                    $bank->bank_balance += $record->amount;
+                                    $bank->save();
 
-                                $user = User::findOrFail($record->user_id);
-                                $user->balance += $record->amount;
-                                $user->save();
+                                    $user = User::findOrFail($record->user_id);
+                                    $user->balance += $record->amount;
+                                    $user->save();
+                                }
 
+                                // Debit transaction
+                                if ($record->type === 'Debit' && $previousStatus === 'Pending') {
+                                    $card = Card::findOrFail($record->card_id);
+                                    $card->amount -= $record->amount;
+                                    $card->save();
+                                }
+
+                                // Credit transaction
+                                if ($record->type === 'Credit' && $previousStatus === 'Pending') {
+                                    $card = Card::findOrFail($record->card_id);
+                                    $card->amount += $record->amount;
+                                    $card->save();
+                                }
                             }
 
                             DB::commit();
@@ -122,7 +140,6 @@ class TransactionResource extends Resource
                                 ->title('Transaction approved successfully!')
                                 ->success()
                                 ->send();
-
                         } catch (\Exception $e) {
                             DB::rollBack();
 
@@ -134,67 +151,6 @@ class TransactionResource extends Resource
                         }
                     }),
 
-                    Tables\Actions\Action::make('approve')
-                    ->label('Approve')
-                    ->icon('heroicon-o-check-circle')
-                    ->color('success')
-                    ->requiresConfirmation() // Ask for confirmation before approving
-                    ->modalHeading('Approve Transaction')
-                    ->modalDescription('Are you sure you want to approve this transaction and update the Card balance?')
-                    ->visible(fn (Transaction $record): bool => $record->status === 'Pending' || $record->status === 'Insufficient Balance' && $record->type === 'Topup' && !is_null($record->card_id))
-                    ->action(function (Transaction $record) {
-                        DB::beginTransaction();
-                        try {
-                            // Fetch user
-                            $user = User::findOrFail($record->user_id);
-
-                            // Check if user has sufficient balance
-                            if ($user->balance < $record->amount) {
-                                DB::rollBack();
-
-                                $record->status = 'Insufficient Balance';
-                                $record->save();
-
-                                Notification::make()
-                                    ->title('Insufficient Balance')
-                                    ->body("User does not have enough balance to complete the Topup.")
-                                    ->danger()
-                                    ->send();
-                                return;
-                            }
-
-                            // Update transaction status
-                            $record->status = 'Approved';
-                            $record->save();
-
-                            // Update card balance if it's an topup transaction
-                            if ($record->type === 'Topup' && $record->card_id) {
-                                $card = Card::findOrFail($record->card_id);
-                                $card->amount += $record->amount;
-                                $card->save();
-
-                                $user = User::findOrFail($record->user_id);
-                                $user->balance -= $record->amount;
-                                $user->save();
-                            }
-
-                            DB::commit();
-
-                            Notification::make()
-                                ->title('Transaction approved successfully!')
-                                ->success()
-                                ->send();
-
-                        } catch (\Exception $e) {
-                            DB::rollBack();
-
-                            Notification::make()
-                                ->title('Error approving transaction!')
-                                ->body($e->getMessage())
-                                ->danger()
-                                ->send();
-                        }
-                    }),
             ])->defaultSort('created_at', 'desc')
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
