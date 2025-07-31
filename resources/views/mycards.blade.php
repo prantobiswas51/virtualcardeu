@@ -51,9 +51,6 @@
                         )" class="bg-gray-500/20 px-4 py-2 rounded-md text-gray-500 flex items-center">
                             <i class="fa-solid fa-circle-info mr-1"></i> Details
                         </button>
-                        <button class="bg-red-800/20 px-4 py-2 rounded-md text-red-800 flex items-center">
-                            <i class="fa-solid fa-trash mr-1"></i> Remove
-                        </button>
                     </div>
 
                 </div>

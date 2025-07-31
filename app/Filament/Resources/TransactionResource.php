@@ -96,7 +96,7 @@ class TransactionResource extends Resource
                     ->requiresConfirmation() // Ask for confirmation before approving
                     ->modalHeading('Approve Transaction')
                     ->modalDescription('Are you sure you want to approve this transaction and update the bank balance?')
-                    ->visible(fn(Transaction $record): bool => $record->status === 'Pending' && ($record->type === 'Incoming' || $record->type === 'Debit' || $record->type === 'Credit' || $record->type === 'Topup')) // Only show if pending, incoming, and has a bank_id
+                    ->visible(fn(Transaction $record): bool => $record->status === 'Pending' && ($record->type === 'Incoming' || $record->type === 'Debit' || $record->type === 'Credit' || $record->type === 'Topup'))
                     ->action(function (Transaction $record) {
                         DB::beginTransaction();
                         try {
@@ -123,6 +123,13 @@ class TransactionResource extends Resource
                                 if ($record->type === 'Debit' && $previousStatus === 'Pending') {
                                     $card = Card::findOrFail($record->card_id);
                                     $card->amount -= $record->amount;
+                                    $card->save();
+                                }
+
+                                // Debit transaction
+                                if ($record->type === 'Topup' && $previousStatus === 'Pending') {
+                                    $card = Card::findOrFail($record->card_id);
+                                    $card->amount += $record->amount;
                                     $card->save();
                                 }
 
