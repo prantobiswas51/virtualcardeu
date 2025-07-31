@@ -96,7 +96,7 @@ class TransactionResource extends Resource
                     ->requiresConfirmation() // Ask for confirmation before approving
                     ->modalHeading('Approve Transaction')
                     ->modalDescription('Are you sure you want to approve this transaction and update the bank balance?')
-                    ->visible(fn(Transaction $record): bool => $record->status === 'Pending' && ($record->type === 'Incoming' || $record->type === 'Debit' || $record->type === 'Credit')) // Only show if pending, incoming, and has a bank_id
+                    ->visible(fn(Transaction $record): bool => $record->status === 'Pending' && ($record->type === 'Incoming' || $record->type === 'Debit' || $record->type === 'Credit' || $record->type === 'Topup')) // Only show if pending, incoming, and has a bank_id
                     ->action(function (Transaction $record) {
                         DB::beginTransaction();
                         try {
