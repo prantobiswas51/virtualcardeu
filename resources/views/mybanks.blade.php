@@ -61,8 +61,8 @@
                 <div class="flex justify-between items-center mb-6">
                     
                     <div class="">
-                        <h1 class="text-2xl font-bold text-gray-900">Order Virtual Card</h1>
-                        <p class="text-gray-600 mt-1">Create a virtual card for secure online transactions</p>
+                        <h1 class="text-2xl font-bold text-gray-900">Order Virtual Bank</h1>
+                        <p class="text-gray-600 mt-1">Create a virtual bank for secure online transactions</p>
                     </div>
 
                     <a href="{{ route('order_banks') }}"
@@ -170,7 +170,7 @@
                 </div>
 
 
-                <!-- Card Transactions -->
+                <!-- Bank Transactions -->
                 <div class="bg-white rounded-lg shadow-sm my-6">
                     <div class="p-4 border-b flex justify-between items-center">
                         <h2 class="text-lg font-semibold text-gray-900">Recent Bank Transactions</h2>
@@ -186,6 +186,7 @@
                                     <th scope="col" class="px-4 py-3 w-[20px]">Date</th>
                                     <th scope="col" class="px-4 py-3">Bank Number</th>
                                     <th scope="col" class="px-4 py-3 text-right">Amount</th>
+                                    <th scope="col" class="px-4 py-3">Type</th>
                                     <th scope="col" class="px-4 py-3 text-right">Status</th>
                                 </tr>
                             </thead>
@@ -202,6 +203,7 @@
                                     <td class="px-4 py-3">...{{ substr($transaction->bank->bank_account_number, -3) }}</td>
 
                                     <td class="px-4 py-3 text-right text-red-600 ">${{ $transaction->amount }} </td>
+                                    <td class="px-4 py-3 ">{{ $transaction->type }} </td>
                                     <td class="px-4 py-3 text-right">
                                         <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">{{ $transaction->status }}</span>
                                     </td>

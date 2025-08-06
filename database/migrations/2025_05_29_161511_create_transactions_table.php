@@ -17,12 +17,12 @@ return new class extends Migration
             $table->foreignId('bank_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('card_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('payment_method'); //Paypal , payeer, crypto, bank, card
-            $table->string('payment_id')->nullable();
+            $table->string('payment_id')->nullable()->unique();
             $table->string('payer_email')->nullable();
             $table->string('merchant')->nullable();
             $table->decimal('amount', 10, 2); // 525
             $table->enum('status', ['Pending', 'Approved', 'Insufficient Balance', 'Canceled'])->default('Pending'); //pending, failed, success
-            $table->enum('type', ['Deposit', 'Withdrawal', 'Credit', 'Debit', 'Outgoing', 'Incoming', 'Topup', 'Unknown']);
+            $table->enum('type', ['Deposit', 'Withdrawal', 'Credit', 'Debit', 'Outgoing', 'Incoming', 'Topup', 'Unknown', 'Bank2Balance']);
             $table->timestamps();
         });
     }

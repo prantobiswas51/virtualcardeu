@@ -63,13 +63,15 @@
     </div>
 
 
-    
+
 
     <!-- Card Details Modal -->
     <div class="modal-overlay fixed inset-0 bg-gray-500 bg-opacity-50 hidden pt-[50px]" id="cardDetailsModal">
 
-        <div class="modal-content max-h-[90vh] pb-[100px] md:pb-0  overflow-y-auto bg-white rounded-lg max-w-4xl mx-auto  ">
-            <span class="close-modal absolute top-2 right-2 text-2xl cursor-pointer bg-red-600 text-white px-2 rounded-full">&times;</span>
+        <div
+            class="modal-content max-h-[90vh] pb-[100px] md:pb-0  overflow-y-auto bg-white rounded-lg max-w-4xl mx-auto  ">
+            <span
+                class="close-modal absolute top-2 right-2 text-2xl cursor-pointer bg-red-600 text-white px-2 rounded-full">&times;</span>
 
             <div class="p-6 border-b card-details-header flex justify-between items-center">
                 <h3 class="text-xl font-semibold">Card Details</h3>
@@ -88,7 +90,8 @@
 
                         <!-- Card Header -->
                         <div class="flex items-start justify-between mb-8 relative z-10">
-                            <div class="font-bold text-lg tracking-wide">VISA</div>
+                            <div id="card_icon" class="font-bold text-lg tracking-wide">
+                            </div>
                             <div
                                 class="w-10 h-7 bg-gradient-to-br from-gray-300 to-gray-500 rounded-md relative overflow-hidden">
                                 <div class="absolute top-1/2 left-0 w-full h-px bg-black bg-opacity-20"></div>
@@ -160,8 +163,9 @@
                     <label for="">Amount to Top Up</label>
                     <!-- Hidden card_id input (will be filled dynamically by JS) -->
                     <input type="hidden" name="card_id" id="topupCardId">
-                    
-                    <input type="number" name="topup_amount" placeholder="$30" class="p-1 px-2 w-full border-gray-300 rounded-md"> <br>
+
+                    <input type="number" name="topup_amount" placeholder="$30"
+                        class="p-1 px-2 w-full border-gray-300 rounded-md"> <br>
                     <button class="p-2 border rounded-md my-2 bg-primary text-white px-4">Confirm Topup</button>
                 </form>
             </div>
@@ -172,17 +176,19 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-100">
                             <tr>
-                                <th
-                                    class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
-                                    ID</th>
-                                <th
-                                    class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
+                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
+                                    Transaction ID</th>                            
+                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
                                     Date</th>
-                                <th
-                                    class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
+                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
                                     Amount</th>
-                                <th
-                                    class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
+                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
+                                    Payment Method</th>
+                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
+                                    Merchant</th>
+                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
+                                    type</th>
+                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
                                     Status</th>
                             </tr>
                         </thead>
@@ -195,7 +201,7 @@
 
         </div>
 
- 
+
     </div>
 
     <script>
@@ -221,11 +227,14 @@
                 topUpSection.classList.add('hidden');
             }
 
+            const card_icon = document.getElementById('card_icon');
+            if (cardType === 'Reloadable Visa Card') {
+                card_icon.innerHTML = '<div> VISA </div>';
+            } else {
+                card_icon.innerHTML = '<div> MASTERCARD </div>';
+            }
+
             
-
-
-
-
             // Set the card status dynamically
             const cardStatusElement = document.getElementById('cardStatus');
             const cardStatusControlsElement = document.getElementById('cardStatusControls');
@@ -272,9 +281,12 @@
 
                         tbody.innerHTML += `
                             <tr>
-                                <td class="px-6 py-4 text-sm text-gray-800">#${tx.id}</td>
+                                <td class="px-6 py-4 text-sm text-gray-800">#${tx.payment_id}</td>
                                 <td class="px-6 py-4 text-sm text-gray-800">${formattedDate}</td>
                                 <td class="px-6 py-4 text-sm text-gray-800">$${tx.amount}</td>
+                                <td class="px-6 py-4 text-sm text-gray-800">${tx.payment_method}</td>
+                                <td class="px-6 py-4 text-sm text-gray-800">${tx.merchant}</td>
+                                <td class="px-6 py-4 text-sm text-gray-800">${tx.type}</td>
                                 <td class="px-6 py-4 text-sm">
                                     <span class="inline-block px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">${tx.status}</span>
                                 </td>

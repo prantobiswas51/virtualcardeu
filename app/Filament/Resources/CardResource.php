@@ -2,19 +2,22 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CardResource\Pages;
-use App\Filament\Resources\CardResource\RelationManagers;
-use App\Models\Card;
 use Filament\Forms;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Models\Card;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use App\Models\Transaction;
+use Illuminate\Support\Str;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\CardResource\Pages;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\CardResource\RelationManagers;
 
 class CardResource extends Resource
 {
@@ -56,6 +59,60 @@ class CardResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\Action::make('update_balance')
+                    ->label('Update Balance')
+                    ->icon('heroicon-o-banknotes')
+                    ->form([
+                        TextInput::make('amount')
+                            ->label('Amount')
+                            ->numeric()
+                            ->required(),
+
+                        Select::make('type')
+                            ->label('Transaction Type')
+                            ->options([
+                                'Credit' => 'Credit',
+                                'Debit' => 'Debit',
+                                'Refund' => 'Refund',
+                            ])
+                            ->required(),
+
+                        TextInput::make('merchant')
+                            ->label('Merchant')
+                            ->required(),
+                    ])
+                    ->action(function (array $data, Card $record): void {
+                        $amount = floatval($data['amount']);
+                        $type = $data['type'];
+
+                        if ($type === 'Debit') {
+                            if ($record->amount < $amount) {
+                                throw ValidationException::withMessages([
+                                    'success' => 'Insufficient balance for debit transaction.',
+                                ]);
+                            }
+                            $record->amount -= $amount;
+                        } elseif ($type === 'Credit' || $type === 'Refund') {
+                            $record->amount += $amount;
+                        }
+
+                        $record->save();
+
+                        // Optional: you could also create a transaction log model here
+                        Transaction::create([
+                            'user_id' => $record->user_id,
+                            'card_id' => $record->id,
+                            'amount' => $amount,
+                            'payment_method' => 'Card',
+                            'type' => $type,
+                            'status' => "Approved",
+                            'payment_id' => Str::upper(Str::random(10)),
+                            'merchant' => $data['merchant'],
+                        ]);
+                    })
+                    ->modalHeading('Update Card Balance')
+                    ->modalSubmitActionLabel('Apply')
+                    ->requiresConfirmation(),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

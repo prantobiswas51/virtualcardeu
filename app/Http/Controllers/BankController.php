@@ -121,7 +121,6 @@ class BankController extends Controller
 
     public function transfer_bank_balance(Request $request)
     {
-
         $request->validate([
             'bank_id' => 'required|exists:banks,id',
             'bank_balance' => 'required|numeric|min:0',
@@ -137,8 +136,8 @@ class BankController extends Controller
         $transaction->payment_method = "Bank";
         $transaction->amount = $request->bank_balance;
         $transaction->status = "Pending";
-        $transaction->type = "Incoming";
-        $transaction->merchant = "Bank to Balance";
+        $transaction->type = "Bank2Balance";
+        $transaction->merchant = "Exchange";
         $transaction->save();
 
         // 4. Return a success response

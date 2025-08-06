@@ -65,12 +65,12 @@
             <table class="w-full text-left text-gray-500">
                <thead class=" text-gray-700  text-sm bg-gray-50">
                   <tr>
-                     <th scope="col" class="px-4 py-3">ID</th>
+                     <th scope="col" class="px-4 py-3">Transaction ID</th>
                      <th scope="col" class="px-4 py-3">Merchant</th>
                      <th scope="col" class="px-4 py-3">Date</th>
-                     <th scope="col" class="px-4 py-3">Card Number</th>
-                     <th scope="col" class="px-4 py-3 text-right">Amount</th>
-                     <th scope="col" class="px-4 py-3 text-right">Status</th>
+                     <th scope="col" class="px-4 py-3 ">Amount</th>
+                     <th scope="col" class="px-4 py-3 ">Type</th>
+                     <th scope="col" class="px-4 py-3 ">Status</th>
                   </tr>
                </thead>
                <tbody>
@@ -78,16 +78,13 @@
 
                   @foreach ($transactions as $transaction)
                   <tr class="border-b text-sm  hover:bg-gray-50">
-                     <td class="px-4 py-3  text-gray-900">{{ $transaction->id }}</td>
+                     <td class="px-4 py-3  text-gray-900">{{ $transaction->payment_id }}</td>
                      <td class="px-4 py-3  text-gray-900">{{ $transaction->merchant }}</td>
-                     <td class="px-4 py-3 w-40  whitespace-nowrap">
-                        {{ $transaction->created_at->format('d M Y, h:i A') }}
-                     </td>
-                     <td class="px-4 py-3">{{ $transaction->card_id }}</td>
-                     <td class="px-4 py-3 text-right {{ $transaction->type === "Incoming" ? "text-green-600" : "text-red-600" }} ">${{ $transaction->amount }} </td>
-                     <td class="px-4 py-3 text-right">
-                        <span class="px-2 py-1  rounded-full bg-green-100 text-green-800">{{ $transaction->status
-                           }}</span>
+                     <td class="px-4 py-3 w-40  whitespace-nowrap">{{ $transaction->created_at->format('d M Y, h:i A') }}</td>
+                     <td class="px-4 py-3  {{ $transaction->type === "Incoming" ? "text-green-600" : "text-red-600" }} ">${{ $transaction->amount }} </td>
+                     <td class="px-4 py-3  text-gray-900">{{ $transaction->type }}</td>
+                     <td class="px-4 py-3 ">
+                        <span class="px-2 py-1  rounded-full bg-green-100 text-green-800">{{ $transaction->status }}</span>
                      </td>
                   </tr>
                   @endforeach

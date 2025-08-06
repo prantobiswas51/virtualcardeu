@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@example.com',
             'password' => Hash::make('password'), // Change in production
             'role' => 'Admin',
-            'balance' => 10000, // Optional
+            'balance' => 1000, // Optional
         ]);
 
         // Regular user
@@ -33,29 +33,6 @@ class DatabaseSeeder extends Seeder
             'email' => 'user@example.com',
             'password' => Hash::make('password'),
             'balance' => 5000,
-        ]);
-
-
-        // Admin user
-        Bank::create([
-            'user_id' => 2,
-            'bank_name' => 'DBBL',
-            'bank_location' => 'USA',
-            'bank_balance' => 5455,
-            'account_type' => 'DFA',
-            'bank_account_number' => '5768756 4887',
-            'currency' => 'USD',
-        ]);
-
-        Card::create([
-            'user_id' => 2,
-            'number' => 484564845846,
-            'amount' => 545,
-            'type' => "Reloadable Visa Card",
-            'expiry_date' => '4/45',
-            'cvc' => '576',
-            'status' => 'Inactive',
-        ]);
-        
+        ]);        
     }
 }

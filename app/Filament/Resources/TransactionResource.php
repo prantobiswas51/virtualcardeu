@@ -10,6 +10,7 @@ use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\Transaction;
+use Illuminate\Support\Str;
 use Filament\Resources\Resource;
 use Illuminate\Support\Facades\DB;
 use Filament\Forms\Components\Select;
@@ -44,7 +45,7 @@ class TransactionResource extends Resource
                 Select::make('bank_id')
                     ->label('Bank')
                     ->searchable()
-                    ->options(Bank::pluck('bank_name', 'id')), // adjust as needed
+                    ->options(Bank::pluck('bank_account_number', 'id')), // adjust as needed
 
                 Select::make('payment_method')->options([
                     'Paypal' => 'Paypal',
@@ -62,8 +63,6 @@ class TransactionResource extends Resource
                     'Canceled' => 'Canceled'
                 ]),
                 Select::make('type')->options([
-                    'Debit' => 'Debit',
-                    'Credit' => 'Credit',
                     'Topup' => 'Topup',
                     'Bank to Balance' => 'Bank to Balance',
                 ]),
@@ -75,11 +74,11 @@ class TransactionResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('user.name')->label('Owner'),
-                TextColumn::make('card_id'),
-                TextColumn::make('card.number')->label('Card Number'),
-                TextColumn::make('bank_id'),
-                TextColumn::make('payment_method'),
+                TextColumn::make('user.name')->label('Owner')->searchable(),
+                TextColumn::make('card.number')->label('Card Number')->searchable(),
+                TextColumn::make('bank.bank_account_number')->searchable(),
+                TextColumn::make('payment_method')->searchable(),
+                TextColumn::make('payment_id')->searchable(),
                 TextColumn::make('amount'),
                 TextColumn::make('status'),
                 TextColumn::make('type'),
@@ -93,19 +92,15 @@ class TransactionResource extends Resource
                     ->label('Approve')
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
-                    ->requiresConfirmation() // Ask for confirmation before approving
+                    ->requiresConfirmation()
                     ->modalHeading('Approve Transaction')
                     ->modalDescription('Are you sure you want to approve this transaction and update the bank balance?')
-                    ->visible(fn(Transaction $record): bool => $record->status === 'Pending' && ($record->type === 'Incoming' || $record->type === 'Debit' || $record->type === 'Credit' || $record->type === 'Topup'))
+                    ->visible(fn(Transaction $record): bool => $record->status === 'Pending' && ($record->type === 'Incoming' || $record->type === 'Topup' || $record->type === 'Bank2Balance'))
                     ->action(function (Transaction $record) {
                         DB::beginTransaction();
                         try {
                             $previousStatus = $record->status;
-
-                            // Update status after financial changes
-                            $record->status = 'Approved';
-                            $record->save();
-
+                            
                             // Only process if not already approved
                             if ($previousStatus !== 'Approved') {
                                 // Incoming transaction
@@ -119,11 +114,14 @@ class TransactionResource extends Resource
                                     $user->save();
                                 }
 
-                                // Debit transaction
-                                if ($record->type === 'Debit' && $previousStatus === 'Pending') {
-                                    $card = Card::findOrFail($record->card_id);
-                                    $card->amount -= $record->amount;
-                                    $card->save();
+                                if ($record->type === 'Bank2Balance' && $record->bank_id) {
+                                    $bank = Bank::findOrFail($record->bank_id);
+                                    $bank->bank_balance -= $record->amount;
+                                    $bank->save();
+
+                                    $user = User::findOrFail($record->user_id);
+                                    $user->balance += $record->amount;
+                                    $user->save();
                                 }
 
                                 // Debit transaction
@@ -132,14 +130,11 @@ class TransactionResource extends Resource
                                     $card->amount += $record->amount;
                                     $card->save();
                                 }
-
-                                // Credit transaction
-                                if ($record->type === 'Credit' && $previousStatus === 'Pending') {
-                                    $card = Card::findOrFail($record->card_id);
-                                    $card->amount += $record->amount;
-                                    $card->save();
-                                }
                             }
+
+                            $record->status = 'Approved';
+                            $record->payment_id = Str::upper(Str::random(10));
+                            $record->save();
 
                             DB::commit();
 
@@ -156,7 +151,8 @@ class TransactionResource extends Resource
                                 ->danger()
                                 ->send();
                         }
-                    }),
+                }),
+                
 
             ])->defaultSort('created_at', 'desc')
             ->bulkActions([

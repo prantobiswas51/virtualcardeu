@@ -2,19 +2,23 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\BankResource\Pages;
-use App\Filament\Resources\BankResource\RelationManagers;
-use App\Models\Bank;
 use Filament\Forms;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Models\Bank;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use App\Models\Transaction;
+use Illuminate\Support\Str;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\BankResource\Pages;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\BankResource\RelationManagers;
 
 class BankResource extends Resource
 {
@@ -32,7 +36,8 @@ class BankResource extends Resource
                     'England' => 'England',
                     'Japan' => 'Japan'
                 ])->required(),
-                TextInput::make('account_holder_name'),
+                TextInput::make('bank_balance')->required(),
+                TextInput::make('bank_account_number')->required(),
                 Select::make('account_type')->options([
                     'Checking' => 'Checking',
                     // 'Savings' => 'Savings'
@@ -49,11 +54,10 @@ class BankResource extends Resource
                     'ACH' => 'ACH',
                     'Local Transfer' => 'Local Transfer'
                 ]),
-                TextInput::make('bank_account_number'),
+                TextInput::make('account_holder_name'),
                 TextInput::make('bic'),
                 TextInput::make('iban'),
                 TextInput::make('bank_address'),
-                TextInput::make('bank_balance'),
                 TextInput::make('bank_short_code'),
                 Select::make('status')->options([
                     'Active' => 'Active',
@@ -69,13 +73,8 @@ class BankResource extends Resource
             ->columns([
                 TextColumn::make('bank_name'),
                 TextColumn::make('bank_location'),
-                TextColumn::make('account_holder_name'),
                 TextColumn::make('account_type'),
-                TextColumn::make('routing_number'),
-                TextColumn::make('bank_account_number'),
-                TextColumn::make('bic'),
-                TextColumn::make('iban'),
-                TextColumn::make('bank_short_code'),
+                TextColumn::make('bank_account_number')->label('Bank Number'),
                 TextColumn::make('status'),
                 TextColumn::make('registered_at'),
             ])
@@ -83,6 +82,70 @@ class BankResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\Action::make('update_balance')
+                    ->label('Update Balance')
+                    ->icon('heroicon-o-banknotes')
+                    ->form([
+                        TextInput::make('bank_balance')
+                            ->label('Amount')
+                            ->numeric()
+                            ->required(),
+
+                        Select::make('type')
+                            ->label('Transaction Type')
+                            ->options([
+                                'Incoming' => 'Incoming',
+                                'Outgoing' => 'Outgoing'
+                            ])
+                            ->required(),
+
+                        TextInput::make('merchant')
+                            ->label('Merchant')
+                            ->required(),
+                    ])
+                    ->action(function (array $data, Bank $record): void {
+                        $amount = floatval($data['bank_balance']);
+                        $type = $data['type'];
+
+                        if ($type === 'Outgoing') {
+                            if ($record->bank_balance < $amount) {
+                                Notification::make()
+                                    ->title('Insufficient Balance')
+                                    ->body('This bank does not have enough funds for the debit transaction.')
+                                    ->danger()
+                                    ->persistent() // optional: keeps the notification until manually dismissed
+                                    ->send();
+
+                                return; // Stop further execution
+                            }
+                            $record->bank_balance -= $amount;
+                        } elseif ($type === 'Incoming') {
+                            $record->bank_balance += $amount;
+                        }
+
+                        $record->save();
+
+                        Transaction::create([
+                            'user_id' => $record->user_id,
+                            'bank_id' => $record->id,
+                            'amount' => $amount,
+                            'payment_method' => 'Bank',
+                            'type' => $type,
+                            'status' => "Approved",
+                            'payment_id' => Str::upper(Str::random(10)),
+                            'merchant' => $data['merchant'],
+                        ]);
+
+                        Notification::make()
+                            ->title('Task Complete Successfully')
+                            ->body('This bank balance has been updated successfully')
+                            ->success()
+                            ->persistent()
+                            ->send();
+                    })
+                    ->modalHeading('Update Bank Balance')
+                    ->modalSubmitActionLabel('Apply')
+                    ->requiresConfirmation(),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
